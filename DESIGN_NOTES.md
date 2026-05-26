@@ -24,3 +24,10 @@
 - Because the benchmark data file contains labels for all five synthetic folds, an agent that can see all data could still construct oracle action artifacts for every fold. The hidden `eval/test/` split helps with metric/code overfit, but a stronger future design would use a separate hidden test dataset or labels unavailable during train-side development.
 - The test slice has three folds while the visible train slice has two. This improves held-out stability, but train/test variance should be inspected when scores are generated.
 - No experiments were run in this design pass, so the runner should verify that recomputed train/test numbers differ from the prior self-reported-artifact scores only through intended replay and split changes.
+
+## Runner Results
+
+- Job `54556eec-4d7` ran `scripts/evaluate_train.sh /home/user/checkpoints` and `scripts/evaluate_test.sh /home/user/checkpoints` on CPU and completed successfully.
+- Generated `scoring/scores_train.json` and `scoring/scores_test.json` contain the same five methods for `synthetic_main`: `pege_ddb`, `greedy_classifier`, `greedy_neighbor`, `random`, and `fully_observable_gittins`.
+- The proposed method's replayed AUC is comparable across the split (`2.6943` train, `2.7755` test), while the fully observable oracle remains a clear upper bound (`5.7699` train, `6.8978` test).
+- Benefit metrics vary across methods and train/test values are not byte-identical. `budget_fraction` is `1.0` for every current method because all existing artifacts contain valid full-budget action sequences; it remains a low-weight validity guard against future invalid-action or early-stopping shortcuts.

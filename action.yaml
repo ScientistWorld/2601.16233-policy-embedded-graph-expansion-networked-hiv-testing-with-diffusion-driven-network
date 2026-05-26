@@ -1,6 +1,6 @@
-# This iteration submits a scoring job.
-action: submit
+# Scoring run completed and reviewed.
+action: done
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Run evaluate_train.sh and evaluate_test.sh against checkpoint directory; populate scores_train/test for review."
+notes: "Artifact replay split; 5 train metrics and 5 test metrics for synthetic_main across 5 methods; pege_ddb AUC train 2.6943 vs test 2.7755; benefit metrics vary, budget_fraction saturated at 1.0 as expected validity guard."
