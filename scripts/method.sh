@@ -20,6 +20,7 @@ python method/pege_ddb.py \
   --folds "${FOLDS:-5}" \
   --k "${PEGE_K:-24}" \
   --depth "${PEGE_DEPTH:-3}" \
+  --gittins-grid "${GITTINS_GRID:-96}" \
   --gamma 0.99
 
 bash scripts/evaluate.sh checkpoints/pege_ddb/results.json

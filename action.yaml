@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: false
 milestone: method_runs
-notes: "Run corrected CPU PEGE+DDB with numerical branching-bandit Gittins oracle on 5 folds, k=24, d=3; then evaluate and compare scores."
+notes: "Retry corrected PEGE+DDB with resumable fold outputs on a scaled smoke setting: 3 folds, k=8, d=3, Gittins grid 64; then evaluate scores."

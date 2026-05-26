@@ -170,6 +170,7 @@ def oracle_scores(
     known_labels: Dict[int, int],
     ddb: DDB,
     gamma: float,
+    grid_size: int = 96,
 ) -> Dict[int, float]:
     """Numerically compute binary branching-bandit Gittins indices.
 
@@ -179,7 +180,7 @@ def oracle_scores(
     """
 
     upper = 1.0 / max(1e-6, 1.0 - gamma)
-    grid = np.linspace(0.0, upper, 192)
+    grid = np.linspace(0.0, upper, int(grid_size))
     nodes = list(features)
     depth_memo: Dict[int, int] = {}
 
@@ -255,6 +256,7 @@ def run_policy(
     budget_fraction: float = 1.0,
     k: int = 12,
     depth: int = 3,
+    gittins_grid: int = 96,
 ) -> Dict[str, object]:
     test_set = set(int(i) for i in test_indices)
     discovered = set(component_roots(ds, test_indices))
@@ -281,14 +283,14 @@ def run_policy(
             true_children = {v: [c for c in ds.children[v] if c in test_set and c not in tested] for v in test_set}
             feats = {v: ds.features[v] for v in test_set}
             labels = {v: int(ds.labels[v]) for v in test_set}
-            scores = oracle_scores(fr, true_children, feats, labels, ddb, gamma)
+            scores = oracle_scores(fr, true_children, feats, labels, ddb, gamma, gittins_grid)
             action = max(scores, key=scores.get)
         elif policy == "pege_ddb":
             assert ddb is not None
             aggregate = {v: [] for v in fr}
             for _ in range(k):
                 syn_children, syn_features = expand_from_frontier(ds, ddb, sorted(discovered), fr, depth, rng)
-                scores = oracle_scores(fr, syn_children, syn_features, known_labels, ddb, gamma)
+                scores = oracle_scores(fr, syn_children, syn_features, known_labels, ddb, gamma, gittins_grid)
                 for v in fr:
                     aggregate[v].append(scores[v])
             means = {v: float(np.mean(vals)) for v, vals in aggregate.items()}
@@ -327,33 +329,64 @@ def run_experiment(args: argparse.Namespace) -> None:
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     policies = args.policies.split(",")
+    artifact_path = out_dir / "results.json"
+
     all_results: Dict[str, List[Dict[str, object]]] = {p: [] for p in policies}
+    if args.resume and artifact_path.exists():
+        raw = json.loads(artifact_path.read_text())
+        if (
+            raw.get("data") == args.data
+            and float(raw.get("gamma", -1)) == args.gamma
+            and int(raw.get("k", -1)) == args.k
+            and int(raw.get("depth", -1)) == args.depth
+            and int(raw.get("gittins_grid", -1)) == args.gittins_grid
+            and float(raw.get("budget_fraction", -1)) == args.budget_fraction
+        ):
+            for policy in policies:
+                all_results[policy] = list(raw.get("policies", {}).get(policy, []))
+
+    def write_artifact() -> None:
+        artifact = {
+            "experiment": args.experiment,
+            "data": args.data,
+            "gamma": args.gamma,
+            "k": args.k,
+            "depth": args.depth,
+            "gittins_grid": args.gittins_grid,
+            "budget_fraction": args.budget_fraction,
+            "folds": args.folds,
+            "policies": all_results,
+        }
+        artifact_path.write_text(json.dumps(artifact, indent=2))
 
     for fold in range(args.folds):
+        finished = {int(r["fold"]) for rows in all_results.values() for r in rows if "fold" in r}
+        if fold in finished and all(any(int(r.get("fold", -1)) == fold for r in rows) for rows in all_results.values()):
+            print(json.dumps({"skip_completed_fold": fold}, indent=2))
+            continue
         train_idx, test_idx = fold_split(ds, fold)
         model_path = out_dir / f"ddb_fold{fold}.pkl"
-        ddb = train_ddb(ds, train_idx, seed=args.seed + fold)
-        save_ddb(ddb, model_path)
+        if args.resume and model_path.exists():
+            ddb = load_ddb(model_path)
+        else:
+            ddb = train_ddb(ds, train_idx, seed=args.seed + fold)
+            save_ddb(ddb, model_path)
         for policy in policies:
+            if any(int(r.get("fold", -1)) == fold for r in all_results[policy]):
+                continue
             stable_policy_seed = sum((i + 1) * ord(ch) for i, ch in enumerate(policy))
             rng = np.random.default_rng(args.seed + 1000 * fold + stable_policy_seed % 997)
-            result = run_policy(ds, test_idx, ddb, policy, rng, args.gamma, args.budget_fraction, args.k, args.depth)
+            result = run_policy(
+                ds, test_idx, ddb, policy, rng, args.gamma, args.budget_fraction, args.k, args.depth, args.gittins_grid
+            )
             result["fold"] = fold
             result["test_nodes"] = len(test_idx)
             all_results[policy].append(result)
+            write_artifact()
+            print(json.dumps({"completed_fold": fold, "policy": policy}, indent=2))
 
-    artifact = {
-        "experiment": args.experiment,
-        "data": args.data,
-        "gamma": args.gamma,
-        "k": args.k,
-        "depth": args.depth,
-        "budget_fraction": args.budget_fraction,
-        "folds": args.folds,
-        "policies": all_results,
-    }
-    (out_dir / "results.json").write_text(json.dumps(artifact, indent=2))
-    print(json.dumps({"wrote": str(out_dir / "results.json"), "policies": policies}, indent=2))
+    write_artifact()
+    print(json.dumps({"wrote": str(artifact_path), "policies": policies}, indent=2))
 
 
 def main() -> None:
@@ -365,9 +398,11 @@ def main() -> None:
     parser.add_argument("--folds", type=int, default=5)
     parser.add_argument("--k", type=int, default=12)
     parser.add_argument("--depth", type=int, default=3)
+    parser.add_argument("--gittins-grid", type=int, default=96)
     parser.add_argument("--gamma", type=float, default=0.99)
     parser.add_argument("--budget-fraction", type=float, default=1.0)
     parser.add_argument("--seed", type=int, default=11)
+    parser.add_argument("--resume", action=argparse.BooleanOptionalAction, default=True)
     args = parser.parse_args()
     run_experiment(args)
 
