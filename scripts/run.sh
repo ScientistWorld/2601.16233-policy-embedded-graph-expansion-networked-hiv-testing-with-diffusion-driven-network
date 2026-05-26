@@ -12,6 +12,7 @@
 set -e
 
 cd /home/user
+export PYTHONPATH=/home/user:${PYTHONPATH:-}
 
 export FOLDS="${FOLDS:-3}"
 export PEGE_K="${PEGE_K:-8}"

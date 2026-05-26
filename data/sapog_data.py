@@ -68,7 +68,7 @@ def generate_synthetic_forest(
         base = rng.binomial(1, 0.16, size=feature_dim)
         base[:8] = rng.binomial(1, _sigmoid(comp_risk + rng.normal(0, 0.4)), size=8)
         root_risk = comp_risk + 0.9 * base[:8].mean() + rng.normal(0, 0.45)
-        root_label = int(rng.random() < _sigmoid(-2.45 + 1.55 * root_risk))
+        root_label = int(rng.random() < _sigmoid(-4.05 + 1.15 * root_risk))
         features.append(base.astype(int).tolist())
         labels.append(root_label)
         parents.append(-1)
@@ -82,9 +82,9 @@ def generate_synthetic_forest(
                 continue
 
             parent_x = np.array(features[parent])
-            mean_children = _sigmoid(-1.6 + 1.15 * parent_risk + 0.45 * parent_x[8:16].mean())
+            mean_children = _sigmoid(-1.35 + 1.15 * parent_risk + 0.45 * parent_x[8:16].mean())
             # Count distribution is deliberately over-dispersed, as in noisy referral data.
-            n_child = int(min(5, rng.poisson(0.25 + 2.3 * mean_children)))
+            n_child = int(min(5, rng.poisson(0.40 + 2.7 * mean_children)))
             n_child = min(n_child, target_size - comp_count, max_nodes - len(features))
             for _ in range(n_child):
                 child = len(features)
@@ -94,7 +94,7 @@ def generate_synthetic_forest(
                 inherited = 0.75 * parent_risk + 0.55 * child_x[:8].mean() + rng.normal(0, 0.65)
                 child_x[:8] = rng.binomial(1, _sigmoid(inherited), size=8)
                 child_x[16:24] = rng.binomial(1, _sigmoid(0.6 * inherited - 0.2), size=8)
-                label_p = _sigmoid(-2.75 + 1.85 * inherited + 0.75 * labels[parent])
+                label_p = _sigmoid(-4.35 + 1.20 * inherited + 0.50 * labels[parent])
                 child_y = int(rng.random() < label_p)
                 features.append(child_x.astype(int).tolist())
                 labels.append(child_y)

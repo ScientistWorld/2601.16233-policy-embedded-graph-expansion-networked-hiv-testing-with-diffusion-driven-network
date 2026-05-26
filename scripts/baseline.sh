@@ -16,6 +16,7 @@
 set -e
 
 cd /home/user
+export PYTHONPATH=/home/user:${PYTHONPATH:-}
 
 NAME="${1:-random,greedy_neighbor,greedy_classifier}"
 python data/sapog_data.py --output data/synthetic_hiv_forest.json

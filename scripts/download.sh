@@ -18,6 +18,7 @@
 set -e
 
 cd /home/user
+export PYTHONPATH=/home/user:${PYTHONPATH:-}
 
 # The ICPSR HIV network used by the paper requires a user agreement, so the
 # portable gym uses a small procedural forest substitute generated from tracked

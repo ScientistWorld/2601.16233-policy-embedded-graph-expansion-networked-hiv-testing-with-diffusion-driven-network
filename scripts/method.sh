@@ -9,6 +9,7 @@
 set -e
 
 cd /home/user
+export PYTHONPATH=/home/user:${PYTHONPATH:-}
 
 python data/sapog_data.py --output data/synthetic_hiv_forest.json
 python method/pege_ddb.py \
