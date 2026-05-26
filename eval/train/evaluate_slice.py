@@ -35,6 +35,24 @@ def discover_artifacts() -> List[Path]:
     return sorted(Path("checkpoints").glob("**/results.json"))
 
 
+def expand_artifacts(paths: Iterable[str]) -> List[Path]:
+    artifacts: List[Path] = []
+    for raw_path in paths:
+        path = Path(raw_path)
+        if path.is_dir():
+            artifacts.extend(sorted(path.glob("**/results.json")))
+        else:
+            artifacts.append(path)
+    seen: set[Path] = set()
+    unique: List[Path] = []
+    for artifact in artifacts:
+        key = artifact.resolve() if artifact.exists() else artifact
+        if key not in seen:
+            seen.add(key)
+            unique.append(artifact)
+    return unique
+
+
 def discounted_auc(curve: List[float]) -> float:
     if not curve:
         return 0.0
@@ -141,7 +159,7 @@ def main() -> None:
     parser.add_argument("--output", default="scoring/scores_train.json")
     args = parser.parse_args()
 
-    artifact_paths = [Path(p) for p in args.artifacts] if args.artifacts else discover_artifacts()
+    artifact_paths = expand_artifacts(args.artifacts) if args.artifacts else discover_artifacts()
     if not artifact_paths:
         raise FileNotFoundError("no checkpoints/**/results.json artifacts were found")
 

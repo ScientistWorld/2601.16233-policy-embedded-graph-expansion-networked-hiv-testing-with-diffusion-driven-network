@@ -1,9 +1,6 @@
-# This iteration writes files only — do NOT submit compute jobs.
-# Once you set action to 'done', STOP immediately.
-# Do NOT sleep, poll, or wait. The system reads this file
-# only after your turn ends.
-action: done
+# This iteration submits a scoring job.
+action: submit
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Improvements: replay action sequences for train/test scoring, expanded held-out folds, neutralized reference-only ICPSR scoring, clarified metric schema. Notes: see DESIGN_NOTES.md for residual hidden-data concern."
+notes: "Run evaluate_train.sh and evaluate_test.sh against checkpoint directory; populate scores_train/test for review."
