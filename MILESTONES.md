@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: core_claim**
+**Current: method_runs**
 
 ## Progress Log
 
@@ -14,3 +14,8 @@
 - The regenerated `scoring/scores.json` is based on complete fold artifacts for PEGE+DDB, Greedy Classifier, Greedy Neighbor, Random, and the fully observable Gittins upper bound.
 - PEGE+DDB achieves the highest primary AUC among practical partial-observation policies on the portable synthetic benchmark, supporting the paper's central claim under the documented ICPSR data-access substitution.
 - `python validate.py --compare` passed in the job, including import-separation and evaluator-output checks.
+
+### [2026-05-26 08:02] - method_runs
+- Superseded the previous `core_claim` result after review found two fidelity issues: generated child covariates were ignored for synthetic-node label probabilities, and the FOG upper bound used unrevealed labels.
+- Patched the method so generated covariates influence oracle probabilities and FOG observes full topology/features without future-label leakage.
+- Prepared a clean five-fold rerun; `core_claim` will only be restored if the corrected artifact supports it.

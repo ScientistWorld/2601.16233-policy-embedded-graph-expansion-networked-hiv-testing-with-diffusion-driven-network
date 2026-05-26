@@ -12,6 +12,7 @@
 - A CPU smoke job completed end-to-end on 3 folds with `k = 8`; `python validate.py --compare` passed.
 - The evaluator now rejects incomplete fold artifacts instead of allowing stale or partial `scores.json` updates.
 - Job `4fd15c8c-403` completed the full five-fold synthetic benchmark and regenerated `scoring/scores.json`; `python validate.py --compare` passed inside the container.
+- A subsequent implementation review found two fidelity issues in that result. The current code has been patched and a clean rerun is pending before restoring the `core_claim` milestone.
 
 ## Results
 
@@ -37,10 +38,11 @@ Completed corrected 5-fold result on the synthetic substitute (`k = 24`, `d = 3`
 | Random | 2.604 | 1.095 | 2.601 | 4.087 |
 | Fully Observable Gittins | 6.447 | 6.733 | 7.221 | 7.221 |
 
-PEGE + DDB beats all practical partial-observation baselines on the primary AUC metric under the fixed full-budget constraint. The fully observable Gittins policy remains much higher, as expected, because it is an upper-bound comparator with access to graph/label information unavailable to the deployable policies. This supports `core_claim` on the portable benchmark.
+This result is now treated as superseded because generated covariates did not affect synthetic-node oracle probabilities and the FOG comparator used unrevealed labels. The next submitted job recomputes the five-fold benchmark after fixing both issues.
 
 ## Remaining
 
+- Restore `core_claim` by completing the corrected five-fold synthetic benchmark and confirming PEGE+DDB beats the practical partial-observation baselines on primary AUC.
 - Higher milestones would require additional settings beyond the fixed synthetic substitute, such as alternative budgets, `k` sweeps, aggregation ablations, or a successful run on the real ICPSR 22140 network after completing its access agreement.
 
 ## Issues
@@ -58,6 +60,7 @@ PEGE + DDB beats all practical partial-observation baselines on the primary AUC 
 - The final corrected run validates cleanly, but the reproduced primary-metric margin is narrow on the synthetic substitute.
 - A later destructive run briefly reset the artifact to fold 0 only. `scripts/run.sh` no longer deletes checkpoints, and `eval/evaluate_outputs.py` now fails if a declared fold count is incomplete.
 - Job `4fd15c8c-403` repaired that issue by finishing folds 1 through 4, writing a complete five-fold artifact for every scored policy, and regenerating `scoring/scores.json`.
+- Review after that job found that generated child covariates were ignored in the oracle for synthetic nodes and that FOG used future labels. Both are patched; old scores remain in `scoring/scores.json` only as the last completed artifact until the corrected job finishes.
 
 ## Deviations from Paper
 

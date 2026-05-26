@@ -214,8 +214,6 @@ def oracle_scores(
         for parent_label in (0, 1):
             if node in known_labels:
                 p1 = float(known_labels[node])
-            elif node < 0:
-                p1 = float(ddb.transition[parent_label])
             else:
                 base = ddb.label_probability(features[node])
                 p1 = float(np.clip(0.65 * base + 0.35 * ddb.transition[parent_label], 1e-4, 1.0 - 1e-4))
@@ -304,13 +302,12 @@ def run_policy(
             assert ddb is not None
             true_children = {v: [c for c in ds.children[v] if c in test_set and c not in tested] for v in test_set}
             feats = {v: ds.features[v] for v in test_set}
-            labels = {v: int(ds.labels[v]) for v in test_set}
             parent_context = {
-                int(v): int(ds.labels[int(ds.parents[int(v)])])
+                int(v): int(known_labels[int(ds.parents[int(v)])])
                 for v in fr
-                if int(ds.parents[int(v)]) in test_set
+                if int(ds.parents[int(v)]) in known_labels
             }
-            scores = oracle_scores(fr, true_children, feats, labels, ddb, gamma, gittins_grid, parent_context)
+            scores = oracle_scores(fr, true_children, feats, known_labels, ddb, gamma, gittins_grid, parent_context)
             action = max(scores, key=scores.get)
         elif policy == "pege_ddb":
             assert ddb is not None

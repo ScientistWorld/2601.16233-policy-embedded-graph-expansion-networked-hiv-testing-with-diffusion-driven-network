@@ -1,6 +1,6 @@
-# Scoring run completed and reviewed.
-action: done
+# Corrected method rerun after fidelity fixes.
+action: submit
 gpus: 0
 test: false
-milestone: core_claim
-notes: "Packaging audit passed: no external artifacts required; download.sh regenerates tracked synthetic data and no shared paths are referenced."
+milestone: method_runs
+notes: "CPU rerun of the corrected five-fold PEGE+DDB benchmark: generated covariates now affect oracle probabilities and FOG no longer uses unrevealed labels."
