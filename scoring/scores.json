@@ -3,10 +3,10 @@
     "synthetic_main": {
       "results": {
         "pege_ddb": {
-          "auc": 2.742979593720272,
-          "reward_25pct": 1.4701565589261354,
-          "reward_50pct": 2.8054561369098114,
-          "reward_75pct": 3.9290909776036487,
+          "auc": 2.7864422605930583,
+          "reward_25pct": 1.8122596611365867,
+          "reward_50pct": 2.862760625850697,
+          "reward_75pct": 3.8837422395445644,
           "budget_fraction": 1.0
         },
         "greedy_classifier": {
@@ -31,10 +31,10 @@
           "budget_fraction": 1.0
         },
         "fully_observable_gittins": {
-          "auc": 6.446666188200443,
-          "reward_25pct": 6.733196376787922,
-          "reward_50pct": 7.2207343458032165,
-          "reward_75pct": 7.2207343458032165,
+          "auc": 2.5874185824768734,
+          "reward_25pct": 1.1170308683507038,
+          "reward_50pct": 2.4717135252173796,
+          "reward_75pct": 3.8721857518623315,
           "budget_fraction": 1.0
         }
       }
