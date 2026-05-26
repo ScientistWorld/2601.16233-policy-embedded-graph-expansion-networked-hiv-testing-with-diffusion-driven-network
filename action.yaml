@@ -1,6 +1,5 @@
-# Final verification complete.
-action: done
+action: submit
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Corrected five-fold PEGE+DDB benchmark completed and validated; portable synthetic gym is ready with documented ICPSR data limitation."
+notes: "Run CPU normal job for PEGE+DDB Figure 6 ablations: k sweep and aggregation variants, then evaluate and validate for core_claim_plus."
