@@ -2,14 +2,14 @@
   "experiments": {
     "paper_icpsr_main": {
       "description": "Paper Table 1 on the ICPSR HIV network: 5 component-level folds, d=3, k=24, gamma=0.99, T=|V|. This original dataset requires an ICPSR user agreement, so this experiment is transcribed as the paper reference but is not the portable scored benchmark.",
-      "weight": 0.2,
+      "weight": 0.0,
       "primary_metric": "auc",
       "metrics": {
-        "auc": {"higher_is_better": true, "coefficient": 1.0},
-        "reward_25pct": {"higher_is_better": true, "coefficient": 0.7},
-        "reward_50pct": {"higher_is_better": true, "coefficient": 0.5},
-        "reward_75pct": {"higher_is_better": true, "coefficient": 0.4},
-        "budget_fraction": {"higher_is_better": false, "coefficient": -0.1}
+        "auc": {"higher_is_better": true, "coefficient": 0.0, "description": "Reference-only area under the cumulative discounted positive-detection curve from the non-redistributable ICPSR experiment."},
+        "reward_25pct": {"higher_is_better": true, "coefficient": 0.0, "description": "Reference-only cumulative discounted positive detections after the first 25% of the testing budget."},
+        "reward_50pct": {"higher_is_better": true, "coefficient": 0.0, "description": "Reference-only cumulative discounted positive detections after the first 50% of the testing budget."},
+        "reward_75pct": {"higher_is_better": true, "coefficient": 0.0, "description": "Reference-only cumulative discounted positive detections after the first 75% of the testing budget."},
+        "budget_fraction": {"higher_is_better": true, "coefficient": 0.0, "description": "Reference-only fraction of the allowed testing budget consumed by valid sequential actions."}
       },
       "results": {
         "random": {"type": "baseline", "auc": 6.92, "reward_25pct": 5.10, "reward_50pct": 8.11, "reward_75pct": 9.13, "budget_fraction": 1.0},
@@ -22,14 +22,14 @@
     },
     "synthetic_main": {
       "description": "Portable sequential HIV network testing benchmark on the tracked synthetic forest substitute. This is the scored gym target used when the ICPSR data cannot be redistributed.",
-      "weight": 0.8,
+      "weight": 1.0,
       "primary_metric": "auc",
       "metrics": {
-        "auc": {"higher_is_better": true, "coefficient": 1.0},
-        "reward_25pct": {"higher_is_better": true, "coefficient": 0.7},
-        "reward_50pct": {"higher_is_better": true, "coefficient": 0.5},
-        "reward_75pct": {"higher_is_better": true, "coefficient": 0.4},
-        "budget_fraction": {"higher_is_better": false, "coefficient": -0.1}
+        "auc": {"higher_is_better": true, "coefficient": 1.0, "description": "Area under the cumulative discounted positive-detection curve."},
+        "reward_25pct": {"higher_is_better": true, "coefficient": 0.7, "description": "Cumulative discounted positive detections after the first 25% of the testing budget."},
+        "reward_50pct": {"higher_is_better": true, "coefficient": 0.5, "description": "Cumulative discounted positive detections after the first 50% of the testing budget."},
+        "reward_75pct": {"higher_is_better": true, "coefficient": 0.4, "description": "Cumulative discounted positive detections after the first 75% of the testing budget."},
+        "budget_fraction": {"higher_is_better": true, "coefficient": 0.1, "description": "Fraction of the allowed testing budget consumed by valid sequential actions, capped at the paper's full-budget protocol."}
       },
       "results": {
         "random": {"type": "baseline", "auc": 2.603916750352307, "reward_25pct": 1.0949096566821177, "reward_50pct": 2.6010108978042883, "reward_75pct": 4.086856879100924, "budget_fraction": 1.0},

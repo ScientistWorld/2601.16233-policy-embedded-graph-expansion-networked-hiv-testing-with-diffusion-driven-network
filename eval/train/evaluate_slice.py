@@ -1,8 +1,10 @@
 """Visible train-slice scorer for artifact-only SAPOG evaluations.
 
 This evaluator intentionally scores method output artifacts rather than running
-method code. It uses a fixed pair of evaluation folds from the existing
-five-fold protocol so future agents can optimize against this visible slice.
+method code. It replays submitted action sequences against the tracked SAPOG
+data, so self-reported reward curves in artifacts cannot determine the score.
+It uses a fixed pair of evaluation folds from the existing five-fold protocol
+so future agents can optimize against this visible slice.
 """
 
 from __future__ import annotations
@@ -11,6 +13,10 @@ import argparse
 import json
 from pathlib import Path
 from typing import Dict, Iterable, List
+
+import numpy as np
+
+from data.sapog_data import component_roots, fold_split, load_forest
 
 
 SLICE = "train"
@@ -27,6 +33,56 @@ METHOD_NAMES = {
 
 def discover_artifacts() -> List[Path]:
     return sorted(Path("checkpoints").glob("**/results.json"))
+
+
+def discounted_auc(curve: List[float]) -> float:
+    if not curve:
+        return 0.0
+    arr = np.asarray(curve, dtype=float)
+    if len(arr) == 1:
+        return float(arr[0])
+    area = float(np.sum((arr[:-1] + arr[1:]) * 0.5))
+    return area / len(arr)
+
+
+def replay_row(ds, row: dict, gamma: float, budget_fraction: float) -> dict:
+    fold = int(row["fold"])
+    _, test_indices = fold_split(ds, fold)
+    test_set = set(int(i) for i in test_indices)
+    frontier = set(component_roots(ds, test_indices))
+    tested: set[int] = set()
+    rewards: List[float] = []
+    valid_tests = 0
+    budget = max(1, int(round(len(test_indices) * budget_fraction)))
+
+    for raw_action in row.get("actions", [])[:budget]:
+        try:
+            action = int(raw_action)
+        except (TypeError, ValueError):
+            action = -1
+
+        if action in frontier and action in test_set and action not in tested:
+            frontier.remove(action)
+            tested.add(action)
+            valid_tests += 1
+            rewards.append((gamma ** len(rewards)) * int(ds.labels[action]))
+            for child in ds.children[action]:
+                if child in test_set and child not in tested:
+                    frontier.add(int(child))
+        else:
+            rewards.append(0.0)
+
+    while len(rewards) < budget:
+        rewards.append(0.0)
+
+    cumulative = np.cumsum(rewards).astype(float).tolist()
+    return {
+        "fold": fold,
+        "test_nodes": len(test_indices),
+        "cumulative_discounted_reward": cumulative,
+        "auc": discounted_auc(cumulative),
+        "budget_fraction": valid_tests / budget,
+    }
 
 
 def weighted_mean(rows: List[dict], key: str) -> float:
@@ -56,9 +112,12 @@ def slice_rows(rows: Iterable[dict]) -> List[dict]:
 
 def summarize_artifact(path: Path) -> Dict[str, Dict[str, float]]:
     raw = json.loads(path.read_text())
+    ds = load_forest(raw.get("data", "data/synthetic_hiv_forest.json"))
+    gamma = float(raw.get("gamma", 0.99))
+    budget_fraction = float(raw.get("budget_fraction", 1.0))
     out: Dict[str, Dict[str, float]] = {}
     for policy, all_rows in raw["policies"].items():
-        rows = slice_rows(all_rows)
+        rows = [replay_row(ds, row, gamma, budget_fraction) for row in slice_rows(all_rows)]
         if not rows:
             continue
         observed_folds = {int(r["fold"]) for r in rows if "fold" in r}
@@ -71,7 +130,7 @@ def summarize_artifact(path: Path) -> Dict[str, Dict[str, float]]:
             "reward_25pct": weighted_curve_value(rows, 0.25),
             "reward_50pct": weighted_curve_value(rows, 0.50),
             "reward_75pct": weighted_curve_value(rows, 0.75),
-            "budget_fraction": float(raw.get("budget_fraction", 1.0)),
+            "budget_fraction": weighted_mean(rows, "budget_fraction"),
         }
     return out
 
