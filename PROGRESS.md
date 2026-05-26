@@ -8,16 +8,26 @@
 - Implemented PEGE action selection with sampled graph expansions and a forest oracle.
 - Implemented Random, Greedy Neighbor, Greedy Classifier, and Fully Observable Gittins comparison policies in the same run artifact.
 - Implemented an evaluation script that reads result artifacts and writes `scoring/scores.json` without importing from `method/`.
+- A CPU smoke job completed end-to-end on 3 folds with `k = 8`; `python validate.py --compare` passed.
 
 ## Results
 
-No compute job has completed yet. The first submitted job will run a 3-fold smoke reproduction and validate the produced scores.
+3-fold smoke result on the synthetic substitute:
+
+| Method | AUC | 25% | 50% | 75% |
+| --- | ---: | ---: | ---: | ---: |
+| PEGE + DDB | 3.169 | 2.441 | 3.476 | 3.916 |
+| Greedy Classifier | 3.104 | 2.119 | 3.353 | 4.418 |
+| Greedy Neighbor | 2.541 | 0.902 | 2.753 | 3.612 |
+| Random | 2.574 | 1.202 | 2.709 | 4.158 |
+| Fully Observable Gittins | 5.634 | 5.871 | 6.411 | 6.411 |
+
+The method beats the strongest practical baseline by AUC in the smoke setting, but the margin is small and the 75% budget value trails Greedy Classifier. A 5-fold `k = 24` run is queued to strengthen the result before claiming `core_claim`.
 
 ## Remaining
 
-- Run the method end-to-end in the compute container.
-- Inspect whether PEGE + DDB beats the practical baselines on the synthetic substitute.
-- If the core claim holds, expand from the smoke setting to all 5 folds and `k = 24`.
+- Run the paper-aligned scaled setting: 5 folds, `k = 24`, depth 3.
+- Inspect whether PEGE + DDB beats practical baselines robustly enough for `core_claim`.
 
 ## Issues
 

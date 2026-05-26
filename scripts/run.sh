@@ -14,8 +14,8 @@ set -e
 cd /home/user
 export PYTHONPATH=/home/user:${PYTHONPATH:-}
 
-export FOLDS="${FOLDS:-3}"
-export PEGE_K="${PEGE_K:-8}"
+export FOLDS="${FOLDS:-5}"
+export PEGE_K="${PEGE_K:-24}"
 export PEGE_DEPTH="${PEGE_DEPTH:-3}"
 
 bash scripts/reproduce.sh

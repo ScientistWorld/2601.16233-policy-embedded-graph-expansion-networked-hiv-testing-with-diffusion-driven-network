@@ -29,6 +29,6 @@
 
 action: submit
 gpus: 0
-test: true
-milestone: none
-notes: "Retry CPU smoke job after replacing np.trapz for NumPy 2.4 compatibility; run 3 folds with k=8, write scores.json, and validate."
+test: false
+milestone: method_runs
+notes: "Run the stronger paper-aligned scaled setting on CPU: 5 folds, PEGE k=24, depth=3, then write scores.json and validate."
