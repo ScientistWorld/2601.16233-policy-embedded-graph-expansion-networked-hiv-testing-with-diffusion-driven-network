@@ -27,8 +27,8 @@
 #   milestone: core_claim
 #   notes: "Reproduced the core claim. Environment packaged."
 
-action: submit
+action: done
 gpus: 0
 test: true
 milestone: core_claim
-notes: "Validation-only CPU job for completed 5-fold k=24 artifacts: rewrite scores.json from checkpoints/pege_ddb/results.json and run validate.py --compare."
+notes: "Core claim reproduced on the synthetic forest substitute. PEGE+DDB artifacts and scores validate locally; final scheduler retry failed before code execution due to missing generated container image after quota cleanup."

@@ -26,5 +26,9 @@
 - PEGE + DDB beat all practical baselines on primary AUC and at 25% and 50% budgets on the synthetic forest substitute.
 - Fully Observable Gittins remains a stronger upper bound, as expected.
 
+### [2026-05-26 06:27] - core_claim
+- Validation-only scheduler retry failed before running code because the generated container image had been deleted to recover quota.
+- Re-ran artifact evaluation and `python validate.py --compare` locally; all checks pass with the completed 5-fold scores.
+
 ## Stop Justification
 - Not stopped.
