@@ -3,4 +3,4 @@ action: done
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Artifact replay split; 5 train metrics and 5 test metrics for synthetic_main across 5 methods; pege_ddb AUC train 2.6943 vs test 2.7755; benefit metrics vary, budget_fraction saturated at 1.0 as expected validity guard."
+notes: "Packaging audit passed: no external artifacts required; download.sh regenerates tracked synthetic data and no shared paths are referenced."
