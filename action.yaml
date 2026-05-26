@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: false
 milestone: method_runs
-notes: "Resume and finish the full 5-fold PEGE+DDB synthetic benchmark; evaluator now rejects incomplete fold artifacts and will regenerate scores.json only after all folds complete."
+notes: "Audit found current artifact still has only fold 0 and scores.json is stale. Resume/finish the full 5-fold PEGE+DDB synthetic benchmark; evaluator will reject incomplete fold artifacts and regenerate scores.json only after all folds complete."
