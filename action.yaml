@@ -1,8 +1,8 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: submit
+action: done
 gpus: 0
 test: false
-milestone: method_runs
-notes: "Run corrected PEGE+DDB after fidelity fixes: parent-label-conditioned Gittins scores, balanced linear SVM classifier baseline, 5 folds, k=24, d=3, Gittins grid 64; then evaluate scores."
+milestone: core_claim
+notes: "Corrected 5-fold k=24 PEGE+DDB run completed and validated. PEGE+DDB primary AUC 2.743 beats Random 2.604, Greedy Classifier 2.663, and Greedy Neighbor 2.737 under the same full-budget constraint; environment is packaged at core_claim."

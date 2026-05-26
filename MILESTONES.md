@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: core_claim**
 
 ## Progress Log
 
@@ -20,5 +20,9 @@
 - The corrected 3-fold smoke job completed and produced valid scores, but PEGE+DDB still trailed the classifier baseline on primary AUC (`2.793` vs. `3.104`), so it is not a `core_claim` result.
 - Fixed two fidelity issues before the next run: PEGE now conditions frontier Gittins scores on observed parent labels, and Greedy Classifier now uses the paper's balanced linear SVM comparator rather than the DDB logistic label model.
 
+### [2026-05-26 07:35] - core_claim
+- The corrected 5-fold `k=24`, `d=3` synthetic benchmark completed and passed `python validate.py --compare`.
+- PEGE+DDB achieved primary AUC `2.743`, beating Random (`2.604`), Greedy Classifier (`2.663`), and Greedy Neighbor (`2.737`) under the same full-budget constraint. The margin over Greedy Neighbor is narrow, so this restores `core_claim` but not a higher milestone.
+
 ## Stop Justification
-- Not stopped. A scheduler job is being submitted for the corrected 5-fold `k=24` PEGE+DDB run.
+- Stopped at `core_claim`. The reusable environment is packaged and validated; higher milestones would require broader experiments or a stronger margin on the synthetic substitute.

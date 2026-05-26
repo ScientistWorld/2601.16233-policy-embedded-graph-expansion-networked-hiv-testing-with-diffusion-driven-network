@@ -10,7 +10,7 @@
 - Greedy Classifier is now the paper-aligned balanced linear SVM comparator, while DDB keeps a separate calibrated logistic model for label probabilities inside graph expansion/oracle scoring.
 - Implemented an evaluation script that reads result artifacts and writes `scoring/scores.json` without importing from `method/`.
 - A CPU smoke job completed end-to-end on 3 folds with `k = 8`; `python validate.py --compare` passed.
-- A 5-fold `k = 24` run produced complete PEGE + DDB artifacts and `scores.json` before the scheduler killed the shell process.
+- A corrected 5-fold `k = 24` run completed cleanly and wrote validated scores.
 
 ## Results
 
@@ -26,9 +26,21 @@ Corrected 3-fold smoke result on the synthetic substitute (`k = 8`, Gittins grid
 
 PEGE + DDB beats Random and Greedy Neighbor on primary AUC in this smoke setting but trails Greedy Classifier, so this is still `method_runs`. The next run includes two fidelity fixes: frontier Gittins scores are conditioned on observed parent labels, and Greedy Classifier uses the balanced linear SVM comparator specified by the paper.
 
+Corrected 5-fold result on the synthetic substitute (`k = 24`, `d = 3`, Gittins grid 64):
+
+| Method | AUC | 25% | 50% | 75% |
+| --- | ---: | ---: | ---: | ---: |
+| PEGE + DDB | 2.743 | 1.470 | 2.805 | 3.929 |
+| Greedy Classifier | 2.663 | 1.619 | 2.512 | 3.910 |
+| Greedy Neighbor | 2.737 | 0.920 | 2.945 | 3.854 |
+| Random | 2.604 | 1.095 | 2.601 | 4.087 |
+| Fully Observable Gittins | 6.447 | 6.733 | 7.221 | 7.221 |
+
+PEGE + DDB beats all practical baselines on the primary AUC metric under the fixed full-budget constraint, which supports the core claim that sampled graph expansion inside the decision loop improves sequential testing. The result is not `core_claim_plus`: PEGE trails some baselines at individual budget checkpoints and beats Greedy Neighbor by only `0.006` AUC.
+
 ## Remaining
 
-- Run the corrected 5-fold `k = 24` job and compare PEGE+DDB against all practical baselines before restoring `core_claim`.
+- Higher milestones would require additional settings beyond the fixed synthetic substitute, such as alternative budgets or multiple synthetic graph regimes, while preserving the same partial-observability protocol.
 
 ## Issues
 
@@ -42,6 +54,7 @@ PEGE + DDB beats Random and Greedy Neighbor on primary AUC in this smoke setting
 - A follow-up code review found that the first implementation's oracle was not close enough to the cited Gittins-index computation. The implementation now uses a numerical binary branching-bandit Gittins recursion from the cited equations, and the prior synthetic result is treated as superseded rather than a `core_claim` result.
 - The first corrected run was interrupted by a Hive disk-quota heartbeat failure after training several fold models. The method now writes fold/policy results incrementally and resumes from existing DDB fold checkpoints, so infrastructure interruption no longer discards all progress.
 - The corrected 3-fold smoke run completed cleanly, but PEGE+DDB did not beat the classifier baseline. That exposed two implementation fidelity gaps, now fixed before the next job.
+- The final corrected run validates cleanly, but the reproduced primary-metric margin is narrow on the synthetic substitute.
 
 ## Deviations from Paper
 
