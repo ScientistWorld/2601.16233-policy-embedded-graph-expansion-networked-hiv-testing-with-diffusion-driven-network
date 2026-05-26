@@ -13,8 +13,9 @@ set -e
 
 cd /home/user
 
-# Example: train a model
-python method/train.py --epochs 10 --lr 0.001
+export FOLDS="${FOLDS:-3}"
+export PEGE_K="${PEGE_K:-8}"
+export PEGE_DEPTH="${PEGE_DEPTH:-3}"
 
-# Example: evaluate
-bash scripts/evaluate.sh checkpoints/best.pt
+bash scripts/reproduce.sh
+python validate.py --compare

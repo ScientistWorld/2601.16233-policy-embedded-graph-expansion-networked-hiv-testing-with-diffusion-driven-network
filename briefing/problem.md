@@ -1,17 +1,13 @@
 # Problem Definition
 
-What problem does this paper address? Write this so that someone with no knowledge of the paper can understand what needs to be solved and how success is measured.
-
-Do NOT describe the paper's method or solution here — only the problem itself. Think about if a future scientist agent try to solve this problem from scratch without knowing what approach the paper took. If you leak the solution, you compromise the benchmark.
-
 ## Research Question
 
-<!-- What problem or challenge does this paper tackle? What gap in existing work does it address? -->
+How should limited HIV tests be allocated sequentially when the contact network is only partially observed and grows through referrals? At each step, the decision maker can test one discovered but untested person, observes that person's binary HIV status, and discovers their adjacent referrals for future testing.
 
 ## Why It Matters
 
-<!-- Why is this problem important? What would a good solution enable? Make it short -->
+Testing resources and staff time are limited. A good sequential testing policy finds HIV-positive individuals earlier, so treatment and prevention can start sooner.
 
 ## Success Criteria
 
-<!-- What would a successful solution look like? What properties should it have? This is about the goal, not the paper's specific approach. Make it short -->
+A successful policy earns high discounted cumulative positive detections on held-out forest contact graphs. It should work from initially visible root nodes, use only information revealed so far, and preserve the fixed testing budget used in evaluation.

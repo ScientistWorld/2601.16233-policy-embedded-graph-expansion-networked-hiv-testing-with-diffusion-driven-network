@@ -1,0 +1,24 @@
+{
+  "experiments": {
+    "synthetic_main": {
+      "description": "Sequential HIV network testing on forest contact graphs; paper Table 1 values are the real-data target, while this gym runs the same protocol on a synthetic forest substitute because ICPSR access requires a user agreement.",
+      "weight": 1.0,
+      "primary_metric": "auc",
+      "metrics": {
+        "auc": {"higher_is_better": true, "coefficient": 1.0},
+        "reward_25pct": {"higher_is_better": true, "coefficient": 0.7},
+        "reward_50pct": {"higher_is_better": true, "coefficient": 0.5},
+        "reward_75pct": {"higher_is_better": true, "coefficient": 0.4},
+        "budget_fraction": {"higher_is_better": false, "coefficient": -0.1}
+      },
+      "results": {
+        "random": {"type": "baseline", "auc": 6.92, "reward_25pct": 5.10, "reward_50pct": 8.11, "reward_75pct": 9.13, "budget_fraction": 1.0},
+        "greedy_neighbor": {"type": "baseline", "auc": 7.86, "reward_25pct": 6.70, "reward_50pct": 8.75, "reward_75pct": 9.91, "budget_fraction": 1.0},
+        "greedy_classifier": {"type": "baseline", "auc": 8.45, "reward_25pct": 7.12, "reward_50pct": 9.32, "reward_75pct": 10.10, "budget_fraction": 1.0},
+        "dqn": {"type": "baseline", "auc": 7.78, "reward_25pct": 6.11, "reward_50pct": 8.81, "reward_75pct": 9.75, "budget_fraction": 1.0},
+        "pege_ddb": {"type": "proposed", "auc": 9.29, "reward_25pct": 8.02, "reward_50pct": 9.94, "reward_75pct": 11.20, "budget_fraction": 1.0},
+        "fully_observable_gittins": {"type": "baseline", "auc": 12.00, "reward_25pct": 11.10, "reward_50pct": 13.30, "reward_75pct": 13.70, "budget_fraction": 1.0}
+      }
+    }
+  }
+}

@@ -17,4 +17,13 @@ set -e
 
 cd /home/user
 
-# TODO: run baseline
+NAME="${1:-random,greedy_neighbor,greedy_classifier}"
+python data/sapog_data.py --output data/synthetic_hiv_forest.json
+python baseline/run_baselines.py \
+  --data data/synthetic_hiv_forest.json \
+  --output-dir checkpoints/baselines \
+  --policies "$NAME" \
+  --folds "${FOLDS:-5}" \
+  --gamma 0.99
+
+bash scripts/evaluate.sh checkpoints/baselines/results.json

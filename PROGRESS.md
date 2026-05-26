@@ -2,36 +2,30 @@
 
 ## What Works
 
-<!-- What has been successfully reproduced so far. -->
+- Paper analysis is complete enough to identify the core method: PEGE with DDB expansion, evaluated on sequential HIV testing over forest contact graphs.
+- Implemented a portable synthetic forest substitute because the ICPSR data requires a user agreement.
+- Implemented DDB with Gaussian Process branch counts and conditional denoising diffusion for child covariates.
+- Implemented PEGE action selection with sampled graph expansions and a forest oracle.
+- Implemented Random, Greedy Neighbor, Greedy Classifier, and Fully Observable Gittins comparison policies in the same run artifact.
+- Implemented an evaluation script that reads result artifacts and writes `scoring/scores.json` without importing from `method/`.
 
 ## Results
 
-<!-- Reproduced numbers compared to the paper's reported numbers. -->
+No compute job has completed yet. The first submitted job will run a 3-fold smoke reproduction and validate the produced scores.
 
 ## Remaining
 
-<!-- What still needs to be done to reach higher milestones. -->
+- Run the method end-to-end in the compute container.
+- Inspect whether PEGE + DDB beats the practical baselines on the synthetic substitute.
+- If the core claim holds, expand from the smoke setting to all 5 folds and `k = 24`.
 
 ## Issues
 
-<!-- Blockers, bugs, or difficulties encountered. -->
+- The original ICPSR 22140 HIV network is public only after completing an ICPSR user agreement, so it cannot be fetched automatically into this gym.
+- The login environment does not currently have `numpy`; dependencies are declared in `environment/setup.sh` and will be installed by the container setup step.
 
 ## Deviations from Paper
 
-<!-- Do not edit this section unless you deviated from the paper's original setup.
-     For each deviation, document: what the paper used, what you substituted, and why.
-
-     ACCEPTABLE deviations (data/resource/scale substitutions — milestones still valid):
-       - Replaced a proprietary dataset with a public one
-       - Used a smaller model of the same architecture
-       - Scaled down training (fewer epochs, smaller batch)
-       - Used a different library for the same algorithm
-
-     UNACCEPTABLE deviations (algorithm substitutions — milestones above 'none' are void):
-       - Replaced the paper's algorithm with a fundamentally different one
-       - Wrote a generic model trained to approximate the method's outputs
-         instead of implementing the method's computational steps
-
-     The test: could someone reading your code identify which algorithm from
-     the paper you implemented? If not, you replaced the method. -->
-
+- **Dataset**: The paper uses ICPSR 22140 with 778 nodes, 188 connected components, and 72 binary covariates. This reproduction uses a procedural synthetic HIV-like forest with the same partial-observability protocol because ICPSR access requires a user agreement.
+- **Oracle details**: The paper uses the Gittins index policy from Choo et al. 2025. This implementation uses a forest dynamic-priority oracle that scores immediate predicted positivity plus discounted descendant opportunity, preserving the oracle role inside PEGE but not claiming exact parity with the unpublished referenced implementation.
+- **Scale for first job**: The first job uses 3 folds and `k = 8` for a smoke test. The paper's main setting is 5 folds and `k = 24`.

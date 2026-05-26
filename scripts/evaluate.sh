@@ -26,5 +26,15 @@ cd /home/user
 
 mkdir -p scoring
 
-# TODO: implement evaluation using code in eval/
-# Must write scoring/scores.json at the end
+if [ "$#" -gt 0 ]; then
+  python eval/evaluate_outputs.py --artifacts "$@" --output scoring/scores.json
+elif [ -e checkpoints/pege_ddb/results.json ] && [ -e checkpoints/baselines/results.json ]; then
+  python eval/evaluate_outputs.py --artifacts checkpoints/baselines/results.json checkpoints/pege_ddb/results.json --output scoring/scores.json
+elif [ -e checkpoints/pege_ddb/results.json ]; then
+  python eval/evaluate_outputs.py --artifacts checkpoints/pege_ddb/results.json --output scoring/scores.json
+elif [ -e checkpoints/baselines/results.json ]; then
+  python eval/evaluate_outputs.py --artifacts checkpoints/baselines/results.json --output scoring/scores.json
+else
+  echo "No result artifacts found. Run scripts/method.sh or scripts/baseline.sh first." >&2
+  exit 1
+fi
