@@ -61,7 +61,7 @@ Secondary metrics are cumulative discounted reward at 25%, 50%, and 75% of the t
 
 ## Baselines and Targets
 
-The paper reports Random, Greedy Neighbor, Greedy Classifier, DQN, the proposed policy, and a fully observable Gittins upper bound. Because this gym uses a synthetic substitute with a different reward scale, `scoring/reference.json` records the portable benchmark reference values and `notes/paper_table1.md` preserves the paper's original Table 1.
+The paper reports Random, Greedy Neighbor, Greedy Classifier, DQN, the proposed policy, and a fully observable Gittins upper bound. `scoring/reference.json` includes those original ICPSR Table 1 values under `paper_icpsr_main` and also includes the portable synthetic benchmark target used by this gym under `synthetic_main`.
 
 ## Evaluation Protocol
 
@@ -137,12 +137,30 @@ The benchmark uses five component-level folds. Components are never split across
 
 </details>
 
+### Iteration 3: gpt-5.5
+- **Milestone**: `core_claim` | **Status**: done
+- **Working time**: 7m | **GPU**: 0.0h
+- **Jobs**: 9 total (4 completed, 4 failed)
+
+<details>
+<summary>Progress Log</summary>
+
+### [2026-05-26 07:23] - method_runs
+- Implemented the paper's PEGE loop with sampled DDB graph expansions, a GPR branch-count model, a conditional denoising diffusion child-covariate model, and a Gittins-style forest oracle.
+- Added a portable synthetic forest substitute for the ICPSR HIV network, which requires a data-use agreement.
+- Prior jobs showed the method can execute end-to-end, but the current checkpoint artifact is incomplete and must be rerun before claiming `core_claim`.
+
+### [2026-05-26 07:43] - core_claim
+- Job `4fd15c8c-403` completed the clean five-fold synthetic benchmark with `k = 24`, expansion depth `3`, and Gittins grid `64`.
+- The regenerated `scoring/scores.json` is based on complete fold artifacts for PEGE+DDB, Greedy Classifier, Greedy Neighbor, Random, and the fully observable Gittins upper bound.
+- PEGE+DDB achieves the highest primary AUC among practical partial-observation policies on the portable synthetic benchmark, supporting the paper's central claim under the documented ICPSR data-access substitution.
+- `python validate.py --compare` passed in the job, including import-separation and evaluator-output checks.
+
+</details>
+
 
 ---
 
 # Reproduction Milestones
 
-**Current: method_runs**
-
-## Stop Justification
-- Completed at milestone `method_runs`.
+**Current: core_claim**

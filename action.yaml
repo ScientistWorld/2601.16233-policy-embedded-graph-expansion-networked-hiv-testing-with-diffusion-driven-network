@@ -1,8 +1,8 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: submit
+action: done
 gpus: 0
 test: false
-milestone: method_runs
-notes: "Audit found current artifact still has only fold 0 and scores.json is stale. Resume/finish the full 5-fold PEGE+DDB synthetic benchmark; evaluator will reject incomplete fold artifacts and regenerate scores.json only after all folds complete."
+milestone: core_claim
+notes: "Job 4fd15c8c-403 completed the full five-fold PEGE+DDB synthetic benchmark, regenerated scoring/scores.json, and passed python validate.py --compare. PEGE+DDB beats all practical partial-observation baselines on primary AUC; higher milestones would require extra settings or real ICPSR access."

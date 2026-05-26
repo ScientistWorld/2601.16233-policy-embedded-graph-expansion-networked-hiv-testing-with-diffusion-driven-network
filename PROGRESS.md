@@ -11,6 +11,7 @@
 - Implemented an evaluation script that reads result artifacts and writes `scoring/scores.json` without importing from `method/`.
 - A CPU smoke job completed end-to-end on 3 folds with `k = 8`; `python validate.py --compare` passed.
 - The evaluator now rejects incomplete fold artifacts instead of allowing stale or partial `scores.json` updates.
+- Job `4fd15c8c-403` completed the full five-fold synthetic benchmark and regenerated `scoring/scores.json`; `python validate.py --compare` passed inside the container.
 
 ## Results
 
@@ -26,7 +27,7 @@ Corrected 3-fold smoke result on the synthetic substitute (`k = 8`, Gittins grid
 
 PEGE + DDB beats Random and Greedy Neighbor on primary AUC in this smoke setting but trails Greedy Classifier, so this is still `method_runs`. The next run includes two fidelity fixes: frontier Gittins scores are conditioned on observed parent labels, and Greedy Classifier uses the balanced linear SVM comparator specified by the paper.
 
-Prior corrected 5-fold result on the synthetic substitute (`k = 24`, `d = 3`, Gittins grid 64):
+Completed corrected 5-fold result on the synthetic substitute (`k = 24`, `d = 3`, Gittins grid 64):
 
 | Method | AUC | 25% | 50% | 75% |
 | --- | ---: | ---: | ---: | ---: |
@@ -36,12 +37,11 @@ Prior corrected 5-fold result on the synthetic substitute (`k = 24`, `d = 3`, Gi
 | Random | 2.604 | 1.095 | 2.601 | 4.087 |
 | Fully Observable Gittins | 6.447 | 6.733 | 7.221 | 7.221 |
 
-This prior run suggested PEGE + DDB can beat all practical baselines on the primary AUC metric under the fixed full-budget constraint. However, the current workspace checkpoint artifact only contains one fold, so the next job must resume or rerun the full five-fold artifact before `core_claim` is claimed.
+PEGE + DDB beats all practical partial-observation baselines on the primary AUC metric under the fixed full-budget constraint. The fully observable Gittins policy remains much higher, as expected, because it is an upper-bound comparator with access to graph/label information unavailable to the deployable policies. This supports `core_claim` on the portable benchmark.
 
 ## Remaining
 
-- Finish a clean five-fold `k=24`, `d=3` artifact in `checkpoints/pege_ddb/results.json` and regenerate `scoring/scores.json` from that artifact.
-- Higher milestones would require additional settings beyond the fixed synthetic substitute, such as alternative budgets, `k` sweeps, or aggregation ablations while preserving the same partial-observability protocol.
+- Higher milestones would require additional settings beyond the fixed synthetic substitute, such as alternative budgets, `k` sweeps, aggregation ablations, or a successful run on the real ICPSR 22140 network after completing its access agreement.
 
 ## Issues
 
@@ -56,10 +56,11 @@ This prior run suggested PEGE + DDB can beat all practical baselines on the prim
 - The first corrected run was interrupted by a Hive disk-quota heartbeat failure after training several fold models. The method now writes fold/policy results incrementally and resumes from existing DDB fold checkpoints, so infrastructure interruption no longer discards all progress.
 - The corrected 3-fold smoke run completed cleanly, but PEGE+DDB did not beat the classifier baseline. That exposed two implementation fidelity gaps, now fixed before the next job.
 - The final corrected run validates cleanly, but the reproduced primary-metric margin is narrow on the synthetic substitute.
-- Current `checkpoints/pege_ddb/results.json` is incomplete after a later destructive run reset; each policy contains only fold 0. `scripts/run.sh` no longer deletes checkpoints, and `eval/evaluate_outputs.py` now fails if a declared fold count is incomplete.
+- A later destructive run briefly reset the artifact to fold 0 only. `scripts/run.sh` no longer deletes checkpoints, and `eval/evaluate_outputs.py` now fails if a declared fold count is incomplete.
+- Job `4fd15c8c-403` repaired that issue by finishing folds 1 through 4, writing a complete five-fold artifact for every scored policy, and regenerating `scoring/scores.json`.
 
 ## Deviations from Paper
 
 - **Dataset**: The paper uses ICPSR 22140 with 778 nodes, 188 connected components, and 72 binary covariates. This reproduction uses a procedural synthetic HIV-like forest with the same partial-observability protocol because ICPSR access requires a user agreement.
 - **Oracle details**: The paper uses the Gittins index policy from Choo et al. 2025. This implementation uses the cited binary branching-bandit retirement-value recursion on a discretized grid, with learned DDB conditionals substituting for unavailable ICPSR transition estimates.
-- **Scale for first corrected job**: The completed smoke job used 3 folds and `k = 8`. The next job uses the paper's 5 folds and `k = 24` on the synthetic substitute.
+- **Scale for first corrected job**: The completed smoke job used 3 folds and `k = 8`. The final core-claim run used 5 folds and `k = 24` on the synthetic substitute.
