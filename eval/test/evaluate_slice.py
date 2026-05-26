@@ -1,0 +1,145 @@
+"""Held-out test-slice scorer for artifact-only SAPOG evaluations.
+
+This evaluator reads the same method artifacts as the visible train slice but
+scores disjoint folds. When scoring/scores_train.json exists, it enforces that
+the held-out report contains exactly the same method entries as train.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+from typing import Dict, Iterable, List, Optional, Set
+
+
+SLICE = "test"
+SLICE_FOLDS = {1, 3}
+
+METHOD_NAMES = {
+    "pege_ddb": "pege_ddb",
+    "greedy_classifier": "greedy_classifier",
+    "greedy_neighbor": "greedy_neighbor",
+    "random": "random",
+    "fog": "fully_observable_gittins",
+}
+
+
+def discover_artifacts() -> List[Path]:
+    return sorted(Path("checkpoints").glob("**/results.json"))
+
+
+def load_required_methods(path: Path) -> Optional[Dict[str, Set[str]]]:
+    if not path.exists():
+        return None
+    raw = json.loads(path.read_text())
+    required: Dict[str, Set[str]] = {}
+    for experiment, payload in raw.get("experiments", {}).items():
+        required[experiment] = set(payload.get("results", {}).keys())
+    return required
+
+
+def weighted_mean(rows: List[dict], key: str) -> float:
+    weights = [float(r.get("test_nodes", 1.0)) for r in rows]
+    vals = [float(r[key]) for r in rows]
+    total = sum(weights) or 1.0
+    return sum(w * v for w, v in zip(weights, vals)) / total
+
+
+def weighted_curve_value(rows: List[dict], fraction: float) -> float:
+    weights = [float(r.get("test_nodes", 1.0)) for r in rows]
+    vals = []
+    for row in rows:
+        curve = row.get("cumulative_discounted_reward", [])
+        if not curve:
+            vals.append(0.0)
+            continue
+        idx = max(0, min(len(curve) - 1, int(round(len(curve) * fraction)) - 1))
+        vals.append(float(curve[idx]))
+    total = sum(weights) or 1.0
+    return sum(w * v for w, v in zip(weights, vals)) / total
+
+
+def slice_rows(rows: Iterable[dict]) -> List[dict]:
+    return [r for r in rows if int(r.get("fold", -1)) in SLICE_FOLDS]
+
+
+def summarize_artifact(path: Path) -> Dict[str, Dict[str, float]]:
+    raw = json.loads(path.read_text())
+    out: Dict[str, Dict[str, float]] = {}
+    for policy, all_rows in raw["policies"].items():
+        rows = slice_rows(all_rows)
+        if not rows:
+            continue
+        observed_folds = {int(r["fold"]) for r in rows if "fold" in r}
+        if observed_folds != SLICE_FOLDS:
+            missing = sorted(SLICE_FOLDS - observed_folds)
+            raise ValueError(f"{path}: policy {policy} is missing {SLICE} folds {missing}")
+        name = METHOD_NAMES.get(policy, policy)
+        out[name] = {
+            "auc": weighted_mean(rows, "auc"),
+            "reward_25pct": weighted_curve_value(rows, 0.25),
+            "reward_50pct": weighted_curve_value(rows, 0.50),
+            "reward_75pct": weighted_curve_value(rows, 0.75),
+            "budget_fraction": float(raw.get("budget_fraction", 1.0)),
+        }
+    return out
+
+
+def enforce_train_method_set(
+    results: Dict[str, Dict[str, Dict[str, float]]],
+    required: Optional[Dict[str, Set[str]]],
+) -> None:
+    if required is None:
+        return
+    for experiment, methods in required.items():
+        if experiment not in results:
+            raise ValueError(f"{experiment}: missing from held-out {SLICE} scores")
+        observed = set(results[experiment]["results"])
+        missing = methods - observed
+        if missing:
+            raise ValueError(f"{experiment}: held-out {SLICE} scores missing methods {sorted(missing)}")
+        extra = observed - methods
+        for method in extra:
+            del results[experiment]["results"][method]
+    for experiment in list(results):
+        if experiment not in required:
+            del results[experiment]
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--artifacts", nargs="+")
+    parser.add_argument("--output", default="scoring/scores_test.json")
+    parser.add_argument("--train-scores", default="scoring/scores_train.json")
+    args = parser.parse_args()
+
+    artifact_paths = [Path(p) for p in args.artifacts] if args.artifacts else discover_artifacts()
+    if not artifact_paths:
+        raise FileNotFoundError("no checkpoints/**/results.json artifacts were found")
+
+    results: Dict[str, Dict[str, Dict[str, float]]] = {}
+    for artifact in artifact_paths:
+        if not artifact.exists():
+            continue
+        raw = json.loads(artifact.read_text())
+        experiment = str(raw.get("experiment", "synthetic_main"))
+        results.setdefault(experiment, {"slice": SLICE, "split_folds": sorted(SLICE_FOLDS), "results": {}})
+        results[experiment]["results"].update(summarize_artifact(artifact))
+
+    if not results:
+        raise FileNotFoundError("no result artifacts were found or readable")
+    enforce_train_method_set(results, load_required_methods(Path(args.train_scores)))
+    for experiment, payload in results.items():
+        if not payload["results"]:
+            raise ValueError(f"{experiment}: no methods had rows for {SLICE} folds {sorted(SLICE_FOLDS)}")
+
+    output = Path(args.output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps({"slice": SLICE, "experiments": results}, indent=2))
+    methods = {exp: sorted(payload["results"]) for exp, payload in results.items()}
+    print(json.dumps({"wrote": str(output), "slice": SLICE, "methods": methods}, indent=2))
+
+
+if __name__ == "__main__":
+    main()
