@@ -23,6 +23,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPRegressor
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+from sklearn.svm import LinearSVC
 
 from data.sapog_data import ForestDataset, component_roots, fold_split, load_forest
 
@@ -44,6 +45,7 @@ class DDB:
     label_model: object
     feature_dim: int
     transition: Tuple[float, float]
+    classifier_model: object | None = None
     diffusion_steps: int = 12
     max_children: int = 5
 
@@ -76,6 +78,16 @@ class DDB:
     def label_probability(self, x: np.ndarray) -> float:
         return float(self.label_model.predict_proba(x[None, :])[0, 1])
 
+    def classifier_score(self, x: np.ndarray) -> float:
+        model = getattr(self, "classifier_model", None)
+        if model is None:
+            return self.label_probability(x)
+        if hasattr(model, "decision_function"):
+            return float(model.decision_function(x[None, :])[0])
+        if hasattr(model, "predict_proba"):
+            return float(model.predict_proba(x[None, :])[0, 1])
+        return float(model.predict(x[None, :])[0])
+
 
 def train_ddb(ds: ForestDataset, train_indices: Sequence[int], seed: int = 0) -> DDB:
     rng = np.random.default_rng(seed)
@@ -99,6 +111,11 @@ def train_ddb(ds: ForestDataset, train_indices: Sequence[int], seed: int = 0) ->
 
     label_model = LogisticRegression(class_weight="balanced", max_iter=1000, random_state=seed)
     label_model.fit(ds.features[list(train_indices)], ds.labels[list(train_indices)])
+    classifier_model = make_pipeline(
+        StandardScaler(),
+        LinearSVC(class_weight="balanced", max_iter=5000, random_state=seed),
+    )
+    classifier_model.fit(ds.features[list(train_indices)], ds.labels[list(train_indices)])
 
     # Conditional denoising diffusion training examples: predict injected noise
     # from parent covariates, noised child covariates, and diffusion timestep.
@@ -130,7 +147,7 @@ def train_ddb(ds: ForestDataset, train_indices: Sequence[int], seed: int = 0) ->
         float(np.mean(child_labels_by_parent[b])) if child_labels_by_parent[b] else global_rate
         for b in (0, 1)
     )
-    return DDB(count_model, diffusion_model, label_model, ds.features.shape[1], transition)
+    return DDB(count_model, diffusion_model, label_model, ds.features.shape[1], transition, classifier_model=classifier_model)
 
 
 def save_ddb(model: DDB, path: str | Path) -> None:
@@ -171,6 +188,7 @@ def oracle_scores(
     ddb: DDB,
     gamma: float,
     grid_size: int = 96,
+    parent_label_by_node: Optional[Dict[int, int]] = None,
 ) -> Dict[int, float]:
     """Numerically compute binary branching-bandit Gittins indices.
 
@@ -181,6 +199,7 @@ def oracle_scores(
 
     upper = 1.0 / max(1e-6, 1.0 - gamma)
     grid = np.linspace(0.0, upper, int(grid_size))
+    parent_label_by_node = parent_label_by_node or {}
     nodes = list(features)
     depth_memo: Dict[int, int] = {}
 
@@ -212,9 +231,11 @@ def oracle_scores(
 
     scores: Dict[int, float] = {}
     for v in frontier:
-        # If the frontier node's parent has been tested, condition on that
-        # label; otherwise average both parent-label states.
-        scores[int(v)] = 0.5 * (index_by_state[(int(v), 0)] + index_by_state[(int(v), 1)])
+        parent_label = parent_label_by_node.get(int(v))
+        if parent_label in (0, 1):
+            scores[int(v)] = index_by_state[(int(v), int(parent_label))]
+        else:
+            scores[int(v)] = 0.5 * (index_by_state[(int(v), 0)] + index_by_state[(int(v), 1)])
     return scores
 
 
@@ -276,21 +297,31 @@ def run_policy(
             action = int(rng.choice(candidates or fr))
         elif policy == "greedy_classifier":
             assert ddb is not None
-            probs = [ddb.label_probability(ds.features[v]) for v in fr]
-            action = int(fr[int(np.argmax(probs))])
+            scores = [ddb.classifier_score(ds.features[v]) for v in fr]
+            action = int(fr[int(np.argmax(scores))])
         elif policy == "fog":
             assert ddb is not None
             true_children = {v: [c for c in ds.children[v] if c in test_set and c not in tested] for v in test_set}
             feats = {v: ds.features[v] for v in test_set}
             labels = {v: int(ds.labels[v]) for v in test_set}
-            scores = oracle_scores(fr, true_children, feats, labels, ddb, gamma, gittins_grid)
+            parent_context = {
+                int(v): int(ds.labels[int(ds.parents[int(v)])])
+                for v in fr
+                if int(ds.parents[int(v)]) in test_set
+            }
+            scores = oracle_scores(fr, true_children, feats, labels, ddb, gamma, gittins_grid, parent_context)
             action = max(scores, key=scores.get)
         elif policy == "pege_ddb":
             assert ddb is not None
             aggregate = {v: [] for v in fr}
+            parent_context = {
+                int(v): int(known_labels[int(ds.parents[int(v)])])
+                for v in fr
+                if int(ds.parents[int(v)]) in known_labels
+            }
             for _ in range(k):
                 syn_children, syn_features = expand_from_frontier(ds, ddb, sorted(discovered), fr, depth, rng)
-                scores = oracle_scores(fr, syn_children, syn_features, known_labels, ddb, gamma, gittins_grid)
+                scores = oracle_scores(fr, syn_children, syn_features, known_labels, ddb, gamma, gittins_grid, parent_context)
                 for v in fr:
                     aggregate[v].append(scores[v])
             means = {v: float(np.mean(vals)) for v, vals in aggregate.items()}

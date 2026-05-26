@@ -14,8 +14,12 @@ set -e
 cd /home/user
 export PYTHONPATH=/home/user:${PYTHONPATH:-}
 
-# Run a resumable corrected PEGE+DDB job. This keeps the paper's procedure
-# but uses a smaller sample count/fold count for the first corrected result;
-# scripts/method.sh defaults remain at the paper's k=24, d=3 setting.
-PEGE_K="${PEGE_K:-8}" PEGE_DEPTH="${PEGE_DEPTH:-3}" FOLDS="${FOLDS:-3}" GITTINS_GRID="${GITTINS_GRID:-64}" bash scripts/method.sh
+# The DDB checkpoint schema changed to include the paper's linear SVM
+# classifier comparator, so retrain fold models rather than resuming stale
+# pickles from the previous smoke run.
+rm -rf checkpoints/pege_ddb
+
+# Run the corrected method at the paper's k=24, d=3, 5-fold protocol on the
+# portable synthetic substitute. The Gittins grid is kept at 64 for compute.
+PEGE_K="${PEGE_K:-24}" PEGE_DEPTH="${PEGE_DEPTH:-3}" FOLDS="${FOLDS:-5}" GITTINS_GRID="${GITTINS_GRID:-64}" bash scripts/method.sh
 python validate.py --compare

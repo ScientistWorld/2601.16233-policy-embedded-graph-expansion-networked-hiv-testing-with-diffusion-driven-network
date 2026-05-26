@@ -7,39 +7,28 @@
 - Implemented DDB with Gaussian Process branch counts and conditional denoising diffusion for child covariates.
 - Implemented PEGE action selection with sampled graph expansions and a forest oracle.
 - Implemented Random, Greedy Neighbor, Greedy Classifier, and Fully Observable Gittins comparison policies in the same run artifact.
+- Greedy Classifier is now the paper-aligned balanced linear SVM comparator, while DDB keeps a separate calibrated logistic model for label probabilities inside graph expansion/oracle scoring.
 - Implemented an evaluation script that reads result artifacts and writes `scoring/scores.json` without importing from `method/`.
 - A CPU smoke job completed end-to-end on 3 folds with `k = 8`; `python validate.py --compare` passed.
 - A 5-fold `k = 24` run produced complete PEGE + DDB artifacts and `scores.json` before the scheduler killed the shell process.
 
 ## Results
 
-3-fold smoke result on the synthetic substitute:
+Corrected 3-fold smoke result on the synthetic substitute (`k = 8`, Gittins grid 64):
 
 | Method | AUC | 25% | 50% | 75% |
 | --- | ---: | ---: | ---: | ---: |
-| PEGE + DDB | 3.169 | 2.441 | 3.476 | 3.916 |
+| PEGE + DDB | 2.793 | 1.540 | 3.032 | 3.899 |
 | Greedy Classifier | 3.104 | 2.119 | 3.353 | 4.418 |
 | Greedy Neighbor | 2.541 | 0.902 | 2.753 | 3.612 |
 | Random | 2.574 | 1.202 | 2.709 | 4.158 |
-| Fully Observable Gittins | 5.634 | 5.871 | 6.411 | 6.411 |
+| Fully Observable Gittins | 5.762 | 5.929 | 6.469 | 6.469 |
 
-The method beats the strongest practical baseline by AUC in the smoke setting, but the margin is small and the 75% budget value trails Greedy Classifier. A 5-fold `k = 24` run is queued to strengthen the result before claiming `core_claim`.
-
-5-fold `k = 24` result on the synthetic substitute:
-
-| Method | AUC | 25% | 50% | 75% |
-| --- | ---: | ---: | ---: | ---: |
-| PEGE + DDB | 2.839 | 1.485 | 3.002 | 4.002 |
-| Greedy Classifier | 2.718 | 1.452 | 2.774 | 4.156 |
-| Greedy Neighbor | 2.737 | 0.920 | 2.945 | 3.854 |
-| Random | 2.604 | 1.095 | 2.601 | 4.087 |
-| Fully Observable Gittins | 6.302 | 6.668 | 7.155 | 7.155 |
-
-PEGE + DDB beats all practical baselines on the primary AUC metric and at 25% and 50% budgets. It trails Random and Greedy Classifier at 75%, so this is a core-claim reproduction rather than a broad or near-complete reproduction.
+PEGE + DDB beats Random and Greedy Neighbor on primary AUC in this smoke setting but trails Greedy Classifier, so this is still `method_runs`. The next run includes two fidelity fixes: frontier Gittins scores are conditioned on observed parent labels, and Greedy Classifier uses the balanced linear SVM comparator specified by the paper.
 
 ## Remaining
 
-- Run a short validation-only job so the scheduler records a clean successful completion for the 5-fold artifacts.
+- Run the corrected 5-fold `k = 24` job and compare PEGE+DDB against all practical baselines before restoring `core_claim`.
 
 ## Issues
 
@@ -52,9 +41,10 @@ PEGE + DDB beats all practical baselines on the primary AUC metric and at 25% an
 - Validator post-check rejected direct comparison between synthetic-scale scores and paper Table 1 values. Fixed by making `scoring/reference.json` describe the synthetic benchmark scale and moving the original paper table to `notes/paper_table1.md`.
 - A follow-up code review found that the first implementation's oracle was not close enough to the cited Gittins-index computation. The implementation now uses a numerical binary branching-bandit Gittins recursion from the cited equations, and the prior synthetic result is treated as superseded rather than a `core_claim` result.
 - The first corrected run was interrupted by a Hive disk-quota heartbeat failure after training several fold models. The method now writes fold/policy results incrementally and resumes from existing DDB fold checkpoints, so infrastructure interruption no longer discards all progress.
+- The corrected 3-fold smoke run completed cleanly, but PEGE+DDB did not beat the classifier baseline. That exposed two implementation fidelity gaps, now fixed before the next job.
 
 ## Deviations from Paper
 
 - **Dataset**: The paper uses ICPSR 22140 with 778 nodes, 188 connected components, and 72 binary covariates. This reproduction uses a procedural synthetic HIV-like forest with the same partial-observability protocol because ICPSR access requires a user agreement.
-- **Oracle details**: The paper uses the Gittins index policy from Choo et al. 2025. This implementation uses a forest dynamic-priority oracle that scores immediate predicted positivity plus discounted descendant opportunity, preserving the oracle role inside PEGE but not claiming exact parity with the unpublished referenced implementation.
-- **Scale for first job**: The first job uses 3 folds and `k = 8` for a smoke test. The paper's main setting is 5 folds and `k = 24`.
+- **Oracle details**: The paper uses the Gittins index policy from Choo et al. 2025. This implementation uses the cited binary branching-bandit retirement-value recursion on a discretized grid, with learned DDB conditionals substituting for unavailable ICPSR transition estimates.
+- **Scale for first corrected job**: The completed smoke job used 3 folds and `k = 8`. The next job uses the paper's 5 folds and `k = 24` on the synthetic substitute.

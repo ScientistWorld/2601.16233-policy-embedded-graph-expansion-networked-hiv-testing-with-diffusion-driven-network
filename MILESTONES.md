@@ -16,5 +16,9 @@
 - Corrected run was interrupted by a Hive disk-quota heartbeat failure before writing final results.
 - Added resumable fold/policy artifact writing and a smaller corrected smoke configuration (`k=8`, 3 folds, Gittins grid 64) to get a valid result before scaling back toward the paper's `k=24`, 5-fold setting.
 
+### [2026-05-26 07:20] - method_runs
+- The corrected 3-fold smoke job completed and produced valid scores, but PEGE+DDB still trailed the classifier baseline on primary AUC (`2.793` vs. `3.104`), so it is not a `core_claim` result.
+- Fixed two fidelity issues before the next run: PEGE now conditions frontier Gittins scores on observed parent labels, and Greedy Classifier now uses the paper's balanced linear SVM comparator rather than the DDB logistic label model.
+
 ## Stop Justification
-- Not stopped. A scheduler job is being submitted to test the corrected Gittins-based PEGE+DDB implementation.
+- Not stopped. A scheduler job is being submitted for the corrected 5-fold `k=24` PEGE+DDB run.
