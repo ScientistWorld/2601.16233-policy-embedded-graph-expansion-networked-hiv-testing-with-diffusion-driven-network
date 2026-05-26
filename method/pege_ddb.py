@@ -30,7 +30,11 @@ from data.sapog_data import ForestDataset, component_roots, fold_split, load_for
 def discounted_auc(curve: Sequence[float]) -> float:
     if not curve:
         return 0.0
-    return float(np.trapz(np.asarray(curve, dtype=float), dx=1.0) / len(curve))
+    arr = np.asarray(curve, dtype=float)
+    if len(arr) == 1:
+        return float(arr[0])
+    area = float(np.sum((arr[:-1] + arr[1:]) * 0.5))
+    return area / len(arr)
 
 
 @dataclass
@@ -273,7 +277,8 @@ def run_experiment(args: argparse.Namespace) -> None:
         ddb = train_ddb(ds, train_idx, seed=args.seed + fold)
         save_ddb(ddb, model_path)
         for policy in policies:
-            rng = np.random.default_rng(args.seed + 1000 * fold + hash(policy) % 997)
+            stable_policy_seed = sum((i + 1) * ord(ch) for i, ch in enumerate(policy))
+            rng = np.random.default_rng(args.seed + 1000 * fold + stable_policy_seed % 997)
             result = run_policy(ds, test_idx, ddb, policy, rng, args.gamma, args.budget_fraction, args.k, args.depth)
             result["fold"] = fold
             result["test_nodes"] = len(test_idx)

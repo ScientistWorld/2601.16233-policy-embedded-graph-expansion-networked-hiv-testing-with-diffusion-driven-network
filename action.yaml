@@ -31,4 +31,4 @@ action: submit
 gpus: 0
 test: true
 milestone: none
-notes: "Retry CPU smoke job after fixing PYTHONPATH/package imports and lowering synthetic HIV prevalence; run 3 folds with k=8, write scores.json, and validate."
+notes: "Retry CPU smoke job after replacing np.trapz for NumPy 2.4 compatibility; run 3 folds with k=8, write scores.json, and validate."

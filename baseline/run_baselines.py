@@ -30,7 +30,8 @@ def main() -> None:
         train_idx, test_idx = fold_split(ds, fold)
         ddb = train_ddb(ds, train_idx, seed=args.seed + fold)
         for policy in policies:
-            rng = np.random.default_rng(args.seed + 2000 * fold + hash(policy) % 997)
+            stable_policy_seed = sum((i + 1) * ord(ch) for i, ch in enumerate(policy))
+            rng = np.random.default_rng(args.seed + 2000 * fold + stable_policy_seed % 997)
             result = run_policy(ds, test_idx, ddb, policy, rng, args.gamma, args.budget_fraction)
             result["fold"] = fold
             result["test_nodes"] = len(test_idx)

@@ -13,5 +13,9 @@
 - First CPU smoke job installed dependencies and generated data, then failed on `ModuleNotFoundError: data`.
 - Fixed package import path handling and synthetic prevalence calibration.
 
+### [2026-05-26 05:49] - none
+- Second CPU smoke job generated 375 nodes with 10.4% positive prevalence and trained the first DDB fold.
+- Job failed at metric computation due to a removed NumPy API; replaced `np.trapz` with a manual AUC calculation.
+
 ## Stop Justification
 - Not stopped.

@@ -24,6 +24,7 @@ No compute job has completed yet. The first submitted job will run a 3-fold smok
 - The original ICPSR 22140 HIV network is public only after completing an ICPSR user agreement, so it cannot be fetched automatically into this gym.
 - The login environment does not currently have `numpy`; dependencies are declared in `environment/setup.sh` and will be installed by the container setup step.
 - First CPU smoke job failed before method execution because top-level packages were not on `PYTHONPATH` when executing `method/pege_ddb.py` as a script. Fixed by adding package markers and exporting `PYTHONPATH=/home/user`.
+- Second CPU smoke job trained the first DDB fold, then failed because NumPy 2.4 removed `np.trapz`. Fixed with a local trapezoid calculation.
 
 ## Deviations from Paper
 
