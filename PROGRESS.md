@@ -9,7 +9,6 @@
 - Implemented Random, Greedy Neighbor, Greedy Classifier, and Fully Observable Gittins comparison policies in the same run artifact.
 - Greedy Classifier is now the paper-aligned balanced linear SVM comparator, while DDB keeps a separate calibrated logistic model for label probabilities inside graph expansion/oracle scoring.
 - Implemented an evaluation script that reads result artifacts and writes `scoring/scores.json` without importing from `method/`.
-- Added a PEGE+DDB ablation runner for the paper's Figure 6 axes: number of sampled graph expansions and oracle-score aggregation rule.
 - A CPU smoke job completed end-to-end on 3 folds with `k = 8`; `python validate.py --compare` passed.
 - The evaluator now rejects incomplete fold artifacts instead of allowing stale or partial `scores.json` updates.
 - Job `4fd15c8c-403` completed the full five-fold synthetic benchmark and regenerated `scoring/scores.json`; `python validate.py --compare` passed inside the container.
@@ -43,8 +42,7 @@ PEGE + DDB beats the practical partial-observation baselines on the primary AUC 
 
 ## Remaining
 
-- The next submitted job runs `k` sweep and aggregation ablations on the synthetic substitute. If those complete and validate, the workspace can move from `core_claim` to `core_claim_plus`.
-- Higher milestones after that would require more baselines, additional protocol variants, or a successful run on the real ICPSR 22140 network after completing its access agreement.
+- Higher milestones would require more baselines, additional protocol variants, or a successful run on the real ICPSR 22140 network after completing its access agreement.
 
 ## Issues
 
@@ -63,7 +61,7 @@ PEGE + DDB beats the practical partial-observation baselines on the primary AUC 
 - Job `4fd15c8c-403` repaired that issue by finishing folds 1 through 4, writing a complete five-fold artifact for every scored policy, and regenerating `scoring/scores.json`.
 - Review after that job found that generated child covariates were ignored in the oracle for synthetic nodes and that FOG used future labels. Both are patched; old scores remain in `scoring/scores.json` only as the last completed artifact until the corrected job finishes.
 - Job `22b35548-c3e` was preempted/orphaned under the one-hour CPU-test limit after writing corrected fold artifacts for folds 0-2. The run script no longer deletes `checkpoints/pege_ddb`, so job `4ce1f310-1e9` resumed and completed folds 3-4 successfully.
-- The current turn prepares a CPU normal job for ablations rather than a test job, because the prior full five-fold CPU test could hit the one-hour test-node limit.
+- Final verification removed an unverified ablation submission scaffold from the scored gym surface, because no completed ablation artifacts were present and the validated milestone remains `core_claim`.
 
 ## Deviations from Paper
 

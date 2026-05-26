@@ -10,8 +10,6 @@ Secondary metrics are cumulative discounted reward at 25%, 50%, and 75% of the t
 
 The portable benchmark compares submitted policies against simple reference policies and a full-topology comparator using the same output artifact format. `scoring/reference.json` includes the original ICPSR Table 1 values for context under `paper_icpsr_main` and the scored portable synthetic benchmark under `synthetic_main`.
 
-Two secondary scored targets mirror the paper's Figure 6 ablations. `synthetic_k_sweep` reports AUC lift relative to `k=12`, and `synthetic_aggregation` reports each aggregation rule's AUC ratio to mean aggregation.
-
 ## Evaluation Protocol
 
 The benchmark uses five component-level folds. Components are never split across train and test. For each fold, a static held-out graph is tested from its root nodes, results are averaged with weights proportional to held-out node count, and `scripts/evaluate.sh` reads produced result artifacts to write `scoring/scores.json`.

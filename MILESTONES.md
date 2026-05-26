@@ -31,6 +31,6 @@
 - Corrected PEGE+DDB achieved the best practical partial-observation AUC on `synthetic_main` (2.786), ahead of Greedy Neighbor (2.737), Greedy Classifier (2.663), and Random (2.604).
 
 ### [2026-05-26 09:25] - core_claim
-- Added a runnable ablation scaffold for PEGE sample count and aggregation variants from Figure 6.
-- Updated the evaluator and scoring targets so ablation artifacts are scored from method outputs using paper-reported relative metrics.
-- Preparing a CPU job to run these additional settings; `core_claim_plus` is not claimed until that job completes and validates.
+- Final verification kept the milestone at `core_claim`.
+- Removed the pending ablation submission from the scored gym surface because no completed ablation artifacts were present.
+- Confirmed the completed five-fold `synthetic_main` result remains the validated benchmark.

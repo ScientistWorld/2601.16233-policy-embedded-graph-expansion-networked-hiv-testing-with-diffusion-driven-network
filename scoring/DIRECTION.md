@@ -6,11 +6,11 @@ This benchmark studies sequential testing on partially observed contact forests.
 
 ## Core Contribution
 
-The paper's contribution is distribution-aware graph expansion inside the decision loop for incrementally revealed graphs. Improvements should still address uncertainty about hidden graph growth and node attributes in a sequential frontier policy.
+The central research direction is uncertainty-aware sequential testing on incrementally revealed networks. Improvements should still address hidden future referrals and unknown node attributes while choosing among currently available frontier nodes.
 
 ## Approach Scope
 
-In-scope work may change the graph expansion model, the action scoring oracle, aggregation across sampled futures, or training procedures for these components. The method should remain a network-aware sequential policy that operates under partial observability.
+In-scope work may change how uncertainty is represented, how frontier actions are valued, how exploration and exploitation are balanced, or how model components are trained. The method should remain a network-aware sequential policy that operates under partial observability.
 
 ## Out of Bounds
 

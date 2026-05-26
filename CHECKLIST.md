@@ -14,7 +14,6 @@
 - [x] `scoring/TARGETS.md`
 - [x] `scoring/CONSTRAINTS.md`
 - [x] `scoring/DIRECTION.md`
-- [x] Figure 6 ablation targets scaffolded
 
 ## Code
 - [x] Evaluation code in `eval/`
@@ -26,7 +25,6 @@
 - [x] `scripts/reproduce.sh`
 - [x] `scripts/download.sh`
 - [x] `scripts/baseline.sh`
-- [x] `scripts/ablation.sh`
 
 ## Environment
 - [x] `environment/container.def` + `environment/setup.sh`

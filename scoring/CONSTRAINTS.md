@@ -8,8 +8,6 @@ Use the provided `data/synthetic_hiv_forest.json` generator and five component-l
 
 Use the same full-population testing budget and `gamma = 0.99` when reporting `synthetic_main`. Reducing the tested population fraction can improve apparent early precision but changes the task.
 
-For `synthetic_k_sweep` and `synthetic_aggregation`, keep the same folds, budget, discount factor, expansion depth, and oracle grid as the main run. Only the named ablation axis should change.
-
 ## Information
 
 Policies may only act on discovered frontier nodes and information revealed by previous tests. They must not inspect labels of untested nodes or hidden future graph topology, except for the explicit fully observable upper-bound baseline.
