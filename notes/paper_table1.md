@@ -1,8 +1,9 @@
 # Paper Table 1 Reference
 
 The original paper reports these values on the ICPSR HIV network. That dataset
-requires a user agreement, so `scoring/reference.json` uses the portable
-synthetic benchmark scale instead.
+requires a user agreement, so the runnable gym target is the portable synthetic
+benchmark, but `scoring/reference.json` also records this paper table under
+`paper_icpsr_main`.
 
 | Algorithm | AUC | 25% | 50% | 75% |
 | --- | ---: | ---: | ---: | ---: |

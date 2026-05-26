@@ -1,8 +1,28 @@
 {
   "experiments": {
+    "paper_icpsr_main": {
+      "description": "Paper Table 1 on the ICPSR HIV network: 5 component-level folds, d=3, k=24, gamma=0.99, T=|V|. This original dataset requires an ICPSR user agreement, so this experiment is transcribed as the paper reference but is not the portable scored benchmark.",
+      "weight": 0.2,
+      "primary_metric": "auc",
+      "metrics": {
+        "auc": {"higher_is_better": true, "coefficient": 1.0},
+        "reward_25pct": {"higher_is_better": true, "coefficient": 0.7},
+        "reward_50pct": {"higher_is_better": true, "coefficient": 0.5},
+        "reward_75pct": {"higher_is_better": true, "coefficient": 0.4},
+        "budget_fraction": {"higher_is_better": false, "coefficient": -0.1}
+      },
+      "results": {
+        "random": {"type": "baseline", "auc": 6.92, "reward_25pct": 5.10, "reward_50pct": 8.11, "reward_75pct": 9.13, "budget_fraction": 1.0},
+        "greedy_neighbor": {"type": "baseline", "auc": 7.86, "reward_25pct": 6.70, "reward_50pct": 8.75, "reward_75pct": 9.91, "budget_fraction": 1.0},
+        "greedy_classifier": {"type": "baseline", "auc": 8.45, "reward_25pct": 7.12, "reward_50pct": 9.32, "reward_75pct": 10.10, "budget_fraction": 1.0},
+        "dqn": {"type": "baseline", "auc": 7.78, "reward_25pct": 6.11, "reward_50pct": 8.81, "reward_75pct": 9.75, "budget_fraction": 1.0},
+        "pege_ddb": {"type": "proposed", "auc": 9.29, "reward_25pct": 8.02, "reward_50pct": 9.94, "reward_75pct": 11.20, "budget_fraction": 1.0},
+        "fully_observable_gittins": {"type": "baseline", "auc": 12.00, "reward_25pct": 11.10, "reward_50pct": 13.30, "reward_75pct": 13.70, "budget_fraction": 1.0}
+      }
+    },
     "synthetic_main": {
-      "description": "Sequential HIV network testing on the portable synthetic forest substitute. The original paper's ICPSR benchmark requires a user agreement, so this reference records the completed 5-fold k=24 reproduction scale used by this gym; paper Table 1 is transcribed separately in notes/paper_table1.md.",
-      "weight": 1.0,
+      "description": "Portable sequential HIV network testing benchmark on the tracked synthetic forest substitute. This is the scored gym target used when the ICPSR data cannot be redistributed.",
+      "weight": 0.8,
       "primary_metric": "auc",
       "metrics": {
         "auc": {"higher_is_better": true, "coefficient": 1.0},

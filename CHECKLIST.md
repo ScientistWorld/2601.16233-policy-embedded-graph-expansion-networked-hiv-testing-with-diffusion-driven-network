@@ -7,7 +7,7 @@
 - [x] `briefing/overview.md`
 
 ## Scoring
-- [x] `scoring/reference.json` — portable synthetic benchmark reference
+- [x] `scoring/reference.json` — paper Table 1 plus portable synthetic benchmark reference
 - [x] Workspace validated via `python validate.py`
 - [x] `scoring/scores.json` — reproduced numbers
 - [x] `scoring/EXPERIMENTS.md`
@@ -35,7 +35,7 @@
 
 ## Milestones
 - [x] `method_runs`
-- [x] `core_claim`
+- [ ] `core_claim`
 - [ ] `core_claim_plus`
 - [ ] `secondary_claims`
 - [ ] `majority`

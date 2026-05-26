@@ -14,12 +14,11 @@ set -e
 cd /home/user
 export PYTHONPATH=/home/user:${PYTHONPATH:-}
 
-# The DDB checkpoint schema changed to include the paper's linear SVM
-# classifier comparator, so retrain fold models rather than resuming stale
-# pickles from the previous smoke run.
-rm -rf checkpoints/pege_ddb
+rm -f scoring/scores.json
 
-# Run the corrected method at the paper's k=24, d=3, 5-fold protocol on the
-# portable synthetic substitute. The Gittins grid is kept at 64 for compute.
+# Resume or finish the corrected method at the paper's k=24, d=3, 5-fold
+# protocol on the portable synthetic substitute. The evaluator rejects
+# incomplete fold artifacts, so this job must finish all policy/fold rows
+# before scores.json can be regenerated.
 PEGE_K="${PEGE_K:-24}" PEGE_DEPTH="${PEGE_DEPTH:-3}" FOLDS="${FOLDS:-5}" GITTINS_GRID="${GITTINS_GRID:-64}" bash scripts/method.sh
 python validate.py --compare

@@ -41,9 +41,17 @@ def weighted_curve_value(rows: List[dict], fraction: float) -> float:
 def summarize_artifact(path: Path) -> Dict[str, Dict[str, float]]:
     raw = json.loads(path.read_text())
     out: Dict[str, Dict[str, float]] = {}
+    expected_folds = raw.get("folds")
     for policy, rows in raw["policies"].items():
         if not rows:
             continue
+        if isinstance(expected_folds, int) and expected_folds > 0:
+            observed_folds = {int(r["fold"]) for r in rows if "fold" in r}
+            if len(observed_folds) != expected_folds:
+                raise ValueError(
+                    f"{path}: policy {policy} has {len(observed_folds)} folds, "
+                    f"expected {expected_folds}"
+                )
         name = METHOD_NAMES.get(policy, policy)
         out[name] = {
             "auc": weighted_mean(rows, "auc"),
@@ -61,15 +69,21 @@ def main() -> None:
     parser.add_argument("--output", default="scoring/scores.json")
     args = parser.parse_args()
 
-    results: Dict[str, Dict[str, Dict[str, float]]] = {"synthetic_main": {"results": {}}}
+    results: Dict[str, Dict[str, Dict[str, float]]] = {}
     for artifact in args.artifacts:
         p = Path(artifact)
         if not p.exists():
             continue
-        results["synthetic_main"]["results"].update(summarize_artifact(p))
+        raw = json.loads(p.read_text())
+        experiment = str(raw.get("experiment", "synthetic_main"))
+        results.setdefault(experiment, {"results": {}})
+        results[experiment]["results"].update(summarize_artifact(p))
+    if not results:
+        raise FileNotFoundError("no result artifacts were found or readable")
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     Path(args.output).write_text(json.dumps({"experiments": results}, indent=2))
-    print(json.dumps({"wrote": args.output, "methods": sorted(results["synthetic_main"]["results"])}, indent=2))
+    methods = {exp: sorted(payload["results"]) for exp, payload in results.items()}
+    print(json.dumps({"wrote": args.output, "methods": methods}, indent=2))
 
 
 if __name__ == "__main__":

@@ -278,6 +278,7 @@ def run_policy(
     k: int = 12,
     depth: int = 3,
     gittins_grid: int = 96,
+    pege_aggregate: str = "mean",
 ) -> Dict[str, object]:
     test_set = set(int(i) for i in test_indices)
     discovered = set(component_roots(ds, test_indices))
@@ -314,6 +315,7 @@ def run_policy(
         elif policy == "pege_ddb":
             assert ddb is not None
             aggregate = {v: [] for v in fr}
+            winners: List[int] = []
             parent_context = {
                 int(v): int(known_labels[int(ds.parents[int(v)])])
                 for v in fr
@@ -322,10 +324,21 @@ def run_policy(
             for _ in range(k):
                 syn_children, syn_features = expand_from_frontier(ds, ddb, sorted(discovered), fr, depth, rng)
                 scores = oracle_scores(fr, syn_children, syn_features, known_labels, ddb, gamma, gittins_grid, parent_context)
+                winners.append(max(scores, key=scores.get))
                 for v in fr:
                     aggregate[v].append(scores[v])
-            means = {v: float(np.mean(vals)) for v, vals in aggregate.items()}
-            action = max(means, key=means.get)
+            if pege_aggregate == "mean":
+                action_scores = {v: float(np.mean(vals)) for v, vals in aggregate.items()}
+            elif pege_aggregate == "mode":
+                counts = {v: winners.count(v) for v in fr}
+                action_scores = {v: (float(counts[v]), float(np.mean(aggregate[v]))) for v in fr}
+            elif pege_aggregate == "mean_plus_var":
+                action_scores = {v: float(np.mean(vals) + np.var(vals)) for v, vals in aggregate.items()}
+            elif pege_aggregate == "mean_minus_var":
+                action_scores = {v: float(np.mean(vals) - np.var(vals)) for v, vals in aggregate.items()}
+            else:
+                raise ValueError(f"unknown PEGE aggregation method {pege_aggregate}")
+            action = max(action_scores, key=action_scores.get)
         else:
             raise ValueError(f"unknown policy {policy}")
 
@@ -352,6 +365,7 @@ def run_policy(
         "auc": discounted_auc(cumulative),
         "positives_found": int(sum(ds.labels[a] for a in actions)),
         "tests": len(actions),
+        "pege_aggregate": pege_aggregate if policy == "pege_ddb" else None,
     }
 
 
@@ -408,7 +422,17 @@ def run_experiment(args: argparse.Namespace) -> None:
             stable_policy_seed = sum((i + 1) * ord(ch) for i, ch in enumerate(policy))
             rng = np.random.default_rng(args.seed + 1000 * fold + stable_policy_seed % 997)
             result = run_policy(
-                ds, test_idx, ddb, policy, rng, args.gamma, args.budget_fraction, args.k, args.depth, args.gittins_grid
+                ds,
+                test_idx,
+                ddb,
+                policy,
+                rng,
+                args.gamma,
+                args.budget_fraction,
+                args.k,
+                args.depth,
+                args.gittins_grid,
+                args.pege_aggregate,
             )
             result["fold"] = fold
             result["test_nodes"] = len(test_idx)
@@ -432,6 +456,11 @@ def main() -> None:
     parser.add_argument("--gittins-grid", type=int, default=96)
     parser.add_argument("--gamma", type=float, default=0.99)
     parser.add_argument("--budget-fraction", type=float, default=1.0)
+    parser.add_argument(
+        "--pege-aggregate",
+        choices=["mean", "mode", "mean_plus_var", "mean_minus_var"],
+        default="mean",
+    )
     parser.add_argument("--seed", type=int, default=11)
     parser.add_argument("--resume", action=argparse.BooleanOptionalAction, default=True)
     args = parser.parse_args()

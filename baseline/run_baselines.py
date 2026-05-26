@@ -44,6 +44,7 @@ def main() -> None:
         "data": args.data,
         "gamma": args.gamma,
         "budget_fraction": args.budget_fraction,
+        "folds": args.folds,
         "policies": out,
     }
     (out_dir / "results.json").write_text(json.dumps(artifact, indent=2))
