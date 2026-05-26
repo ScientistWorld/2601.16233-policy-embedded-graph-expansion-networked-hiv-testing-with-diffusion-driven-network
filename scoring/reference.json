@@ -2,7 +2,7 @@
   "experiments": {
     "paper_icpsr_main": {
       "description": "Paper Table 1 on the ICPSR HIV network: 5 component-level folds, d=3, k=24, gamma=0.99, T=|V|. This original dataset requires an ICPSR user agreement, so this experiment is transcribed as the paper reference but is not the portable scored benchmark.",
-      "weight": 0.0,
+      "weight": 0.001,
       "primary_metric": "auc",
       "metrics": {
         "auc": {"higher_is_better": true, "coefficient": 0.0, "description": "Reference-only area under the cumulative discounted positive-detection curve from the non-redistributable ICPSR experiment."},
@@ -22,7 +22,7 @@
     },
     "synthetic_main": {
       "description": "Portable sequential HIV network testing benchmark on the tracked synthetic forest substitute. This is the scored gym target used when the ICPSR data cannot be redistributed.",
-      "weight": 1.0,
+      "weight": 0.999,
       "primary_metric": "auc",
       "metrics": {
         "auc": {"higher_is_better": true, "coefficient": 1.0, "description": "Area under the cumulative discounted positive-detection curve."},
