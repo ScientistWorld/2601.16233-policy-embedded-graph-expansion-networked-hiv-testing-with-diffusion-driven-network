@@ -5,19 +5,81 @@
       "weight": 0.001,
       "primary_metric": "auc",
       "metrics": {
-        "auc": {"higher_is_better": true, "coefficient": 0.0, "description": "Reference-only area under the cumulative discounted positive-detection curve from the non-redistributable ICPSR experiment."},
-        "reward_25pct": {"higher_is_better": true, "coefficient": 0.0, "description": "Reference-only cumulative discounted positive detections after the first 25% of the testing budget."},
-        "reward_50pct": {"higher_is_better": true, "coefficient": 0.0, "description": "Reference-only cumulative discounted positive detections after the first 50% of the testing budget."},
-        "reward_75pct": {"higher_is_better": true, "coefficient": 0.0, "description": "Reference-only cumulative discounted positive detections after the first 75% of the testing budget."},
-        "budget_fraction": {"higher_is_better": true, "coefficient": 0.0, "description": "Reference-only fraction of the allowed testing budget consumed by valid sequential actions."}
+        "auc": {
+          "higher_is_better": true,
+          "coefficient": 0.0,
+          "description": "Reference-only area under the cumulative discounted positive-detection curve from the non-redistributable ICPSR experiment."
+        },
+        "reward_25pct": {
+          "higher_is_better": true,
+          "coefficient": 0.0,
+          "description": "Reference-only cumulative discounted positive detections after the first 25% of the testing budget."
+        },
+        "reward_50pct": {
+          "higher_is_better": true,
+          "coefficient": 0.0,
+          "description": "Reference-only cumulative discounted positive detections after the first 50% of the testing budget."
+        },
+        "reward_75pct": {
+          "higher_is_better": true,
+          "coefficient": 0.0,
+          "description": "Reference-only cumulative discounted positive detections after the first 75% of the testing budget."
+        },
+        "budget_fraction": {
+          "higher_is_better": true,
+          "coefficient": 0.0,
+          "description": "Reference-only fraction of the allowed testing budget consumed by valid sequential actions."
+        }
       },
       "results": {
-        "random": {"type": "baseline", "auc": 6.92, "reward_25pct": 5.10, "reward_50pct": 8.11, "reward_75pct": 9.13, "budget_fraction": 1.0},
-        "greedy_neighbor": {"type": "baseline", "auc": 7.86, "reward_25pct": 6.70, "reward_50pct": 8.75, "reward_75pct": 9.91, "budget_fraction": 1.0},
-        "greedy_classifier": {"type": "baseline", "auc": 8.45, "reward_25pct": 7.12, "reward_50pct": 9.32, "reward_75pct": 10.10, "budget_fraction": 1.0},
-        "dqn": {"type": "baseline", "auc": 7.78, "reward_25pct": 6.11, "reward_50pct": 8.81, "reward_75pct": 9.75, "budget_fraction": 1.0},
-        "pege_ddb": {"type": "proposed", "auc": 9.29, "reward_25pct": 8.02, "reward_50pct": 9.94, "reward_75pct": 11.20, "budget_fraction": 1.0},
-        "fully_observable_gittins": {"type": "baseline", "auc": 12.00, "reward_25pct": 11.10, "reward_50pct": 13.30, "reward_75pct": 13.70, "budget_fraction": 1.0}
+        "random": {
+          "type": "baseline",
+          "auc": 6.92,
+          "reward_25pct": 5.1,
+          "reward_50pct": 8.11,
+          "reward_75pct": 9.13,
+          "budget_fraction": 1.0
+        },
+        "greedy_neighbor": {
+          "type": "baseline",
+          "auc": 7.86,
+          "reward_25pct": 6.7,
+          "reward_50pct": 8.75,
+          "reward_75pct": 9.91,
+          "budget_fraction": 1.0
+        },
+        "greedy_classifier": {
+          "type": "baseline",
+          "auc": 8.45,
+          "reward_25pct": 7.12,
+          "reward_50pct": 9.32,
+          "reward_75pct": 10.1,
+          "budget_fraction": 1.0
+        },
+        "dqn": {
+          "type": "baseline",
+          "auc": 7.78,
+          "reward_25pct": 6.11,
+          "reward_50pct": 8.81,
+          "reward_75pct": 9.75,
+          "budget_fraction": 1.0
+        },
+        "pege_ddb": {
+          "type": "proposed",
+          "auc": 9.29,
+          "reward_25pct": 8.02,
+          "reward_50pct": 9.94,
+          "reward_75pct": 11.2,
+          "budget_fraction": 1.0
+        },
+        "fully_observable_gittins": {
+          "type": "baseline",
+          "auc": 12.0,
+          "reward_25pct": 11.1,
+          "reward_50pct": 13.3,
+          "reward_75pct": 13.7,
+          "budget_fraction": 1.0
+        }
       }
     },
     "synthetic_main": {
@@ -25,19 +87,75 @@
       "weight": 0.999,
       "primary_metric": "auc",
       "metrics": {
-        "auc": {"higher_is_better": true, "coefficient": 1.0, "description": "Area under the cumulative discounted positive-detection curve."},
-        "reward_25pct": {"higher_is_better": true, "coefficient": 0.7, "description": "Cumulative discounted positive detections after the first 25% of the testing budget."},
-        "reward_50pct": {"higher_is_better": true, "coefficient": 0.5, "description": "Cumulative discounted positive detections after the first 50% of the testing budget."},
-        "reward_75pct": {"higher_is_better": true, "coefficient": 0.4, "description": "Cumulative discounted positive detections after the first 75% of the testing budget."},
-        "budget_fraction": {"higher_is_better": true, "coefficient": 0.1, "description": "Fraction of the allowed testing budget consumed by valid sequential actions, capped at the paper's full-budget protocol."}
+        "auc": {
+          "higher_is_better": true,
+          "coefficient": 1.0,
+          "description": "Area under the cumulative discounted positive-detection curve."
+        },
+        "reward_25pct": {
+          "higher_is_better": true,
+          "coefficient": 0.7,
+          "description": "Cumulative discounted positive detections after the first 25% of the testing budget."
+        },
+        "reward_50pct": {
+          "higher_is_better": true,
+          "coefficient": 0.5,
+          "description": "Cumulative discounted positive detections after the first 50% of the testing budget."
+        },
+        "reward_75pct": {
+          "higher_is_better": true,
+          "coefficient": 0.4,
+          "description": "Cumulative discounted positive detections after the first 75% of the testing budget."
+        },
+        "budget_fraction": {
+          "higher_is_better": true,
+          "coefficient": 0.1,
+          "description": "Fraction of the allowed testing budget consumed by valid sequential actions, capped at the paper's full-budget protocol."
+        }
       },
       "results": {
-        "random": {"type": "baseline", "auc": 2.603916750352307, "reward_25pct": 1.0949096566821177, "reward_50pct": 2.6010108978042883, "reward_75pct": 4.086856879100924, "budget_fraction": 1.0},
-        "greedy_neighbor": {"type": "baseline", "auc": 2.736953618187337, "reward_25pct": 0.9199658790239673, "reward_50pct": 2.9447494866648096, "reward_75pct": 3.854317746925611, "budget_fraction": 1.0},
-        "greedy_classifier": {"type": "baseline", "auc": 2.7183628924611116, "reward_25pct": 1.4522381664006327, "reward_50pct": 2.7740241673400483, "reward_75pct": 4.156298075738972, "budget_fraction": 1.0},
-        "pege_ddb": {"type": "proposed", "auc": 2.839054457161529, "reward_25pct": 1.485052989920507, "reward_50pct": 3.0019466434393376, "reward_75pct": 4.001577519237295, "budget_fraction": 1.0},
-        "fully_observable_gittins": {"type": "baseline", "auc": 6.301850664531337, "reward_25pct": 6.667920442202154, "reward_50pct": 7.155458411217449, "reward_75pct": 7.155458411217449, "budget_fraction": 1.0}
-      }
+        "random": {
+          "type": "baseline",
+          "auc": 2.603916750352307,
+          "reward_25pct": 1.0949096566821177,
+          "reward_50pct": 2.6010108978042887,
+          "reward_75pct": 4.086856879100923,
+          "budget_fraction": 1.0
+        },
+        "greedy_neighbor": {
+          "type": "baseline",
+          "auc": 2.736953618187337,
+          "reward_25pct": 0.9199658790239673,
+          "reward_50pct": 2.9447494866648096,
+          "reward_75pct": 3.854317746925611,
+          "budget_fraction": 1.0
+        },
+        "greedy_classifier": {
+          "type": "baseline",
+          "auc": 2.6630502291299276,
+          "reward_25pct": 1.6188672283100778,
+          "reward_50pct": 2.5122900173969653,
+          "reward_75pct": 3.90959694233301,
+          "budget_fraction": 1.0
+        },
+        "pege_ddb": {
+          "type": "proposed",
+          "auc": 2.7864422605930583,
+          "reward_25pct": 1.8122596611365867,
+          "reward_50pct": 2.862760625850697,
+          "reward_75pct": 3.8837422395445644,
+          "budget_fraction": 1.0
+        },
+        "fully_observable_gittins": {
+          "type": "baseline",
+          "auc": 2.5874185824768734,
+          "reward_25pct": 1.1170308683507038,
+          "reward_50pct": 2.4717135252173796,
+          "reward_75pct": 3.8721857518623315,
+          "budget_fraction": 1.0
+        }
+      },
+      "notes": "Synthetic benchmark reference values are the corrected five-fold reproduction artifacts from job 4ce1f310-1e9; original ICPSR Table 1 values remain in paper_icpsr_main."
     }
   }
 }

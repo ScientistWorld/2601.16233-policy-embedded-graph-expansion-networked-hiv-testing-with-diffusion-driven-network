@@ -1,6 +1,6 @@
-# Resume corrected method rerun after preemption/orphaned CPU job.
-action: submit
+# Final verification complete.
+action: done
 gpus: 0
 test: false
-milestone: method_runs
-notes: "Resume corrected five-fold PEGE+DDB benchmark from folds 0-2; scripts/run.sh no longer deletes resumable checkpoints."
+milestone: core_claim
+notes: "Corrected five-fold PEGE+DDB benchmark completed and validated; portable synthetic gym is ready with documented ICPSR data limitation."

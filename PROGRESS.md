@@ -12,7 +12,7 @@
 - A CPU smoke job completed end-to-end on 3 folds with `k = 8`; `python validate.py --compare` passed.
 - The evaluator now rejects incomplete fold artifacts instead of allowing stale or partial `scores.json` updates.
 - Job `4fd15c8c-403` completed the full five-fold synthetic benchmark and regenerated `scoring/scores.json`; `python validate.py --compare` passed inside the container.
-- A subsequent implementation review found two fidelity issues in that result. The current code has been patched and a clean rerun is pending before restoring the `core_claim` milestone.
+- A subsequent implementation review found two fidelity issues in that result. The current code was patched and job `4ce1f310-1e9` completed the corrected five-fold rerun.
 
 ## Results
 
@@ -28,21 +28,20 @@ Corrected 3-fold smoke result on the synthetic substitute (`k = 8`, Gittins grid
 
 PEGE + DDB beats Random and Greedy Neighbor on primary AUC in this smoke setting but trails Greedy Classifier, so this is still `method_runs`. The next run includes two fidelity fixes: frontier Gittins scores are conditioned on observed parent labels, and Greedy Classifier uses the balanced linear SVM comparator specified by the paper.
 
-Completed corrected 5-fold result on the synthetic substitute (`k = 24`, `d = 3`, Gittins grid 64):
+Final corrected 5-fold result on the synthetic substitute (`k = 24`, `d = 3`, Gittins grid 64):
 
 | Method | AUC | 25% | 50% | 75% |
 | --- | ---: | ---: | ---: | ---: |
-| PEGE + DDB | 2.743 | 1.470 | 2.805 | 3.929 |
+| PEGE + DDB | 2.786 | 1.812 | 2.863 | 3.884 |
 | Greedy Classifier | 2.663 | 1.619 | 2.512 | 3.910 |
 | Greedy Neighbor | 2.737 | 0.920 | 2.945 | 3.854 |
 | Random | 2.604 | 1.095 | 2.601 | 4.087 |
-| Fully Observable Gittins | 6.447 | 6.733 | 7.221 | 7.221 |
+| Fully Observable Gittins | 2.587 | 1.117 | 2.472 | 3.872 |
 
-This result is now treated as superseded because generated covariates did not affect synthetic-node oracle probabilities and the FOG comparator used unrevealed labels. The next submitted job recomputes the five-fold benchmark after fixing both issues.
+PEGE + DDB beats the practical partial-observation baselines on the primary AUC metric under the fixed full-budget constraint. The FOG comparator now observes full topology/features without unrevealed label leakage, so it is no longer treated as a label-peeking upper bound in the portable synthetic score.
 
 ## Remaining
 
-- Restore `core_claim` by completing the corrected five-fold synthetic benchmark and confirming PEGE+DDB beats the practical partial-observation baselines on primary AUC.
 - Higher milestones would require additional settings beyond the fixed synthetic substitute, such as alternative budgets, `k` sweeps, aggregation ablations, or a successful run on the real ICPSR 22140 network after completing its access agreement.
 
 ## Issues
@@ -61,7 +60,7 @@ This result is now treated as superseded because generated covariates did not af
 - A later destructive run briefly reset the artifact to fold 0 only. `scripts/run.sh` no longer deletes checkpoints, and `eval/evaluate_outputs.py` now fails if a declared fold count is incomplete.
 - Job `4fd15c8c-403` repaired that issue by finishing folds 1 through 4, writing a complete five-fold artifact for every scored policy, and regenerating `scoring/scores.json`.
 - Review after that job found that generated child covariates were ignored in the oracle for synthetic nodes and that FOG used future labels. Both are patched; old scores remain in `scoring/scores.json` only as the last completed artifact until the corrected job finishes.
-- Job `22b35548-c3e` was preempted/orphaned under the one-hour CPU-test limit after writing corrected fold artifacts for folds 0-2. The run script no longer deletes `checkpoints/pege_ddb`, so the next job can resume and finish the remaining folds instead of restarting.
+- Job `22b35548-c3e` was preempted/orphaned under the one-hour CPU-test limit after writing corrected fold artifacts for folds 0-2. The run script no longer deletes `checkpoints/pege_ddb`, so job `4ce1f310-1e9` resumed and completed folds 3-4 successfully.
 
 ## Deviations from Paper
 

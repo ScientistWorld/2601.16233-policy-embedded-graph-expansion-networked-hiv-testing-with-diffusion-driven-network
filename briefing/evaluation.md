@@ -8,7 +8,7 @@ Secondary metrics are cumulative discounted reward at 25%, 50%, and 75% of the t
 
 ## Baselines and Targets
 
-The paper reports Random, Greedy Neighbor, Greedy Classifier, DQN, the proposed policy, and a fully observable Gittins upper bound. `scoring/reference.json` includes those original ICPSR Table 1 values under `paper_icpsr_main` and also includes the portable synthetic benchmark target used by this gym under `synthetic_main`.
+The portable benchmark compares submitted policies against simple reference policies and a full-topology comparator using the same output artifact format. `scoring/reference.json` includes the original ICPSR Table 1 values for context under `paper_icpsr_main` and the scored portable synthetic benchmark under `synthetic_main`.
 
 ## Evaluation Protocol
 

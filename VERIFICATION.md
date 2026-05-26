@@ -2,23 +2,24 @@
 
 ## Initial Assessment
 
-The workspace has a recognizable implementation of the paper's PEGE+DDB method, a portable synthetic forest substitute for the ICPSR dataset, reusable artifact-based evaluators, and structurally valid scoring files. However, the current committed state is not a final `core_claim` state: `MILESTONES.md` and `action.yaml` are at `method_runs`, and the checkpoint artifacts in `checkpoints/pege_ddb/` predate the latest fidelity patch.
+The workspace has a recognizable implementation of the paper's PEGE+DDB method, a portable synthetic forest substitute for the ICPSR dataset, reusable artifact-based evaluators, and structurally valid scoring files. Job `4ce1f310-1e9` completed the corrected five-fold run after the PEGE oracle and FOG visibility fixes.
 
 ## Issues Found
 
-- **Critical**: `scoring/scores.json` currently reflects the superseded run from before the PEGE oracle and FOG visibility fixes. A corrected five-fold rerun is required before restoring `core_claim`.
-- **Critical**: Job `22b35548-c3e` exited `-9` before evaluation. It produced corrected fold artifacts for folds 0-2, but not the complete five-fold score contract.
-- **Minor**: Some method-agnostic documentation could be tightened later, but it does not expose the paper's architecture or training recipe in a way that blocks rerun submission.
+- **Resolved**: `scoring/scores.json` now reflects the corrected five-fold run from job `4ce1f310-1e9`.
+- **Resolved**: Job `22b35548-c3e` exited `-9` before evaluation, but the resumable runner allowed `4ce1f310-1e9` to finish folds 3-4 and run validation.
+- **Minor**: The portable benchmark uses synthetic data because the original ICPSR dataset requires a data-use agreement.
 
 ## Fixes Applied
 
-- Updated `scripts/run.sh` to resume from existing fold artifacts instead of deleting `checkpoints/pege_ddb` at the start of every job. This directly addresses the preemption/orphan failure mode from `22b35548-c3e`.
+- Updated `scripts/run.sh` to resume from existing fold artifacts instead of deleting `checkpoints/pege_ddb` at the start of every job.
+- Updated `scoring/reference.json` and documentation to reflect the corrected portable synthetic benchmark scores.
 
 ## Final Judgment
 
-The workspace is close to gym-ready, but final sign-off depends on the corrected benchmark completing and producing valid scores from the patched method.
+The workspace is ready to serve as a gym for the portable synthetic benchmark. From-scratch agents can use `data/`, `eval/`, and the method-agnostic briefing files without importing the paper method; improve-mode agents can build from the PEGE+DDB implementation.
 
-- Milestone: method_runs
-- Ready for gym use: partial
+- Milestone: core_claim
+- Ready for gym use: yes
 - Confidence: medium
-- Key limitation: corrected PEGE+DDB scores are pending rerun on the synthetic substitute.
+- Key limitation: synthetic data only; the original ICPSR HIV network requires a data-use agreement.

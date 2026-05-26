@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: core_claim**
 
 ## Progress Log
 
@@ -24,3 +24,8 @@
 - Job `22b35548-c3e` made partial corrected-run progress but exited `-9` after a Hive preemption/orphan event.
 - Corrected artifacts now contain complete folds 0-2 for all scored policies.
 - Removed the checkpoint wipe from `scripts/run.sh` so the next submission resumes folds 3-4 and then runs evaluation/validation.
+
+### [2026-05-26 09:18] - core_claim
+- Job `4ce1f310-1e9` resumed the corrected benchmark, completed folds 3-4, and wrote full five-fold artifacts for all scored policies.
+- `python validate.py --compare` passed in the job.
+- Corrected PEGE+DDB achieved the best practical partial-observation AUC on `synthetic_main` (2.786), ahead of Greedy Neighbor (2.737), Greedy Classifier (2.663), and Random (2.604).
