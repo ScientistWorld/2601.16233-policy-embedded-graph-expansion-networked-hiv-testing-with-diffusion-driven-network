@@ -7,11 +7,12 @@ The workspace has a recognizable implementation of the paper's PEGE+DDB method, 
 ## Issues Found
 
 - **Critical**: `scoring/scores.json` currently reflects the superseded run from before the PEGE oracle and FOG visibility fixes. A corrected five-fold rerun is required before restoring `core_claim`.
+- **Critical**: Job `22b35548-c3e` exited `-9` before evaluation. It produced corrected fold artifacts for folds 0-2, but not the complete five-fold score contract.
 - **Minor**: Some method-agnostic documentation could be tightened later, but it does not expose the paper's architecture or training recipe in a way that blocks rerun submission.
 
 ## Fixes Applied
 
-No code changes were made in this verification pass. The previous patch already updated the method implementation and `scripts/run.sh`; this verification confirms that the pending action should remain a CPU submission rather than `done`.
+- Updated `scripts/run.sh` to resume from existing fold artifacts instead of deleting `checkpoints/pege_ddb` at the start of every job. This directly addresses the preemption/orphan failure mode from `22b35548-c3e`.
 
 ## Final Judgment
 

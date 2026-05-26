@@ -6,9 +6,10 @@ export PYTHONPATH=/home/user:${PYTHONPATH:-}
 
 python data/sapog_data.py --output data/synthetic_hiv_forest.json
 
-# Recompute the main five-fold PEGE+DDB benchmark after method changes. The
-# checkpoint directory is generated output and is intentionally gitignored.
-rm -rf checkpoints/pege_ddb
+# Recompute or resume the main five-fold PEGE+DDB benchmark after method
+# changes. The method runner writes each fold/policy as it finishes, so keeping
+# the checkpoint directory lets preempted CPU jobs continue instead of starting
+# over.
 python method/pege_ddb.py \
   --data data/synthetic_hiv_forest.json \
   --output-dir checkpoints/pege_ddb \

@@ -1,6 +1,6 @@
-# Corrected method rerun after fidelity fixes.
+# Resume corrected method rerun after preemption/orphaned CPU job.
 action: submit
 gpus: 0
 test: false
 milestone: method_runs
-notes: "CPU rerun of the corrected five-fold PEGE+DDB benchmark: generated covariates now affect oracle probabilities and FOG no longer uses unrevealed labels."
+notes: "Resume corrected five-fold PEGE+DDB benchmark from folds 0-2; scripts/run.sh no longer deletes resumable checkpoints."

@@ -61,6 +61,7 @@ This result is now treated as superseded because generated covariates did not af
 - A later destructive run briefly reset the artifact to fold 0 only. `scripts/run.sh` no longer deletes checkpoints, and `eval/evaluate_outputs.py` now fails if a declared fold count is incomplete.
 - Job `4fd15c8c-403` repaired that issue by finishing folds 1 through 4, writing a complete five-fold artifact for every scored policy, and regenerating `scoring/scores.json`.
 - Review after that job found that generated child covariates were ignored in the oracle for synthetic nodes and that FOG used future labels. Both are patched; old scores remain in `scoring/scores.json` only as the last completed artifact until the corrected job finishes.
+- Job `22b35548-c3e` was preempted/orphaned under the one-hour CPU-test limit after writing corrected fold artifacts for folds 0-2. The run script no longer deletes `checkpoints/pege_ddb`, so the next job can resume and finish the remaining folds instead of restarting.
 
 ## Deviations from Paper
 
