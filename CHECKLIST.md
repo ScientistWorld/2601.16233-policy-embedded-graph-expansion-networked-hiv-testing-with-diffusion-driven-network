@@ -7,7 +7,7 @@
 - [x] `briefing/overview.md`
 
 ## Scoring
-- [x] `scoring/reference.json` — paper's reported numbers
+- [x] `scoring/reference.json` — portable synthetic benchmark reference
 - [x] Workspace validated via `python validate.py`
 - [x] `scoring/scores.json` — reproduced numbers
 - [x] `scoring/EXPERIMENTS.md`

@@ -14,7 +14,8 @@ set -e
 cd /home/user
 export PYTHONPATH=/home/user:${PYTHONPATH:-}
 
-# Validation-only job for the completed 5-fold PEGE+DDB artifact. The full
-# end-to-end reproduction remains in scripts/reproduce.sh.
-bash scripts/evaluate.sh checkpoints/pege_ddb/results.json
+# Re-run the corrected PEGE+DDB implementation with the paper's main PEGE
+# sample/depth settings on the portable synthetic benchmark.
+rm -rf checkpoints/pege_ddb
+PEGE_K=24 PEGE_DEPTH=3 FOLDS=5 bash scripts/method.sh
 python validate.py --compare

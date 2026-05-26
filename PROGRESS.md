@@ -50,6 +50,7 @@ PEGE + DDB beats all practical baselines on the primary AUC metric and at 25% an
 - The 5-fold run completed artifacts but exited `-9`, likely due to the one-hour CPU test limit. The produced artifacts validate locally, so the next job only evaluates existing outputs.
 - A validation-only retry failed before executing code because `environment/container.sif` had been removed while clearing quota. Local validation still passes on the completed artifacts, and no method or scoring changes are needed.
 - Validator post-check rejected direct comparison between synthetic-scale scores and paper Table 1 values. Fixed by making `scoring/reference.json` describe the synthetic benchmark scale and moving the original paper table to `notes/paper_table1.md`.
+- A follow-up code review found that the first implementation's oracle was not close enough to the cited Gittins-index computation. The implementation now uses a numerical binary branching-bandit Gittins recursion from the cited equations, and the prior synthetic result is treated as superseded rather than a `core_claim` result.
 
 ## Deviations from Paper
 

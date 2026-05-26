@@ -18,7 +18,7 @@ python method/pege_ddb.py \
   --experiment synthetic_main \
   --policies pege_ddb,greedy_classifier,greedy_neighbor,random,fog \
   --folds "${FOLDS:-5}" \
-  --k "${PEGE_K:-12}" \
+  --k "${PEGE_K:-24}" \
   --depth "${PEGE_DEPTH:-3}" \
   --gamma 0.99
 

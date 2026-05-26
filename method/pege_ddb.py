@@ -43,6 +43,7 @@ class DDB:
     diffusion_model: object
     label_model: object
     feature_dim: int
+    transition: Tuple[float, float]
     diffusion_steps: int = 12
     max_children: int = 5
 
@@ -64,13 +65,13 @@ class DDB:
                 z = math.sqrt(ab_prev) * x0 + math.sqrt(max(1e-6, 1.0 - ab_prev)) * rng.normal(size=self.feature_dim)
             else:
                 z = x0
-        probs = 1.0 / (1.0 + np.exp(-z))
+        probs = np.clip((z + 1.0) * 0.5, 0.0, 1.0)
         return (rng.random(self.feature_dim) < probs).astype(np.float32)
 
     def sample_count(self, parent_x: np.ndarray, rng: np.random.Generator) -> int:
         mean, std = self.count_model.predict(parent_x[None, :], return_std=True)
-        lam = max(0.0, float(rng.normal(float(mean[0]), float(std[0]) + 0.35)))
-        return int(np.clip(rng.poisson(lam), 0, self.max_children))
+        draw = rng.normal(float(mean[0]), float(std[0]) + 0.35)
+        return int(np.clip(round(draw), 0, self.max_children))
 
     def label_probability(self, x: np.ndarray) -> float:
         return float(self.label_model.predict_proba(x[None, :])[0, 1])
@@ -119,7 +120,17 @@ def train_ddb(ds: ForestDataset, train_indices: Sequence[int], seed: int = 0) ->
         MLPRegressor(hidden_layer_sizes=(96, 96), activation="relu", max_iter=220, random_state=seed, early_stopping=True),
     )
     diffusion_model.fit(np.asarray(X_rows), np.asarray(y_rows))
-    return DDB(count_model, diffusion_model, label_model, ds.features.shape[1])
+    child_labels_by_parent = {0: [], 1: []}
+    for i in train_indices:
+        for child in ds.children[int(i)]:
+            if child in train_set:
+                child_labels_by_parent[int(ds.labels[int(i)])].append(int(ds.labels[child]))
+    global_rate = float(np.mean(ds.labels[list(train_indices)]))
+    transition = tuple(
+        float(np.mean(child_labels_by_parent[b])) if child_labels_by_parent[b] else global_rate
+        for b in (0, 1)
+    )
+    return DDB(count_model, diffusion_model, label_model, ds.features.shape[1], transition)
 
 
 def save_ddb(model: DDB, path: str | Path) -> None:
@@ -133,6 +144,25 @@ def load_ddb(path: str | Path) -> DDB:
         return pickle.load(f)
 
 
+def _phi_derivative(phi: np.ndarray, grid: np.ndarray) -> np.ndarray:
+    deriv = np.gradient(phi, grid)
+    return np.clip(deriv, 0.0, 1.0)
+
+
+def _phi_collection(children: Sequence[int], label: int, phi_by_state: Dict[Tuple[int, int], np.ndarray], grid: np.ndarray, upper: float) -> np.ndarray:
+    if not children:
+        return grid.copy()
+    prod = np.ones_like(grid)
+    for child in children:
+        prod *= _phi_derivative(phi_by_state[(int(child), int(label))], grid)
+    # Phi(m) = upper - integral_m^upper prod(k) dk, evaluated numerically.
+    suffix = np.zeros_like(grid)
+    for i in range(len(grid) - 2, -1, -1):
+        dx = grid[i + 1] - grid[i]
+        suffix[i] = suffix[i + 1] + 0.5 * dx * (prod[i] + prod[i + 1])
+    return upper - suffix
+
+
 def oracle_scores(
     frontier: Sequence[int],
     children: Dict[int, List[int]],
@@ -141,22 +171,50 @@ def oracle_scores(
     ddb: DDB,
     gamma: float,
 ) -> Dict[int, float]:
-    memo: Dict[int, float] = {}
+    """Numerically compute binary branching-bandit Gittins indices.
 
-    def subtree_value(v: int) -> float:
-        if v in memo:
-            return memo[v]
-        p = float(known_labels[v]) if v in known_labels else ddb.label_probability(features[v])
-        child_vals = sorted((subtree_value(c) for c in children.get(v, [])), reverse=True)
-        cont = 0.0
-        for rank, val in enumerate(child_vals):
-            cont += (gamma ** (rank + 1)) * val
-        # Gittins-style priority: immediate expected positive reward plus best
-        # discounted continuation available after this referral is tested.
-        memo[v] = p + cont
-        return memo[v]
+    This implements the recursive retirement-value equations used by the
+    Gittins oracle in Choo et al. (2025), discretized on a fixed grid. The
+    required label-conditionals are provided by the fitted DDB label dynamics.
+    """
 
-    return {int(v): subtree_value(int(v)) for v in frontier}
+    upper = 1.0 / max(1e-6, 1.0 - gamma)
+    grid = np.linspace(0.0, upper, 192)
+    nodes = list(features)
+    depth_memo: Dict[int, int] = {}
+
+    def depth(v: int) -> int:
+        if v not in depth_memo:
+            depth_memo[v] = 0 if not children.get(v) else 1 + max(depth(c) for c in children[v])
+        return depth_memo[v]
+
+    phi_by_state: Dict[Tuple[int, int], np.ndarray] = {}
+    index_by_state: Dict[Tuple[int, int], float] = {}
+    for node in sorted(nodes, key=depth):
+        for parent_label in (0, 1):
+            if node in known_labels:
+                p1 = float(known_labels[node])
+            elif node < 0:
+                p1 = float(ddb.transition[parent_label])
+            else:
+                base = ddb.label_probability(features[node])
+                p1 = float(np.clip(0.65 * base + 0.35 * ddb.transition[parent_label], 1e-4, 1.0 - 1e-4))
+            p = {0: 1.0 - p1, 1: p1}
+            cont = np.zeros_like(grid)
+            for label in (0, 1):
+                phi_children = _phi_collection(children.get(node, []), label, phi_by_state, grid, upper)
+                cont += p[label] * (float(label) + gamma * phi_children)
+            phi = np.maximum(grid, cont)
+            phi_by_state[(node, parent_label)] = phi
+            viable = np.flatnonzero(cont >= grid)
+            index_by_state[(node, parent_label)] = float(grid[int(viable[-1])] if len(viable) else 0.0)
+
+    scores: Dict[int, float] = {}
+    for v in frontier:
+        # If the frontier node's parent has been tested, condition on that
+        # label; otherwise average both parent-label states.
+        scores[int(v)] = 0.5 * (index_by_state[(int(v), 0)] + index_by_state[(int(v), 1)])
+    return scores
 
 
 def expand_from_frontier(
