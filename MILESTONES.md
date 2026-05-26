@@ -25,4 +25,4 @@
 - PEGE+DDB achieved primary AUC `2.743`, beating Random (`2.604`), Greedy Classifier (`2.663`), and Greedy Neighbor (`2.737`) under the same full-budget constraint. The margin over Greedy Neighbor is narrow, so this restores `core_claim` but not a higher milestone.
 
 ## Stop Justification
-- Stopped at `core_claim`. The reusable environment is packaged and validated; higher milestones would require broader experiments or a stronger margin on the synthetic substitute.
+- Completed at milestone `core_claim`.
