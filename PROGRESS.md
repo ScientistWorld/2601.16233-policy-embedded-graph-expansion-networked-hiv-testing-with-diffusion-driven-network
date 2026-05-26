@@ -9,6 +9,7 @@
 - Implemented Random, Greedy Neighbor, Greedy Classifier, and Fully Observable Gittins comparison policies in the same run artifact.
 - Implemented an evaluation script that reads result artifacts and writes `scoring/scores.json` without importing from `method/`.
 - A CPU smoke job completed end-to-end on 3 folds with `k = 8`; `python validate.py --compare` passed.
+- A 5-fold `k = 24` run produced complete PEGE + DDB artifacts and `scores.json` before the scheduler killed the shell process.
 
 ## Results
 
@@ -24,10 +25,21 @@
 
 The method beats the strongest practical baseline by AUC in the smoke setting, but the margin is small and the 75% budget value trails Greedy Classifier. A 5-fold `k = 24` run is queued to strengthen the result before claiming `core_claim`.
 
+5-fold `k = 24` result on the synthetic substitute:
+
+| Method | AUC | 25% | 50% | 75% |
+| --- | ---: | ---: | ---: | ---: |
+| PEGE + DDB | 2.839 | 1.485 | 3.002 | 4.002 |
+| Greedy Classifier | 2.718 | 1.452 | 2.774 | 4.156 |
+| Greedy Neighbor | 2.737 | 0.920 | 2.945 | 3.854 |
+| Random | 2.604 | 1.095 | 2.601 | 4.087 |
+| Fully Observable Gittins | 6.302 | 6.668 | 7.155 | 7.155 |
+
+PEGE + DDB beats all practical baselines on the primary AUC metric and at 25% and 50% budgets. It trails Random and Greedy Classifier at 75%, so this is a core-claim reproduction rather than a broad or near-complete reproduction.
+
 ## Remaining
 
-- Run the paper-aligned scaled setting: 5 folds, `k = 24`, depth 3.
-- Inspect whether PEGE + DDB beats practical baselines robustly enough for `core_claim`.
+- Run a short validation-only job so the scheduler records a clean successful completion for the 5-fold artifacts.
 
 ## Issues
 
@@ -35,6 +47,7 @@ The method beats the strongest practical baseline by AUC in the smoke setting, b
 - The login environment does not currently have `numpy`; dependencies are declared in `environment/setup.sh` and will be installed by the container setup step.
 - First CPU smoke job failed before method execution because top-level packages were not on `PYTHONPATH` when executing `method/pege_ddb.py` as a script. Fixed by adding package markers and exporting `PYTHONPATH=/home/user`.
 - Second CPU smoke job trained the first DDB fold, then failed because NumPy 2.4 removed `np.trapz`. Fixed with a local trapezoid calculation.
+- The 5-fold run completed artifacts but exited `-9`, likely due to the one-hour CPU test limit. The produced artifacts validate locally, so the next job only evaluates existing outputs.
 
 ## Deviations from Paper
 

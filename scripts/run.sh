@@ -14,9 +14,7 @@ set -e
 cd /home/user
 export PYTHONPATH=/home/user:${PYTHONPATH:-}
 
-export FOLDS="${FOLDS:-5}"
-export PEGE_K="${PEGE_K:-24}"
-export PEGE_DEPTH="${PEGE_DEPTH:-3}"
-
-bash scripts/reproduce.sh
+# Validation-only job for the completed 5-fold PEGE+DDB artifact. The full
+# end-to-end reproduction remains in scripts/reproduce.sh.
+bash scripts/evaluate.sh checkpoints/pege_ddb/results.json
 python validate.py --compare

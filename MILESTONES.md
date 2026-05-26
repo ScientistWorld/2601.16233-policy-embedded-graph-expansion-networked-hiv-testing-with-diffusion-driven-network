@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: core_claim**
 
 ## Progress Log
 
@@ -20,6 +20,11 @@
 ### [2026-05-26 05:56] - method_runs
 - CPU smoke job completed PEGE + DDB training, rollout, artifact evaluation, and validation on 3 folds with `k = 8`.
 - PEGE + DDB beat the strongest practical baseline by AUC on the smoke setting, but the margin is not yet strong enough to stop at `core_claim`.
+
+### [2026-05-26 06:19] - core_claim
+- 5-fold `k = 24` PEGE + DDB run produced complete artifacts and `scores.json`.
+- PEGE + DDB beat all practical baselines on primary AUC and at 25% and 50% budgets on the synthetic forest substitute.
+- Fully Observable Gittins remains a stronger upper bound, as expected.
 
 ## Stop Justification
 - Not stopped.

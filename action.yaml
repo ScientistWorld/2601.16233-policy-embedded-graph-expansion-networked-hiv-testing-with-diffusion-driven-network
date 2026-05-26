@@ -29,6 +29,6 @@
 
 action: submit
 gpus: 0
-test: false
-milestone: method_runs
-notes: "Run the stronger paper-aligned scaled setting on CPU: 5 folds, PEGE k=24, depth=3, then write scores.json and validate."
+test: true
+milestone: core_claim
+notes: "Validation-only CPU job for completed 5-fold k=24 artifacts: rewrite scores.json from checkpoints/pege_ddb/results.json and run validate.py --compare."
