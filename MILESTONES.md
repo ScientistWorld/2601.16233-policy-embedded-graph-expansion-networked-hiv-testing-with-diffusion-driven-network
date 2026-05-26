@@ -31,4 +31,4 @@
 - Re-ran artifact evaluation and `python validate.py --compare` locally; all checks pass with the completed 5-fold scores.
 
 ## Stop Justification
-- Not stopped.
+- Completed at milestone `core_claim`.
