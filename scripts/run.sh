@@ -25,4 +25,10 @@ python method/pege_ddb.py \
 bash scripts/evaluate.sh checkpoints/pege_ddb/results.json
 bash scripts/evaluate_train.sh checkpoints/pege_ddb/results.json
 bash scripts/evaluate_test.sh checkpoints/pege_ddb/results.json
+
+# Additional paper-aligned ablations for the next milestone: sample-count
+# sweep and PEGE score aggregation variants from Figure 6.
+bash scripts/ablation.sh
+bash scripts/evaluate_train.sh checkpoints/pege_ddb/results.json
+bash scripts/evaluate_test.sh checkpoints/pege_ddb/results.json
 python validate.py --compare

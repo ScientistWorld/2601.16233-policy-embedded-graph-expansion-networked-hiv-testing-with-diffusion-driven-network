@@ -84,7 +84,7 @@
     },
     "synthetic_main": {
       "description": "Portable sequential HIV network testing benchmark on the tracked synthetic forest substitute. This is the scored gym target used when the ICPSR data cannot be redistributed.",
-      "weight": 0.999,
+      "weight": 0.8,
       "primary_metric": "auc",
       "metrics": {
         "auc": {
@@ -156,6 +156,79 @@
         }
       },
       "notes": "Synthetic benchmark reference values are the corrected five-fold reproduction artifacts from job 4ce1f310-1e9; original ICPSR Table 1 values remain in paper_icpsr_main."
+    },
+    "synthetic_k_sweep": {
+      "description": "PEGE sample-count ablation mirroring Figure 6: compare AUC lift against k=12 under the same sequential testing protocol.",
+      "weight": 0.1,
+      "primary_metric": "auc_lift_vs_k12_pct",
+      "metrics": {
+        "auc_lift_vs_k12_pct": {
+          "higher_is_better": true,
+          "coefficient": 1.0,
+          "description": "Percent AUC lift relative to the k=12 PEGE+DDB run. Paper text reports +1.3% for k=24 and +2.7% for k=26 over k=12."
+        },
+        "budget_fraction": {
+          "higher_is_better": true,
+          "coefficient": 0.1,
+          "description": "Fraction of the full testing budget used by valid sequential actions."
+        }
+      },
+      "results": {
+        "pege_k12": {
+          "type": "proposed",
+          "auc_lift_vs_k12_pct": 0.0,
+          "budget_fraction": 1.0
+        },
+        "pege_k24": {
+          "type": "proposed",
+          "auc_lift_vs_k12_pct": 1.3,
+          "budget_fraction": 1.0
+        },
+        "pege_k26": {
+          "type": "proposed",
+          "auc_lift_vs_k12_pct": 2.7,
+          "budget_fraction": 1.0
+        }
+      }
+    },
+    "synthetic_aggregation": {
+      "description": "PEGE aggregation ablation mirroring Figure 6: compare each score-aggregation heuristic to mean aggregation.",
+      "weight": 0.099,
+      "primary_metric": "auc_ratio_to_mean",
+      "metrics": {
+        "auc_ratio_to_mean": {
+          "higher_is_better": true,
+          "coefficient": 1.0,
+          "description": "AUC divided by the AUC of mean aggregation. Paper text reports mode under mean by 7.97%, mean+variance at 65.4% of mean, and mean-variance at 65.6% of mean."
+        },
+        "budget_fraction": {
+          "higher_is_better": true,
+          "coefficient": 0.1,
+          "description": "Fraction of the full testing budget used by valid sequential actions."
+        }
+      },
+      "results": {
+        "agg_mean": {
+          "type": "proposed",
+          "auc_ratio_to_mean": 1.0,
+          "budget_fraction": 1.0
+        },
+        "agg_mode": {
+          "type": "proposed",
+          "auc_ratio_to_mean": 0.9203,
+          "budget_fraction": 1.0
+        },
+        "agg_mean_plus_var": {
+          "type": "proposed",
+          "auc_ratio_to_mean": 0.654,
+          "budget_fraction": 1.0
+        },
+        "agg_mean_minus_var": {
+          "type": "proposed",
+          "auc_ratio_to_mean": 0.656,
+          "budget_fraction": 1.0
+        }
+      }
     }
   }
 }

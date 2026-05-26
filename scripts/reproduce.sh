@@ -21,4 +21,8 @@ export PYTHONPATH=/home/user:${PYTHONPATH:-}
 
 python data/sapog_data.py --output data/synthetic_hiv_forest.json
 bash scripts/method.sh
-bash scripts/evaluate.sh checkpoints/pege_ddb/results.json
+bash scripts/ablation.sh
+bash scripts/evaluate.sh \
+  checkpoints/pege_ddb/results.json \
+  checkpoints/pege_ablation/k_sweep.json \
+  checkpoints/pege_ablation/aggregation.json
