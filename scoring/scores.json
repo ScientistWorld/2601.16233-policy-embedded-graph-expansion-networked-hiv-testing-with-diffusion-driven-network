@@ -1,0 +1,43 @@
+{
+  "experiments": {
+    "synthetic_main": {
+      "results": {
+        "pege_ddb": {
+          "auc": 3.1694896844145943,
+          "reward_25pct": 2.4413583625611155,
+          "reward_50pct": 3.4763544933531607,
+          "reward_75pct": 3.915934520377914,
+          "budget_fraction": 1.0
+        },
+        "greedy_classifier": {
+          "auc": 3.1041311143611146,
+          "reward_25pct": 2.118936252331453,
+          "reward_50pct": 3.3527579844840694,
+          "reward_75pct": 4.418081567032827,
+          "budget_fraction": 1.0
+        },
+        "greedy_neighbor": {
+          "auc": 2.540895878949073,
+          "reward_25pct": 0.9023893457376158,
+          "reward_50pct": 2.752628012094944,
+          "reward_75pct": 3.6124544355677557,
+          "budget_fraction": 1.0
+        },
+        "random": {
+          "auc": 2.5740339377332315,
+          "reward_25pct": 1.2019341568805368,
+          "reward_50pct": 2.7088244151323524,
+          "reward_75pct": 4.15784706551795,
+          "budget_fraction": 1.0
+        },
+        "fully_observable_gittins": {
+          "auc": 5.634465457458933,
+          "reward_25pct": 5.871171429198058,
+          "reward_50pct": 6.411099065024472,
+          "reward_75pct": 6.411099065024472,
+          "budget_fraction": 1.0
+        }
+      }
+    }
+  }
+}
