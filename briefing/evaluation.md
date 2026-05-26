@@ -8,7 +8,7 @@ Secondary metrics are cumulative discounted reward at 25%, 50%, and 75% of the t
 
 ## Baselines and Targets
 
-The paper reports Random, Greedy Neighbor, Greedy Classifier, DQN, the proposed policy, and a fully observable Gittins upper bound. `scoring/reference.json` transcribes the paper's Table 1 values for these methods.
+The paper reports Random, Greedy Neighbor, Greedy Classifier, DQN, the proposed policy, and a fully observable Gittins upper bound. Because this gym uses a synthetic substitute with a different reward scale, `scoring/reference.json` records the portable benchmark reference values and `notes/paper_table1.md` preserves the paper's original Table 1.
 
 ## Evaluation Protocol
 

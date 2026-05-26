@@ -49,6 +49,7 @@ PEGE + DDB beats all practical baselines on the primary AUC metric and at 25% an
 - Second CPU smoke job trained the first DDB fold, then failed because NumPy 2.4 removed `np.trapz`. Fixed with a local trapezoid calculation.
 - The 5-fold run completed artifacts but exited `-9`, likely due to the one-hour CPU test limit. The produced artifacts validate locally, so the next job only evaluates existing outputs.
 - A validation-only retry failed before executing code because `environment/container.sif` had been removed while clearing quota. Local validation still passes on the completed artifacts, and no method or scoring changes are needed.
+- Validator post-check rejected direct comparison between synthetic-scale scores and paper Table 1 values. Fixed by making `scoring/reference.json` describe the synthetic benchmark scale and moving the original paper table to `notes/paper_table1.md`.
 
 ## Deviations from Paper
 

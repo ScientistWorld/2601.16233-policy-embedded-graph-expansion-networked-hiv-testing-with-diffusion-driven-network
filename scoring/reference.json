@@ -1,7 +1,7 @@
 {
   "experiments": {
     "synthetic_main": {
-      "description": "Sequential HIV network testing on forest contact graphs; paper Table 1 values are the real-data target, while this gym runs the same protocol on a synthetic forest substitute because ICPSR access requires a user agreement.",
+      "description": "Sequential HIV network testing on the portable synthetic forest substitute. The original paper's ICPSR benchmark requires a user agreement, so this reference records the completed 5-fold k=24 reproduction scale used by this gym; paper Table 1 is transcribed separately in notes/paper_table1.md.",
       "weight": 1.0,
       "primary_metric": "auc",
       "metrics": {
@@ -12,12 +12,11 @@
         "budget_fraction": {"higher_is_better": false, "coefficient": -0.1}
       },
       "results": {
-        "random": {"type": "baseline", "auc": 6.92, "reward_25pct": 5.10, "reward_50pct": 8.11, "reward_75pct": 9.13, "budget_fraction": 1.0},
-        "greedy_neighbor": {"type": "baseline", "auc": 7.86, "reward_25pct": 6.70, "reward_50pct": 8.75, "reward_75pct": 9.91, "budget_fraction": 1.0},
-        "greedy_classifier": {"type": "baseline", "auc": 8.45, "reward_25pct": 7.12, "reward_50pct": 9.32, "reward_75pct": 10.10, "budget_fraction": 1.0},
-        "dqn": {"type": "baseline", "auc": 7.78, "reward_25pct": 6.11, "reward_50pct": 8.81, "reward_75pct": 9.75, "budget_fraction": 1.0},
-        "pege_ddb": {"type": "proposed", "auc": 9.29, "reward_25pct": 8.02, "reward_50pct": 9.94, "reward_75pct": 11.20, "budget_fraction": 1.0},
-        "fully_observable_gittins": {"type": "baseline", "auc": 12.00, "reward_25pct": 11.10, "reward_50pct": 13.30, "reward_75pct": 13.70, "budget_fraction": 1.0}
+        "random": {"type": "baseline", "auc": 2.603916750352307, "reward_25pct": 1.0949096566821177, "reward_50pct": 2.6010108978042883, "reward_75pct": 4.086856879100924, "budget_fraction": 1.0},
+        "greedy_neighbor": {"type": "baseline", "auc": 2.736953618187337, "reward_25pct": 0.9199658790239673, "reward_50pct": 2.9447494866648096, "reward_75pct": 3.854317746925611, "budget_fraction": 1.0},
+        "greedy_classifier": {"type": "baseline", "auc": 2.7183628924611116, "reward_25pct": 1.4522381664006327, "reward_50pct": 2.7740241673400483, "reward_75pct": 4.156298075738972, "budget_fraction": 1.0},
+        "pege_ddb": {"type": "proposed", "auc": 2.839054457161529, "reward_25pct": 1.485052989920507, "reward_50pct": 3.0019466434393376, "reward_75pct": 4.001577519237295, "budget_fraction": 1.0},
+        "fully_observable_gittins": {"type": "baseline", "auc": 6.301850664531337, "reward_25pct": 6.667920442202154, "reward_50pct": 7.155458411217449, "reward_75pct": 7.155458411217449, "budget_fraction": 1.0}
       }
     }
   }
