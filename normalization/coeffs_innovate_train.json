@@ -1,0 +1,135 @@
+{
+  "paper_id": "2601.16233",
+  "phase": "train",
+  "cohort": [
+    "claude-opus-4-8-xhigh",
+    "claude-opus-xhigh",
+    "gpt-5.6-sol-xhigh",
+    "gpt-5.6-terra-xhigh",
+    "gpt-5.6-luna-xhigh",
+    "gpt-5.5-xhigh",
+    "glm-5-xhigh",
+    "minimax-xhigh",
+    "grok-4.3-xhigh",
+    "gemini-3-pro-preview",
+    "gemini-3.1-flash-lite-preview",
+    "kimi-k2.6-thinking",
+    "mimo-pro-xhigh",
+    "deepseek-v4-pro-xhigh"
+  ],
+  "models_present": [
+    "gpt-5.5-xhigh",
+    "gpt-5.6-luna-xhigh",
+    "gpt-5.6-sol-xhigh",
+    "gpt-5.6-terra-xhigh"
+  ],
+  "n_models": 4,
+  "n_cells": 5,
+  "last_updated": "2026-08-14T17:20:20.763536+00:00",
+  "excluded": false,
+  "typical_spread": 0.4783125584325244,
+  "paper_baseline": 0.6780991727701927,
+  "cohort_raw": {
+    "gpt-5.5-xhigh": 0.35761223494506045,
+    "gpt-5.6-luna-xhigh": -0.9112225495199,
+    "gpt-5.6-sol-xhigh": -0.31904275638153945,
+    "gpt-5.6-terra-xhigh": 1.1245191502342708
+  },
+  "cells": [
+    {
+      "experiment": "synthetic_main",
+      "method": "pege_ddb",
+      "metric": "auc",
+      "source": 3.192059474794552,
+      "higher_is_better": true,
+      "coefficient": 1.3737748666081815,
+      "prior_weight": 0.999,
+      "spread": 0.3941850389174238,
+      "normalizer": 0.3941850389174238,
+      "effective_weight": 0.36720528068393765,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": -0.179125726448766,
+        "gpt-5.6-terra-xhigh": 0.5473952439125864,
+        "gpt-5.6-luna-xhigh": -0.3665692477794318,
+        "gpt-5.5-xhigh": 0.008390311294536712
+      }
+    },
+    {
+      "experiment": "synthetic_main",
+      "method": "pege_ddb",
+      "metric": "reward_25pct",
+      "source": 2.725230531347307,
+      "higher_is_better": true,
+      "coefficient": 0.7367225955195568,
+      "prior_weight": 0.6992999999999999,
+      "spread": 0.562440077947625,
+      "normalizer": 0.562440077947625,
+      "effective_weight": 0.28097874238430953,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": -0.9308224178608653,
+        "gpt-5.6-terra-xhigh": -0.4162803083703821,
+        "gpt-5.6-luna-xhigh": -1.3156581249628179,
+        "gpt-5.5-xhigh": -0.03766747430176087
+      }
+    },
+    {
+      "experiment": "synthetic_main",
+      "method": "pege_ddb",
+      "metric": "reward_50pct",
+      "source": 3.1341840001459222,
+      "higher_is_better": true,
+      "coefficient": 0.49088609368978764,
+      "prior_weight": 0.4995,
+      "spread": 0.6159633755971279,
+      "normalizer": 0.6159633755971279,
+      "effective_weight": 0.20503539255315964,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 0.1558191972275087,
+        "gpt-5.6-terra-xhigh": 1.1554728044351994,
+        "gpt-5.6-luna-xhigh": -0.27402174301645177,
+        "gpt-5.5-xhigh": 0.6341798149788871
+      }
+    },
+    {
+      "experiment": "synthetic_main",
+      "method": "pege_ddb",
+      "metric": "reward_75pct",
+      "source": 4.099774131138937,
+      "higher_is_better": true,
+      "coefficient": 0.8121848964295542,
+      "prior_weight": 0.3996,
+      "spread": 0.2314883268354034,
+      "normalizer": 0.2314883268354034,
+      "effective_weight": 0.1274903224319091,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 0.4738467021669974,
+        "gpt-5.6-terra-xhigh": 0.7951637618565268,
+        "gpt-5.6-luna-xhigh": 0.3245352758038429,
+        "gpt-5.5-xhigh": 0.2860045331562562
+      }
+    },
+    {
+      "experiment": "synthetic_main",
+      "method": "pege_ddb",
+      "metric": "budget_fraction",
+      "source": 1.0,
+      "higher_is_better": true,
+      "coefficient": 0.0594748186909553,
+      "prior_weight": 0.0999,
+      "spread": 0.0,
+      "normalizer": 0.4783125584325244,
+      "effective_weight": 0.019290261946684064,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 0.0,
+        "gpt-5.6-terra-xhigh": 0.0,
+        "gpt-5.6-luna-xhigh": 0.0,
+        "gpt-5.5-xhigh": 0.0
+      }
+    }
+  ],
+  "mode": "innovate",
+  "pruned_cells": [],
+  "locked": true,
+  "locked_at": "2026-08-14T17:22:14.657849+00:00",
+  "locked_n_models": 4
+}

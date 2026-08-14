@@ -1,0 +1,141 @@
+{
+  "paper_id": "2601.16233",
+  "phase": "test",
+  "cohort": [
+    "claude-opus-4-8-xhigh",
+    "claude-opus-xhigh",
+    "gpt-5.6-sol-xhigh",
+    "gpt-5.6-terra-xhigh",
+    "gpt-5.6-luna-xhigh",
+    "gpt-5.5-xhigh",
+    "glm-5-xhigh",
+    "minimax-xhigh",
+    "grok-4.3-xhigh",
+    "gemini-3-pro-preview",
+    "gemini-3.1-flash-lite-preview",
+    "kimi-k2.6-thinking",
+    "mimo-pro-xhigh",
+    "deepseek-v4-pro-xhigh"
+  ],
+  "models_present": [
+    "gpt-5.5-xhigh",
+    "gpt-5.6-luna-xhigh",
+    "gpt-5.6-sol-xhigh",
+    "gpt-5.6-terra-xhigh"
+  ],
+  "n_models": 4,
+  "n_cells": 5,
+  "last_updated": "2026-08-14T17:20:20.799958+00:00",
+  "excluded": false,
+  "typical_spread": 0.4036567575723091,
+  "paper_baseline": 0.8588975950989898,
+  "cohort_raw": {
+    "gpt-5.5-xhigh": 0.2461821382230436,
+    "gpt-5.6-luna-xhigh": 0.9822508343977109,
+    "gpt-5.6-sol-xhigh": 0.544379182454126,
+    "gpt-5.6-terra-xhigh": 1.6627782253210786
+  },
+  "cells": [
+    {
+      "experiment": "synthetic_main",
+      "method": "pege_ddb",
+      "metric": "auc",
+      "source": 2.516030784458729,
+      "higher_is_better": true,
+      "coefficient": 1.6654672413458953,
+      "prior_weight": 0.999,
+      "spread": 0.2391924639771455,
+      "normalizer": 0.2391924639771455,
+      "effective_weight": 0.3421566413242827,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 0.16097188007143526,
+        "gpt-5.6-terra-xhigh": 0.6895430933723201,
+        "gpt-5.6-luna-xhigh": 0.2790735158197286,
+        "gpt-5.5-xhigh": 0.22291162214558913
+      }
+    },
+    {
+      "experiment": "synthetic_main",
+      "method": "pege_ddb",
+      "metric": "reward_25pct",
+      "source": 1.2036124143294402,
+      "higher_is_better": true,
+      "coefficient": 0.9063697184986558,
+      "prior_weight": 0.6992999999999999,
+      "spread": 0.3368881127892527,
+      "normalizer": 0.3368881127892527,
+      "effective_weight": 0.26226024417343985,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 0.5966813601673617,
+        "gpt-5.6-terra-xhigh": 0.031084951993629373,
+        "gpt-5.6-luna-xhigh": 0.5874255638279569,
+        "gpt-5.5-xhigh": -0.012304816066001534
+      }
+    },
+    {
+      "experiment": "synthetic_main",
+      "method": "pege_ddb",
+      "metric": "reward_50pct",
+      "source": 2.6818117096538803,
+      "higher_is_better": true,
+      "coefficient": 0.5040620076870839,
+      "prior_weight": 0.4995,
+      "spread": 0.4704254023553655,
+      "normalizer": 0.4704254023553655,
+      "effective_weight": 0.20366486640051898,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": -0.37837174368798987,
+        "gpt-5.6-terra-xhigh": 0.5660032336643894,
+        "gpt-5.6-luna-xhigh": 0.09335307440759166,
+        "gpt-5.5-xhigh": -0.44544636620691946
+      }
+    },
+    {
+      "experiment": "synthetic_main",
+      "method": "pege_ddb",
+      "metric": "reward_75pct",
+      "source": 3.7397209784816496,
+      "higher_is_better": true,
+      "coefficient": 0.3342351771520817,
+      "prior_weight": 0.3996,
+      "spread": 0.6001976490341404,
+      "normalizer": 0.6001976490341404,
+      "effective_weight": 0.1723010137693362,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 0.046754570595690215,
+        "gpt-5.6-terra-xhigh": 1.4183368121148439,
+        "gpt-5.6-luna-xhigh": 0.29724525004106983,
+        "gpt-5.5-xhigh": 0.45195426554431606
+      }
+    },
+    {
+      "experiment": "synthetic_main",
+      "method": "pege_ddb",
+      "metric": "budget_fraction",
+      "source": 1.0,
+      "higher_is_better": true,
+      "coefficient": 0.056582764961450725,
+      "prior_weight": 0.0999,
+      "spread": 0.0,
+      "normalizer": 0.4036567575723091,
+      "effective_weight": 0.019617234332422226,
+      "cohort_imp": {
+        "gpt-5.6-sol-xhigh": 0.0,
+        "gpt-5.6-terra-xhigh": 0.0,
+        "gpt-5.6-luna-xhigh": 0.0,
+        "gpt-5.5-xhigh": 0.0
+      }
+    }
+  ],
+  "mode": "innovate",
+  "pruned_cells": [
+    {
+      "experiment": "synthetic_main",
+      "method": "pege_ddb",
+      "metric": "auc"
+    }
+  ],
+  "locked": true,
+  "locked_at": "2026-08-14T17:22:14.657849+00:00",
+  "locked_n_models": 4
+}
