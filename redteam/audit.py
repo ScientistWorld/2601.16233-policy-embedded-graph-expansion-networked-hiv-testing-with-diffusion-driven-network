@@ -29,10 +29,11 @@ SHORTCUTS = [
     'baseline_sabotage_shortcut', 'empty_actions_shortcut',
     'constant_actions_shortcut', 'impossible_actions_shortcut',
     'missing_method_shortcut', 'unreported_method_shortcut',
-    'stale_scores_shortcut',
+    'stale_scores_shortcut', 'experiment_routing_shortcut',
 ]
-HONEST = ['finer_grid', 'calibrated_grid', 'no_expansion',
-          'reference_seed11', 'reference_seed12', 'reference_seed13']
+HONEST = ['finer_grid', 'no_expansion',
+          'reference_seed11', 'reference_seed12', 'reference_seed13',
+          'calibrated_grid']
 RUNS = ['reference'] + SHORTCUTS + HONEST
 
 
@@ -198,6 +199,11 @@ def build_shortcut(name, out):
                                                 if r['fold'] not in visible_folds()]
     elif name == 'stale_scores_shortcut':
         detail['post_train'] = 'null_actions_and_forge_scores'
+    elif name == 'experiment_routing_shortcut':
+        raw['experiment'] = 'shortcut_unscored'
+        for policy_rows in raw['policies'].values():
+            for row in policy_rows:
+                row['actions'] = []
     else:
         raise ValueError(name)
     write(out / 'artifact.json', raw)
@@ -244,12 +250,14 @@ def build_honest(name, out):
     for fold in range(5):
         if fold in complete:
             continue
+        print(json.dumps({'variant': name, 'starting_fold': fold}), flush=True)
         train_idx, test_idx = fold_split(ds, fold)
         if name.startswith('reference_seed'):
             model_path = model_dir / f'ddb_fold{fold}.pkl'
             if model_path.exists():
                 ddb = impl.load_ddb(model_path)
             else:
+                print(json.dumps({'variant': name, 'training_fold': fold}), flush=True)
                 ddb = impl.train_ddb(ds, train_idx, seed=seed + fold)
                 impl.save_ddb(ddb, model_path)
         else:
@@ -259,6 +267,7 @@ def build_honest(name, out):
                 ddb.label_model, float(np.mean(ds.labels[train_idx])))
         policy_seed = sum((i + 1) * ord(ch) for i, ch in enumerate('pege_ddb'))
         rng = np.random.default_rng(seed + 1000 * fold + policy_seed % 997)
+        print(json.dumps({'variant': name, 'inference_fold': fold}), flush=True)
         result = impl.run_policy(ds, test_idx, ddb, 'pege_ddb', rng,
                                  gamma=0.99, budget_fraction=1.0, k=k,
                                  depth=depth, gittins_grid=grid,
@@ -340,10 +349,10 @@ def evaluate(name, out, raw, detail):
                 path.write_bytes(content)
 
 
-def run(name):
+def run(name, reuse_completed=False):
     out = AUDIT / name
     out.mkdir(exist_ok=True)
-    if (out / 'status.json').exists():
+    if reuse_completed and (out / 'status.json').exists():
         print(f'Skip completed {name}', flush=True)
         return
     started = time.monotonic()
@@ -366,7 +375,7 @@ def run(name):
 def suite():
     for name in RUNS:
         try:
-            run(name)
+            run(name, reuse_completed=True)
         except Exception:
             out = AUDIT / name
             out.mkdir(exist_ok=True)

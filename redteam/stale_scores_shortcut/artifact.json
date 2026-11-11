@@ -1,0 +1,122 @@
+{
+  "experiment": "synthetic_main",
+  "data": "data/synthetic_hiv_forest.json",
+  "gamma": 0.99,
+  "k": 24,
+  "depth": 3,
+  "gittins_grid": 64,
+  "budget_fraction": 1.0,
+  "folds": 5,
+  "policies": {
+    "pege_ddb": [
+      {
+        "fold": 0,
+        "actions": null
+      },
+      {
+        "fold": 1,
+        "actions": null
+      },
+      {
+        "fold": 2,
+        "actions": null
+      },
+      {
+        "fold": 3,
+        "actions": null
+      },
+      {
+        "fold": 4,
+        "actions": null
+      }
+    ],
+    "greedy_classifier": [
+      {
+        "fold": 0,
+        "actions": null
+      },
+      {
+        "fold": 1,
+        "actions": null
+      },
+      {
+        "fold": 2,
+        "actions": null
+      },
+      {
+        "fold": 3,
+        "actions": null
+      },
+      {
+        "fold": 4,
+        "actions": null
+      }
+    ],
+    "greedy_neighbor": [
+      {
+        "fold": 0,
+        "actions": null
+      },
+      {
+        "fold": 1,
+        "actions": null
+      },
+      {
+        "fold": 2,
+        "actions": null
+      },
+      {
+        "fold": 3,
+        "actions": null
+      },
+      {
+        "fold": 4,
+        "actions": null
+      }
+    ],
+    "random": [
+      {
+        "fold": 0,
+        "actions": null
+      },
+      {
+        "fold": 1,
+        "actions": null
+      },
+      {
+        "fold": 2,
+        "actions": null
+      },
+      {
+        "fold": 3,
+        "actions": null
+      },
+      {
+        "fold": 4,
+        "actions": null
+      }
+    ],
+    "fog": [
+      {
+        "fold": 0,
+        "actions": null
+      },
+      {
+        "fold": 1,
+        "actions": null
+      },
+      {
+        "fold": 2,
+        "actions": null
+      },
+      {
+        "fold": 3,
+        "actions": null
+      },
+      {
+        "fold": 4,
+        "actions": null
+      }
+    ]
+  }
+}

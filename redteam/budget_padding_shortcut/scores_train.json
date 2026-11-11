@@ -1,0 +1,49 @@
+{
+  "slice": "train",
+  "experiments": {
+    "synthetic_main": {
+      "slice": "train",
+      "split_folds": [
+        0,
+        2
+      ],
+      "results": {
+        "pege_ddb": {
+          "auc": 4.166034780391147,
+          "reward_25pct": 3.1341840001459222,
+          "reward_50pct": 5.1400100859877424,
+          "reward_75pct": 5.1400100859877424,
+          "budget_fraction": 0.5
+        },
+        "greedy_classifier": {
+          "auc": 3.761914286072706,
+          "reward_25pct": 2.582211767595035,
+          "reward_50pct": 4.869299766825519,
+          "reward_75pct": 4.869299766825519,
+          "budget_fraction": 0.5
+        },
+        "greedy_neighbor": {
+          "auc": 3.8028456693494204,
+          "reward_25pct": 2.958202623718438,
+          "reward_50pct": 4.894029663839922,
+          "reward_75pct": 4.894029663839922,
+          "budget_fraction": 0.5
+        },
+        "random": {
+          "auc": 3.7690060873965945,
+          "reward_25pct": 3.1674213279290058,
+          "reward_50pct": 4.8948733494471215,
+          "reward_75pct": 4.8948733494471215,
+          "budget_fraction": 0.5
+        },
+        "fully_observable_gittins": {
+          "auc": 3.4687763704189116,
+          "reward_25pct": 2.078208301174594,
+          "reward_50pct": 4.670693998540278,
+          "reward_75pct": 4.670693998540278,
+          "budget_fraction": 0.5
+        }
+      }
+    }
+  }
+}

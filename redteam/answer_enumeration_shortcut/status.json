@@ -1,0 +1,51 @@
+{
+  "name": "answer_enumeration_shortcut",
+  "train_returncode": 0,
+  "test_returncode": 0,
+  "test_score_file_changed": true,
+  "evaluator_unchanged": true,
+  "test_command": [
+    "bash",
+    "scripts/evaluate_test.sh"
+  ],
+  "test_arguments": [],
+  "detail": {
+    "enumeration": [
+      {
+        "fold": 0,
+        "positives": 10,
+        "states": 576,
+        "transitions": 2880,
+        "exact_auc": 7.902047874238066
+      },
+      {
+        "fold": 1,
+        "positives": 7,
+        "states": 80,
+        "transitions": 272,
+        "exact_auc": 5.748930401429639
+      },
+      {
+        "fold": 2,
+        "positives": 4,
+        "states": 12,
+        "transitions": 24,
+        "exact_auc": 3.638757211792756
+      },
+      {
+        "fold": 3,
+        "positives": 6,
+        "states": 64,
+        "transitions": 192,
+        "exact_auc": 5.009799907613105
+      },
+      {
+        "fold": 4,
+        "positives": 12,
+        "states": 1440,
+        "transitions": 8496,
+        "exact_auc": 9.937550568391254
+      }
+    ]
+  }
+}

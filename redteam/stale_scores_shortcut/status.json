@@ -1,0 +1,15 @@
+{
+  "name": "stale_scores_shortcut",
+  "train_returncode": 0,
+  "test_returncode": 1,
+  "test_score_file_changed": false,
+  "evaluator_unchanged": true,
+  "test_command": [
+    "bash",
+    "scripts/evaluate_test.sh"
+  ],
+  "test_arguments": [],
+  "detail": {
+    "post_train": "null_actions_and_forge_scores"
+  }
+}

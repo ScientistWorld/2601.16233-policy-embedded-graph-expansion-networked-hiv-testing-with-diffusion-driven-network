@@ -1,0 +1,13 @@
+{
+  "name": "reference",
+  "train_returncode": 0,
+  "test_returncode": 0,
+  "test_score_file_changed": false,
+  "evaluator_unchanged": true,
+  "test_command": [
+    "bash",
+    "scripts/evaluate_test.sh"
+  ],
+  "test_arguments": [],
+  "detail": {}
+}

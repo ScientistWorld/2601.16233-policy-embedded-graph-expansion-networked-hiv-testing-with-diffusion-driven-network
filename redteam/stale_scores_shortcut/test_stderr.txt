@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/home/user/eval/test/evaluate_slice.py", line 222, in <module>
+    main()
+  File "/home/user/eval/test/evaluate_slice.py", line 205, in main
+    results[experiment]["results"].update(summarize_artifact(artifact))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/evaluate_slice.py", line 148, in summarize_artifact
+    rows = [replay_row(ds, row, gamma, budget_fraction) for row in slice_rows(all_rows)]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/evaluate_slice.py", line 148, in <listcomp>
+    rows = [replay_row(ds, row, gamma, budget_fraction) for row in slice_rows(all_rows)]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/eval/test/evaluate_slice.py", line 76, in replay_row
+    for raw_action in row.get("actions", [])[:budget]:
+                      ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable

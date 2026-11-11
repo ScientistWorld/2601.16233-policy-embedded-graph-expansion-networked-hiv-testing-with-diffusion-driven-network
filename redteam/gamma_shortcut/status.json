@@ -1,0 +1,13 @@
+{
+  "name": "gamma_shortcut",
+  "train_returncode": 0,
+  "test_returncode": 0,
+  "test_score_file_changed": true,
+  "evaluator_unchanged": true,
+  "test_command": [
+    "bash",
+    "scripts/evaluate_test.sh"
+  ],
+  "test_arguments": [],
+  "detail": {}
+}
