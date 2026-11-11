@@ -1,8 +1,4 @@
-# Once you set action to 'submit' or 'done', STOP immediately.
-# Do NOT sleep, poll, or wait for jobs. The system reads this file
-# only after your turn ends.
-action: pending
+action: submit
 gpus: 0
 test: false
-milestone: core_claim
-notes: ""
+notes: "Resume audit after worker preemption: preserve 15 completed trials, run unscored-experiment omission check, no-expansion ablation, three fresh full five-fold reference seeds, then calibrated probabilities."
