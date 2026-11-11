@@ -1,20 +1,14 @@
 #!/bin/bash
-# Held-out test-slice evaluation entry point.
+# Held-out test evaluation (hidden slice).
 #
-# Mirrors scripts/evaluate.sh's artifact contract but writes
-# scoring/scores_test.json and scores the disjoint held-out folds. If
-# scoring/scores_train.json exists, the test scorer enforces the same method
-# entries so train/test gaps are comparable.
-
+# Scores every method on disk: each directory checkpoints/<name>/ with a
+# policy.json is played interactively on held-out episodes generated inside
+# eval/test/ and written to scoring/scores_test.json. Gamma, budget, episodes
+# and metrics are fixed by eval/test/; a failed method gets the worst value
+# in every metric. Runs with no arguments (extra flags are passed through,
+# e.g. --details PATH for per-episode analysis).
 set -e
-
 cd /home/user
 export PYTHONPATH=/home/user:${PYTHONPATH:-}
-
 mkdir -p scoring
-
-if [ "$#" -gt 0 ]; then
-  python eval/test/evaluate_slice.py --artifacts "$@" --output scoring/scores_test.json
-else
-  python eval/test/evaluate_slice.py --output scoring/scores_test.json
-fi
+python eval/test/evaluate.py --output scoring/scores_test.json "$@"

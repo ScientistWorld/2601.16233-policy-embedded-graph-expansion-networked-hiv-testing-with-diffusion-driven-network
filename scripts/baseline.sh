@@ -1,30 +1,10 @@
 #!/bin/bash
-# Run a baseline method from the paper.
+# Register the paper's baselines (Random, Greedy Neighbor, Greedy Classifier)
+# as checkpoints/<name>/policy.json and score them on the visible slice.
 #
-# Baselines are simple reference methods the paper compares against. 
-# Implement this only if applicable, i.e. the paper has baselines.
-# You do not need to implement all baselines to begin — 
-# just enough to validate that the evaluation pipeline works 
-# and provide a reference point. You can decide to expand more baselines later.
-# Each baseline must be actually run and scored through evaluate.sh
-# so the numbers are verified, not self-reported.
-# You can decide what this baseline script should do yourself.
-#
-# Usage:
-#   bash scripts/baseline.sh <name>
-
+# Usage: bash scripts/baseline.sh [comma-separated kinds]
 set -e
-
 cd /home/user
 export PYTHONPATH=/home/user:${PYTHONPATH:-}
-
-NAME="${1:-random,greedy_neighbor,greedy_classifier}"
-python data/sapog_data.py --output data/synthetic_hiv_forest.json
-python baseline/run_baselines.py \
-  --data data/synthetic_hiv_forest.json \
-  --output-dir checkpoints/baselines \
-  --policies "$NAME" \
-  --folds "${FOLDS:-5}" \
-  --gamma 0.99
-
-bash scripts/evaluate.sh checkpoints/baselines/results.json
+python baseline/policies.py train --out-root checkpoints --kinds "${1:-random,greedy_neighbor,greedy_classifier}"
+bash scripts/evaluate.sh

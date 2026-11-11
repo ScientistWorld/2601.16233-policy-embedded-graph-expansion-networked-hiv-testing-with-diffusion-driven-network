@@ -1,18 +1,12 @@
 #!/bin/bash
-# Visible train-slice evaluation entry point.
+# Visible train-slice evaluation.
 #
-# Mirrors scripts/evaluate.sh's artifact contract but writes
-# scoring/scores_train.json and scores only the visible anti-shortcut folds.
-
+# Scores every method on disk (checkpoints/<name>/policy.json) on the visible
+# validation episodes in data/validation_episodes.json through the same
+# interactive protocol as the held-out test, and writes
+# scoring/scores_train.json. Runs with no arguments.
 set -e
-
 cd /home/user
 export PYTHONPATH=/home/user:${PYTHONPATH:-}
-
 mkdir -p scoring
-
-if [ "$#" -gt 0 ]; then
-  python eval/train/evaluate_slice.py --artifacts "$@" --output scoring/scores_train.json
-else
-  python eval/train/evaluate_slice.py --output scoring/scores_train.json
-fi
+python eval/train/evaluate.py --output scoring/scores_train.json "$@"

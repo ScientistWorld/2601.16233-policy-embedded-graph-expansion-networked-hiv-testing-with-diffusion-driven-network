@@ -1,9 +1,27 @@
-"""Policy-Embedded Graph Expansion with Dynamics-Driven Branching.
+"""Policy-Embedded Graph Expansion (PEGE) with Dynamics-Driven Branching (DDB).
 
-This is a scaled implementation of the paper's computation: DDB learns
-node-to-node expansion dynamics with Gaussian Process branch counts and a
-conditional denoising diffusion model for child covariates; PEGE samples graph
-expansions and embeds them inside a forest oracle at every sequential decision.
+Paper: "Policy-Embedded Graph Expansion: Networked HIV Testing with
+Diffusion-Driven Network Samples" (Algorithm 1 and Section 5).
+
+* DDB is trained only on parent->child dynamics of the training forest:
+  a Gaussian Process regressor gives a Gaussian over the number of referrals
+  of a person given their covariates, and a conditional denoising diffusion
+  model (epsilon-prediction MLP) samples a child's covariates given the
+  parent's covariates.  Recursive sampling from each frontier person up to
+  depth ``d`` produces forest-preserving graph expansions.
+* The decision oracle is the Gittins index policy for forests (Choo et al.
+  2025): retirement-value recursion with Whittle's product formula for the
+  children of a node, conditioning each child on its parent's label.  Its
+  feature mapping theta gives P(HIV+ | covariates, referrer's state).
+* PEGE samples ``k`` expansions at every step, evaluates every frontier
+  person with the oracle on each sample, averages (mean aggregation) and
+  tests the argmax.
+
+Subcommands::
+
+    python method/pege_ddb.py train --out checkpoints/pege_ddb [--k 24 --depth 3 ...]
+    python method/pege_ddb.py variant --base checkpoints/pege_ddb --out DIR [--k ...]
+    python method/pege_ddb.py serve --model-dir checkpoints/pege_ddb   # used by policy.json
 """
 
 from __future__ import annotations
@@ -12,457 +30,432 @@ import argparse
 import json
 import math
 import pickle
-from dataclasses import dataclass
+import shutil
+import sys
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
-from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import RBF, WhiteKernel
-from sklearn.linear_model import LogisticRegression
-from sklearn.neural_network import MLPRegressor
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import LinearSVC
 
-from data.sapog_data import ForestDataset, component_roots, fold_split, load_forest
+ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from data.sapog_data import Forest, load_train_forest  # noqa: E402
+from data.sapog_protocol import EpisodeState, serve  # noqa: E402
+
+DIFF_STEPS = 12
+BETAS = np.linspace(0.0008, 0.08, DIFF_STEPS)
+ALPHA_BAR = np.cumprod(1.0 - BETAS)
+
+DEFAULT_CONFIG = {
+    "k": 24,
+    "depth": 3,
+    "grid": 256,
+    "aggregate": "mean",
+    "seed": 11,
+    "theta": "parent_label",
+}
 
 
-def discounted_auc(curve: Sequence[float]) -> float:
-    if not curve:
-        return 0.0
-    arr = np.asarray(curve, dtype=float)
-    if len(arr) == 1:
-        return float(arr[0])
-    area = float(np.sum((arr[:-1] + arr[1:]) * 0.5))
-    return area / len(arr)
+# --------------------------------------------------------------------------- DDB
 
 
-@dataclass
 class DDB:
-    count_model: object
-    diffusion_model: object
-    label_model: object
-    feature_dim: int
-    transition: Tuple[float, float]
-    classifier_model: object | None = None
-    diffusion_steps: int = 12
-    max_children: int = 5
+    """Hybrid GP-count / diffusion-covariate expansion model plus theta."""
 
-    def _alpha_bar(self, t: np.ndarray) -> np.ndarray:
-        beta = np.linspace(0.0008, 0.08, self.diffusion_steps)
-        alpha_bar = np.cumprod(1.0 - beta)
-        return alpha_bar[t]
+    def __init__(self, count_model, diffusion_model, theta_model, feature_dim: int, max_children: int, theta_kind: str):
+        self.count_model = count_model
+        self.diffusion_model = diffusion_model
+        self.theta_model = theta_model
+        self.feature_dim = feature_dim
+        self.max_children = max_children
+        self.theta_kind = theta_kind
+        self._prepared = False
 
-    def sample_child_features(self, parent_x: np.ndarray, rng: np.random.Generator) -> np.ndarray:
-        z = rng.normal(size=self.feature_dim)
-        for t in reversed(range(self.diffusion_steps)):
-            t_scaled = np.array([t / max(1, self.diffusion_steps - 1)])
-            inp = np.concatenate([parent_x, z, t_scaled])[None, :]
-            eps = self.diffusion_model.predict(inp)[0]
-            ab = self._alpha_bar(np.array([t]))[0]
+    # -- fast inference paths (numerically identical to sklearn's predict) --
+    def prepare(self) -> None:
+        if self._prepared:
+            return
+        scaler, mlp = self.diffusion_model.steps[0][1], self.diffusion_model.steps[-1][1]
+        self._d_mean = scaler.mean_
+        self._d_scale = scaler.scale_
+        self._d_W = [w.astype(np.float64) for w in mlp.coefs_]
+        self._d_b = [b.astype(np.float64) for b in mlp.intercepts_]
+        self._t_w = self.theta_model.coef_.ravel().astype(np.float64)
+        self._t_b = float(self.theta_model.intercept_[0])
+        rng = np.random.default_rng(0)
+        probe = np.hstack([rng.integers(0, 2, (4, 2 * self.feature_dim)).astype(float), rng.random((4, 1))])
+        probe[:, self.feature_dim : 2 * self.feature_dim] = rng.normal(size=(4, self.feature_dim))
+        assert np.allclose(self._mlp(probe), self.diffusion_model.predict(probe), atol=1e-6)
+        self._prepared = True
+
+    def _mlp(self, inp: np.ndarray) -> np.ndarray:
+        h = (inp - self._d_mean) / self._d_scale
+        n_layers = len(self._d_W)
+        for i, (W, b) in enumerate(zip(self._d_W, self._d_b)):
+            h = h @ W + b
+            if i < n_layers - 1:
+                np.maximum(h, 0.0, out=h)
+        return h
+
+    def count_mean_std(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+        if len(X) == 0:
+            return np.zeros(0), np.zeros(0)
+        mean, std = self.count_model.predict(X, return_std=True)
+        return np.asarray(mean, dtype=float), np.asarray(std, dtype=float)
+
+    def sample_counts(self, mean: np.ndarray, std: np.ndarray, rng: np.random.Generator) -> np.ndarray:
+        draw = rng.normal(mean, std)
+        return np.clip(np.rint(draw), 0, self.max_children).astype(np.int64)
+
+    def sample_child_features(self, parent_X: np.ndarray, rng: np.random.Generator) -> np.ndarray:
+        R, D = parent_X.shape[0], self.feature_dim
+        if R == 0:
+            return np.zeros((0, D))
+        z = rng.standard_normal((R, D))
+        for t in reversed(range(DIFF_STEPS)):
+            inp = np.hstack([parent_X, z, np.full((R, 1), t / (DIFF_STEPS - 1))])
+            eps = self._mlp(inp)
+            ab = ALPHA_BAR[t]
             x0 = (z - math.sqrt(max(1e-6, 1.0 - ab)) * eps) / math.sqrt(max(1e-6, ab))
             if t > 0:
-                ab_prev = self._alpha_bar(np.array([t - 1]))[0]
-                z = math.sqrt(ab_prev) * x0 + math.sqrt(max(1e-6, 1.0 - ab_prev)) * rng.normal(size=self.feature_dim)
+                abp = ALPHA_BAR[t - 1]
+                z = math.sqrt(abp) * x0 + math.sqrt(max(1e-6, 1.0 - abp)) * rng.standard_normal((R, D))
             else:
                 z = x0
         probs = np.clip((z + 1.0) * 0.5, 0.0, 1.0)
-        return (rng.random(self.feature_dim) < probs).astype(np.float32)
+        return (rng.random((R, D)) < probs).astype(np.float64)
 
-    def sample_count(self, parent_x: np.ndarray, rng: np.random.Generator) -> int:
-        mean, std = self.count_model.predict(parent_x[None, :], return_std=True)
-        draw = rng.normal(float(mean[0]), float(std[0]) + 0.35)
-        return int(np.clip(round(draw), 0, self.max_children))
-
-    def label_probability(self, x: np.ndarray) -> float:
-        return float(self.label_model.predict_proba(x[None, :])[0, 1])
-
-    def classifier_score(self, x: np.ndarray) -> float:
-        model = getattr(self, "classifier_model", None)
-        if model is None:
-            return self.label_probability(x)
-        if hasattr(model, "decision_function"):
-            return float(model.decision_function(x[None, :])[0])
-        if hasattr(model, "predict_proba"):
-            return float(model.predict_proba(x[None, :])[0, 1])
-        return float(model.predict(x[None, :])[0])
+    def theta(self, X: np.ndarray, parent_X: np.ndarray, is_root: np.ndarray, parent_pos: np.ndarray) -> np.ndarray:
+        """P(HIV+ | own covariates, referrer state) for a batch."""
+        feats = theta_features(self.theta_kind, X, parent_X, is_root, parent_pos)
+        z = feats @ self._t_w + self._t_b
+        return 1.0 / (1.0 + np.exp(-z))
 
 
-def train_ddb(ds: ForestDataset, train_indices: Sequence[int], seed: int = 0) -> DDB:
+def theta_features(kind: str, X: np.ndarray, parent_X: np.ndarray, is_root: np.ndarray, parent_pos: np.ndarray) -> np.ndarray:
+    cols = [X, is_root[:, None].astype(float), parent_pos[:, None].astype(float)]
+    if kind == "parent_features":
+        cols.insert(1, parent_X)
+    elif kind != "parent_label":
+        raise ValueError(f"unknown theta kind {kind}")
+    return np.hstack(cols)
+
+
+def _forest_arrays(forest: Forest) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    X = np.asarray(forest.features, dtype=np.float64)
+    y = np.asarray(forest.labels, dtype=np.int64)
+    parents = np.asarray(forest.parents, dtype=np.int64)
+    return X, y, parents
+
+
+def fit_theta(forest: Forest, kind: str, seed: int):
+    from sklearn.linear_model import LogisticRegression
+
+    X, y, parents = _forest_arrays(forest)
+    is_root = parents < 0
+    parent_X = np.where(is_root[:, None], 0.0, X[np.maximum(parents, 0)])
+    parent_pos = np.where(is_root, 0, y[np.maximum(parents, 0)])
+    feats = theta_features(kind, X, parent_X, is_root, parent_pos)
+    # Calibrated (unweighted) logistic model: the Gittins index needs probabilities.
+    model = LogisticRegression(C=1.0, max_iter=5000, random_state=seed)
+    model.fit(feats, y)
+    return model
+
+
+def train_ddb(forest: Forest, seed: int = 11, theta_kind: str = "parent_label") -> DDB:
+    from sklearn.gaussian_process import GaussianProcessRegressor
+    from sklearn.gaussian_process.kernels import RBF, WhiteKernel
+    from sklearn.neural_network import MLPRegressor
+    from sklearn.pipeline import make_pipeline
+    from sklearn.preprocessing import StandardScaler
+
     rng = np.random.default_rng(seed)
-    train_set = set(int(i) for i in train_indices)
-    parent_rows, counts = [], []
-    child_pairs = []
-    for i in train_indices:
-        child_count = sum(1 for c in ds.children[int(i)] if c in train_set)
-        parent_rows.append(ds.features[int(i)])
-        counts.append(child_count)
-        for child in ds.children[int(i)]:
-            if child in train_set:
-                child_pairs.append((ds.features[int(i)], ds.features[child]))
+    X, y, parents = _forest_arrays(forest)
+    n, D = X.shape
+    counts = np.zeros(n, dtype=float)
+    for p in parents:
+        if p >= 0:
+            counts[p] += 1
 
+    # (1) GPR over the number of referrals given the referrer's covariates.
     kernel = 1.0 * RBF(length_scale=6.0) + WhiteKernel(noise_level=0.4)
     count_model = make_pipeline(
         StandardScaler(),
         GaussianProcessRegressor(kernel=kernel, alpha=0.05, normalize_y=True, random_state=seed),
     )
-    count_model.fit(np.asarray(parent_rows), np.asarray(counts, dtype=float))
+    count_model.fit(X, counts)
 
-    label_model = LogisticRegression(class_weight="balanced", max_iter=1000, random_state=seed)
-    label_model.fit(ds.features[list(train_indices)], ds.labels[list(train_indices)])
-    classifier_model = make_pipeline(
-        StandardScaler(),
-        LinearSVC(class_weight="balanced", max_iter=5000, random_state=seed),
-    )
-    classifier_model.fit(ds.features[list(train_indices)], ds.labels[list(train_indices)])
-
-    # Conditional denoising diffusion training examples: predict injected noise
-    # from parent covariates, noised child covariates, and diffusion timestep.
-    X_rows, y_rows = [], []
-    if not child_pairs:
-        child_pairs = [(ds.features[i], ds.features[i]) for i in train_indices]
-    for parent_x, child_x in child_pairs:
-        child_cont = child_x * 2.0 - 1.0
-        for _ in range(5):
-            t = int(rng.integers(0, 12))
-            eps = rng.normal(size=child_cont.shape)
-            beta = np.linspace(0.0008, 0.08, 12)
-            ab = np.cumprod(1.0 - beta)[t]
-            z = math.sqrt(ab) * child_cont + math.sqrt(1.0 - ab) * eps
-            X_rows.append(np.concatenate([parent_x, z, [t / 11.0]]))
-            y_rows.append(eps)
+    # (2) Conditional denoising diffusion over child covariates given parent covariates.
+    child_idx = np.flatnonzero(parents >= 0)
+    parent_x = X[parents[child_idx]]
+    child_x = X[child_idx] * 2.0 - 1.0
+    reps = 5
+    t = rng.integers(0, DIFF_STEPS, size=(len(child_idx), reps))
+    eps = rng.standard_normal((len(child_idx), reps, D))
+    ab = ALPHA_BAR[t][..., None]
+    z = np.sqrt(ab) * child_x[:, None, :] + np.sqrt(1.0 - ab) * eps
+    inputs = np.concatenate(
+        [np.repeat(parent_x[:, None, :], reps, axis=1), z, (t / (DIFF_STEPS - 1))[..., None]], axis=2
+    ).reshape(-1, 2 * D + 1)
+    targets = eps.reshape(-1, D)
     diffusion_model = make_pipeline(
         StandardScaler(),
         MLPRegressor(hidden_layer_sizes=(96, 96), activation="relu", max_iter=220, random_state=seed, early_stopping=True),
     )
-    diffusion_model.fit(np.asarray(X_rows), np.asarray(y_rows))
-    child_labels_by_parent = {0: [], 1: []}
-    for i in train_indices:
-        for child in ds.children[int(i)]:
-            if child in train_set:
-                child_labels_by_parent[int(ds.labels[int(i)])].append(int(ds.labels[child]))
-    global_rate = float(np.mean(ds.labels[list(train_indices)]))
-    transition = tuple(
-        float(np.mean(child_labels_by_parent[b])) if child_labels_by_parent[b] else global_rate
-        for b in (0, 1)
-    )
-    return DDB(count_model, diffusion_model, label_model, ds.features.shape[1], transition, classifier_model=classifier_model)
+    diffusion_model.fit(inputs, targets)
+
+    # (3) Oracle feature mapping theta.
+    theta_model = fit_theta(forest, theta_kind, seed)
+    return DDB(count_model, diffusion_model, theta_model, D, int(counts.max()), theta_kind)
 
 
-def save_ddb(model: DDB, path: str | Path) -> None:
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
-    with Path(path).open("wb") as f:
-        pickle.dump(model, f)
+# --------------------------------------------------------------------------- oracle
 
 
-def load_ddb(path: str | Path) -> DDB:
-    with Path(path).open("rb") as f:
-        return pickle.load(f)
+class Grid:
+    def __init__(self, gamma: float, size: int):
+        self.gamma = gamma
+        self.upper = 1.0 / (1.0 - gamma)
+        self.m = np.linspace(0.0, self.upper, int(size))
+        self.dx = float(self.m[1] - self.m[0])
+
+    def collection(self, prod: np.ndarray) -> np.ndarray:
+        """Whittle: Phi(m) = M - int_m^M prod_i dphi_i/dy dy (rows = collections)."""
+        trap = 0.5 * self.dx * (prod[:, :-1] + prod[:, 1:])
+        suffix = np.zeros_like(prod)
+        suffix[:, :-1] = np.cumsum(trap[:, ::-1], axis=1)[:, ::-1]
+        return self.upper - suffix
+
+    def derivative(self, phi: np.ndarray) -> np.ndarray:
+        return np.clip(np.gradient(phi, self.dx, axis=-1), 0.0, 1.0)
+
+    def index(self, cont: np.ndarray) -> np.ndarray:
+        """Retirement value where continuing stops being better (cont - m decreasing)."""
+        diff = cont - self.m
+        neg = diff < 0
+        first = np.argmax(neg, axis=1)
+        out = np.full(len(cont), self.upper)
+        has = neg.any(axis=1)
+        zero = has & (first == 0)
+        out[zero] = 0.0
+        mid = has & (first > 0)
+        i = first[mid]
+        rows = np.flatnonzero(mid)
+        a = diff[rows, i - 1]
+        b = diff[rows, i]
+        out[mid] = self.m[i - 1] + self.dx * a / (a - b)
+        return out
 
 
-def _phi_derivative(phi: np.ndarray, grid: np.ndarray) -> np.ndarray:
-    deriv = np.gradient(phi, grid)
-    return np.clip(deriv, 0.0, 1.0)
+def _children_product(child_deriv: np.ndarray, counts: np.ndarray) -> np.ndarray:
+    """Product of child derivative curves per parent (rows of child_deriv grouped by parent)."""
+    G = child_deriv.shape[-1]
+    prod = np.ones((len(counts), G))
+    has = counts > 0
+    if has.any():
+        starts = np.concatenate([[0], np.cumsum(counts)[:-1]])[has]
+        prod[has] = np.multiply.reduceat(child_deriv, starts, axis=0)
+    return prod
 
 
-def _phi_collection(children: Sequence[int], label: int, phi_by_state: Dict[Tuple[int, int], np.ndarray], grid: np.ndarray, upper: float) -> np.ndarray:
-    if not children:
-        return grid.copy()
-    prod = np.ones_like(grid)
-    for child in children:
-        prod *= _phi_derivative(phi_by_state[(int(child), int(label))], grid)
-    # Phi(m) = upper - integral_m^upper prod(k) dk, evaluated numerically.
-    suffix = np.zeros_like(grid)
-    for i in range(len(grid) - 2, -1, -1):
-        dx = grid[i + 1] - grid[i]
-        suffix[i] = suffix[i + 1] + 0.5 * dx * (prod[i] + prod[i + 1])
-    return upper - suffix
+def gittins_indices(levels: List[dict], p_root: np.ndarray, grid: Grid) -> np.ndarray:
+    """Gittins index of every level-0 node of a batch of expansions.
 
-
-def oracle_scores(
-    frontier: Sequence[int],
-    children: Dict[int, List[int]],
-    features: Dict[int, np.ndarray],
-    known_labels: Dict[int, int],
-    ddb: DDB,
-    gamma: float,
-    grid_size: int = 96,
-    parent_label_by_node: Optional[Dict[int, int]] = None,
-) -> Dict[int, float]:
-    """Numerically compute binary branching-bandit Gittins indices.
-
-    This implements the recursive retirement-value equations used by the
-    Gittins oracle in Choo et al. (2025), discretized on a fixed grid. The
-    required label-conditionals are provided by the fitted DDB label dynamics.
+    ``levels[L]`` for L >= 1 holds ``p`` (n_L x 2: P(+) given parent label 0/1)
+    and ``counts`` of children for level L-1 nodes is ``levels[L]['parent_counts']``.
+    Level-0 nodes use ``p_root`` (their actual referrer state is known).
     """
+    gamma = grid.gamma
+    deriv_below: Optional[np.ndarray] = None  # (n_{L+1}, 2, G): dphi of level L+1 nodes given their parent's label
+    for L in range(len(levels) - 1, 0, -1):
+        p = levels[L]["p"]
+        n = p.shape[0]
+        if L + 1 < len(levels):
+            counts = levels[L + 1]["parent_counts"]
+            phi_c = [grid.collection(_children_product(deriv_below[:, lab, :], counts)) for lab in (0, 1)]
+        else:
+            phi_c = [np.broadcast_to(grid.m, (n, grid.m.size)) for _ in (0, 1)]
+        deriv = np.empty((n, 2, grid.m.size))
+        for parent_lab in (0, 1):
+            q = p[:, parent_lab][:, None]
+            cont = (1.0 - q) * (gamma * phi_c[0]) + q * (1.0 + gamma * phi_c[1])
+            deriv[:, parent_lab, :] = grid.derivative(np.maximum(grid.m, cont))
+        deriv_below = deriv
+    n0 = len(p_root)
+    if len(levels) > 1:
+        counts = levels[1]["parent_counts"]
+        phi_c = [grid.collection(_children_product(deriv_below[:, lab, :], counts)) for lab in (0, 1)]
+    else:
+        phi_c = [np.broadcast_to(grid.m, (n0, grid.m.size)) for _ in (0, 1)]
+    q = p_root[:, None]
+    cont = (1.0 - q) * (gamma * phi_c[0]) + q * (1.0 + gamma * phi_c[1])
+    return grid.index(cont)
 
-    upper = 1.0 / max(1e-6, 1.0 - gamma)
-    grid = np.linspace(0.0, upper, int(grid_size))
-    parent_label_by_node = parent_label_by_node or {}
-    nodes = list(features)
-    depth_memo: Dict[int, int] = {}
 
-    def depth(v: int) -> int:
-        if v not in depth_memo:
-            depth_memo[v] = 0 if not children.get(v) else 1 + max(depth(c) for c in children[v])
-        return depth_memo[v]
+# --------------------------------------------------------------------------- PEGE policy
 
-    phi_by_state: Dict[Tuple[int, int], np.ndarray] = {}
-    index_by_state: Dict[Tuple[int, int], float] = {}
-    for node in sorted(nodes, key=depth):
-        for parent_label in (0, 1):
-            if node in known_labels:
-                p1 = float(known_labels[node])
+
+class PEGEPolicy:
+    def __init__(self, ddb: DDB, config: dict):
+        self.ddb = ddb
+        self.ddb.prepare()
+        self.k = int(config["k"])
+        self.depth = int(config["depth"])
+        self.grid_size = int(config["grid"])
+        self.aggregate = config["aggregate"]
+        self.seed = int(config["seed"])
+        self.rng = np.random.default_rng(self.seed)
+        self.grid: Optional[Grid] = None
+
+    def reset(self, state: EpisodeState) -> None:
+        self.rng = np.random.default_rng([self.seed, int(state.policy_seed)])
+        self.grid = Grid(state.gamma, self.grid_size)
+
+    def frontier_inputs(self, state: EpisodeState, frontier: Sequence[int]):
+        D = self.ddb.feature_dim
+        X = np.asarray([state.features[v] for v in frontier], dtype=np.float64)
+        parent_X = np.zeros((len(frontier), D))
+        is_root = np.zeros(len(frontier), dtype=bool)
+        parent_pos = np.zeros(len(frontier), dtype=np.int64)
+        for i, v in enumerate(frontier):
+            par = state.parent.get(v)
+            if par is None:
+                is_root[i] = True
             else:
-                base = ddb.label_probability(features[node])
-                p1 = float(np.clip(0.65 * base + 0.35 * ddb.transition[parent_label], 1e-4, 1.0 - 1e-4))
-            p = {0: 1.0 - p1, 1: p1}
-            cont = np.zeros_like(grid)
-            for label in (0, 1):
-                phi_children = _phi_collection(children.get(node, []), label, phi_by_state, grid, upper)
-                cont += p[label] * (float(label) + gamma * phi_children)
-            phi = np.maximum(grid, cont)
-            phi_by_state[(node, parent_label)] = phi
-            viable = np.flatnonzero(cont >= grid)
-            index_by_state[(node, parent_label)] = float(grid[int(viable[-1])] if len(viable) else 0.0)
+                parent_X[i] = state.features[par]
+                parent_pos[i] = int(state.labels.get(par, 0))
+        return X, parent_X, is_root, parent_pos
 
-    scores: Dict[int, float] = {}
-    for v in frontier:
-        parent_label = parent_label_by_node.get(int(v))
-        if parent_label in (0, 1):
-            scores[int(v)] = index_by_state[(int(v), int(parent_label))]
+    def expand(self, X0: np.ndarray, p0: np.ndarray) -> List[dict]:
+        """k independent DDB expansions of depth d from every frontier person."""
+        F = len(X0)
+        ddb, rng, k = self.ddb, self.rng, self.k
+        levels: List[dict] = [{"X": np.repeat(X0, k, axis=0)}]
+        if self.depth <= 0:
+            return levels
+        mean0, std0 = ddb.count_mean_std(X0)
+        mean, std = np.repeat(mean0, k), np.repeat(std0, k)
+        for L in range(1, self.depth + 1):
+            prev = levels[L - 1]["X"]
+            if L > 1:
+                mean, std = ddb.count_mean_std(prev)
+            counts = ddb.sample_counts(mean, std, rng) if len(prev) else np.zeros(0, dtype=np.int64)
+            parent_rows = np.repeat(np.arange(len(prev)), counts)
+            parent_X = prev[parent_rows]
+            X = ddb.sample_child_features(parent_X, rng)
+            n = len(X)
+            p = np.empty((n, 2))
+            for lab in (0, 1):
+                p[:, lab] = ddb.theta(X, parent_X, np.zeros(n, dtype=bool), np.full(n, lab))
+            levels.append({"X": X, "p": p, "parent_counts": counts})
+        return levels
+
+    def choose(self, state: EpisodeState) -> int:
+        frontier = list(state.frontier)
+        if len(frontier) == 1:
+            return frontier[0]
+        X0, pX0, is_root, ppos = self.frontier_inputs(state, frontier)
+        p0 = self.ddb.theta(X0, pX0, is_root, ppos)
+        F, k = len(frontier), self.k
+        levels = self.expand(X0, p0)
+        idx = gittins_indices(levels, np.repeat(p0, k), self.grid).reshape(F, k)
+        if self.aggregate == "mean":
+            score = idx.mean(axis=1)
+        elif self.aggregate == "mode":
+            winners = np.bincount(idx.argmax(axis=0), minlength=F).astype(float)
+            score = winners + 1e-6 * idx.mean(axis=1) / self.grid.upper
+        elif self.aggregate == "mean_plus_var":
+            score = idx.mean(axis=1) + idx.var(axis=1)
+        elif self.aggregate == "mean_minus_var":
+            score = idx.mean(axis=1) - idx.var(axis=1)
         else:
-            scores[int(v)] = 0.5 * (index_by_state[(int(v), 0)] + index_by_state[(int(v), 1)])
-    return scores
+            raise ValueError(f"unknown aggregation {self.aggregate}")
+        return frontier[int(np.argmax(score))]
 
 
-def expand_from_frontier(
-    ds: ForestDataset,
-    ddb: DDB,
-    discovered: Sequence[int],
-    frontier: Sequence[int],
-    depth: int,
-    rng: np.random.Generator,
-) -> Tuple[Dict[int, List[int]], Dict[int, np.ndarray]]:
-    children = {int(v): [] for v in discovered}
-    features = {int(v): ds.features[int(v)] for v in discovered}
-    next_id = -1
-    queue: List[Tuple[int, int]] = [(int(v), 0) for v in frontier]
-    while queue:
-        parent, dist = queue.pop(0)
-        if dist >= depth:
-            continue
-        n_child = ddb.sample_count(features[parent], rng)
-        for _ in range(n_child):
-            child = next_id
-            next_id -= 1
-            child_x = ddb.sample_child_features(features[parent], rng)
-            features[child] = child_x
-            children.setdefault(parent, []).append(child)
-            children[child] = []
-            queue.append((child, dist + 1))
-    return children, features
+# --------------------------------------------------------------------------- CLI
 
 
-def run_policy(
-    ds: ForestDataset,
-    test_indices: Sequence[int],
-    ddb: Optional[DDB],
-    policy: str,
-    rng: np.random.Generator,
-    gamma: float = 0.99,
-    budget_fraction: float = 1.0,
-    k: int = 12,
-    depth: int = 3,
-    gittins_grid: int = 96,
-    pege_aggregate: str = "mean",
-) -> Dict[str, object]:
-    test_set = set(int(i) for i in test_indices)
-    discovered = set(component_roots(ds, test_indices))
-    frontier = set(discovered)
-    tested: set[int] = set()
-    known_labels: Dict[int, int] = {}
-    parent_tested_positive: Dict[int, bool] = {}
-    rewards, actions = [], []
-    budget = max(1, int(round(len(test_indices) * budget_fraction)))
-
-    while frontier and len(rewards) < budget:
-        fr = sorted(frontier)
-        if policy == "random":
-            action = int(rng.choice(fr))
-        elif policy == "greedy_neighbor":
-            candidates = [v for v in fr if parent_tested_positive.get(v, False)]
-            action = int(rng.choice(candidates or fr))
-        elif policy == "greedy_classifier":
-            assert ddb is not None
-            scores = [ddb.classifier_score(ds.features[v]) for v in fr]
-            action = int(fr[int(np.argmax(scores))])
-        elif policy == "fog":
-            assert ddb is not None
-            true_children = {v: [c for c in ds.children[v] if c in test_set and c not in tested] for v in test_set}
-            feats = {v: ds.features[v] for v in test_set}
-            parent_context = {
-                int(v): int(known_labels[int(ds.parents[int(v)])])
-                for v in fr
-                if int(ds.parents[int(v)]) in known_labels
-            }
-            scores = oracle_scores(fr, true_children, feats, known_labels, ddb, gamma, gittins_grid, parent_context)
-            action = max(scores, key=scores.get)
-        elif policy == "pege_ddb":
-            assert ddb is not None
-            aggregate = {v: [] for v in fr}
-            winners: List[int] = []
-            parent_context = {
-                int(v): int(known_labels[int(ds.parents[int(v)])])
-                for v in fr
-                if int(ds.parents[int(v)]) in known_labels
-            }
-            for _ in range(k):
-                syn_children, syn_features = expand_from_frontier(ds, ddb, sorted(discovered), fr, depth, rng)
-                scores = oracle_scores(fr, syn_children, syn_features, known_labels, ddb, gamma, gittins_grid, parent_context)
-                winners.append(max(scores, key=scores.get))
-                for v in fr:
-                    aggregate[v].append(scores[v])
-            if pege_aggregate == "mean":
-                action_scores = {v: float(np.mean(vals)) for v, vals in aggregate.items()}
-            elif pege_aggregate == "mode":
-                counts = {v: winners.count(v) for v in fr}
-                action_scores = {v: (float(counts[v]), float(np.mean(aggregate[v]))) for v in fr}
-            elif pege_aggregate == "mean_plus_var":
-                action_scores = {v: float(np.mean(vals) + np.var(vals)) for v, vals in aggregate.items()}
-            elif pege_aggregate == "mean_minus_var":
-                action_scores = {v: float(np.mean(vals) - np.var(vals)) for v, vals in aggregate.items()}
-            else:
-                raise ValueError(f"unknown PEGE aggregation method {pege_aggregate}")
-            action = max(action_scores, key=action_scores.get)
-        else:
-            raise ValueError(f"unknown policy {policy}")
-
-        tested.add(action)
-        frontier.remove(action)
-        known_labels[action] = int(ds.labels[action])
-        rewards.append((gamma ** (len(rewards))) * int(ds.labels[action]))
-        actions.append(action)
-        for child in ds.children[action]:
-            if child in test_set and child not in tested:
-                discovered.add(child)
-                frontier.add(child)
-                parent_tested_positive[child] = bool(ds.labels[action])
-
-    cumulative = np.cumsum(rewards).astype(float).tolist()
-    while len(cumulative) < budget:
-        cumulative.append(cumulative[-1] if cumulative else 0.0)
-    return {
-        "policy": policy,
-        "actions": actions,
-        "discounted_rewards": rewards,
-        "cumulative_discounted_reward": cumulative,
-        "total_discounted_reward": float(cumulative[-1] if cumulative else 0.0),
-        "auc": discounted_auc(cumulative),
-        "positives_found": int(sum(ds.labels[a] for a in actions)),
-        "tests": len(actions),
-        "pege_aggregate": pege_aggregate if policy == "pege_ddb" else None,
-    }
+def write_policy_dir(out: Path, ddb_path: Path, config: dict) -> None:
+    out.mkdir(parents=True, exist_ok=True)
+    cfg = dict(config)
+    cfg["ddb"] = str(ddb_path)
+    (out / "config.json").write_text(json.dumps(cfg, indent=2) + "\n")
+    (out / "policy.json").write_text(
+        json.dumps({"command": ["python", "method/pege_ddb.py", "serve", "--model-dir", str(out)]}, indent=2) + "\n"
+    )
 
 
-def run_experiment(args: argparse.Namespace) -> None:
-    ds = load_forest(args.data)
-    out_dir = Path(args.output_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    policies = args.policies.split(",")
-    artifact_path = out_dir / "results.json"
+def cmd_train(args: argparse.Namespace) -> None:
+    out = Path(args.out)
+    config = {**DEFAULT_CONFIG, **{k: v for k, v in vars(args).items() if k in DEFAULT_CONFIG and v is not None}}
+    forest = load_train_forest(args.data)
+    ddb = train_ddb(forest, seed=int(config["seed"]), theta_kind=config["theta"])
+    out.mkdir(parents=True, exist_ok=True)
+    with (out / "ddb.pkl").open("wb") as f:
+        pickle.dump(ddb, f)
+    write_policy_dir(out, out / "ddb.pkl", config)
+    print(json.dumps({"trained": str(out), "config": config, "max_children": ddb.max_children}))
 
-    all_results: Dict[str, List[Dict[str, object]]] = {p: [] for p in policies}
-    if args.resume and artifact_path.exists():
-        raw = json.loads(artifact_path.read_text())
-        if (
-            raw.get("data") == args.data
-            and float(raw.get("gamma", -1)) == args.gamma
-            and int(raw.get("k", -1)) == args.k
-            and int(raw.get("depth", -1)) == args.depth
-            and int(raw.get("gittins_grid", -1)) == args.gittins_grid
-            and float(raw.get("budget_fraction", -1)) == args.budget_fraction
-        ):
-            for policy in policies:
-                all_results[policy] = list(raw.get("policies", {}).get(policy, []))
 
-    def write_artifact() -> None:
-        artifact = {
-            "experiment": args.experiment,
-            "data": args.data,
-            "gamma": args.gamma,
-            "k": args.k,
-            "depth": args.depth,
-            "gittins_grid": args.gittins_grid,
-            "budget_fraction": args.budget_fraction,
-            "folds": args.folds,
-            "policies": all_results,
-        }
-        artifact_path.write_text(json.dumps(artifact, indent=2))
+def cmd_variant(args: argparse.Namespace) -> None:
+    """Same trained DDB, different PEGE settings (optionally a refit theta)."""
+    base = Path(args.base)
+    out = Path(args.out)
+    config = json.loads((base / "config.json").read_text())
+    config.pop("ddb", None)
+    for key in DEFAULT_CONFIG:
+        val = getattr(args, key, None)
+        if val is not None:
+            config[key] = val
+    out.mkdir(parents=True, exist_ok=True)
+    with (base / "ddb.pkl").open("rb") as f:
+        ddb = pickle.load(f)
+    if config["theta"] != ddb.theta_kind:
+        ddb.theta_model = fit_theta(load_train_forest(args.data), config["theta"], int(config["seed"]))
+        ddb.theta_kind = config["theta"]
+        ddb._prepared = False
+    with (out / "ddb.pkl").open("wb") as f:
+        pickle.dump(ddb, f)
+    write_policy_dir(out, out / "ddb.pkl", config)
+    print(json.dumps({"variant": str(out), "config": config}))
 
-    for fold in range(args.folds):
-        finished = {int(r["fold"]) for rows in all_results.values() for r in rows if "fold" in r}
-        if fold in finished and all(any(int(r.get("fold", -1)) == fold for r in rows) for rows in all_results.values()):
-            print(json.dumps({"skip_completed_fold": fold}, indent=2))
-            continue
-        train_idx, test_idx = fold_split(ds, fold)
-        model_path = out_dir / f"ddb_fold{fold}.pkl"
-        if args.resume and model_path.exists():
-            ddb = load_ddb(model_path)
-        else:
-            ddb = train_ddb(ds, train_idx, seed=args.seed + fold)
-            save_ddb(ddb, model_path)
-        for policy in policies:
-            if any(int(r.get("fold", -1)) == fold for r in all_results[policy]):
-                continue
-            stable_policy_seed = sum((i + 1) * ord(ch) for i, ch in enumerate(policy))
-            rng = np.random.default_rng(args.seed + 1000 * fold + stable_policy_seed % 997)
-            result = run_policy(
-                ds,
-                test_idx,
-                ddb,
-                policy,
-                rng,
-                args.gamma,
-                args.budget_fraction,
-                args.k,
-                args.depth,
-                args.gittins_grid,
-                args.pege_aggregate,
-            )
-            result["fold"] = fold
-            result["test_nodes"] = len(test_idx)
-            all_results[policy].append(result)
-            write_artifact()
-            print(json.dumps({"completed_fold": fold, "policy": policy}, indent=2))
 
-    write_artifact()
-    print(json.dumps({"wrote": str(artifact_path), "policies": policies}, indent=2))
+def cmd_serve(args: argparse.Namespace) -> None:
+    model_dir = Path(args.model_dir)
+    config = {**DEFAULT_CONFIG, **json.loads((model_dir / "config.json").read_text())}
+    with Path(config.get("ddb", model_dir / "ddb.pkl")).open("rb") as f:
+        ddb = pickle.load(f)
+    policy = PEGEPolicy(ddb, config)
+    serve(policy.choose, policy.reset)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data", default="data/synthetic_hiv_forest.json")
-    parser.add_argument("--output-dir", default="checkpoints/pege_ddb")
-    parser.add_argument("--experiment", default="synthetic_main")
-    parser.add_argument("--policies", default="pege_ddb,greedy_classifier,greedy_neighbor,random,fog")
-    parser.add_argument("--folds", type=int, default=5)
-    parser.add_argument("--k", type=int, default=12)
-    parser.add_argument("--depth", type=int, default=3)
-    parser.add_argument("--gittins-grid", type=int, default=96)
-    parser.add_argument("--gamma", type=float, default=0.99)
-    parser.add_argument("--budget-fraction", type=float, default=1.0)
-    parser.add_argument(
-        "--pege-aggregate",
-        choices=["mean", "mode", "mean_plus_var", "mean_minus_var"],
-        default="mean",
-    )
-    parser.add_argument("--seed", type=int, default=11)
-    parser.add_argument("--resume", action=argparse.BooleanOptionalAction, default=True)
+    sub = parser.add_subparsers(dest="cmd", required=True)
+    for name in ("train", "variant"):
+        p = sub.add_parser(name)
+        p.add_argument("--out", required=True)
+        p.add_argument("--data", default=str(ROOT / "data" / "train_forest.json"))
+        p.add_argument("--k", type=int)
+        p.add_argument("--depth", type=int)
+        p.add_argument("--grid", type=int)
+        p.add_argument("--aggregate", choices=["mean", "mode", "mean_plus_var", "mean_minus_var"])
+        p.add_argument("--seed", type=int)
+        p.add_argument("--theta", choices=["parent_label", "parent_features"])
+        if name == "variant":
+            p.add_argument("--base", required=True)
+    s = sub.add_parser("serve")
+    s.add_argument("--model-dir", required=True)
     args = parser.parse_args()
-    run_experiment(args)
+    {"train": cmd_train, "variant": cmd_variant, "serve": cmd_serve}[args.cmd](args)
 
 
 if __name__ == "__main__":
-    main()
+    # Dispatch through the importable module so pickled DDB objects reference
+    # ``method.pege_ddb.DDB`` (loadable from any entry point), not ``__main__``.
+    import importlib
+
+    importlib.import_module("method.pege_ddb").main()
