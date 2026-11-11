@@ -1,0 +1,214 @@
+[hive] This stdout log is managed by Hive.
+[hive] job_id: 196a298f
+[hive] host: node
+[hive] node_id: 7d888975a2d9af5ff288c845bd0547d33548cc2bc6e5a85c832fe664
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-11 14:29:58 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2601.16233:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+Skip completed reference
+Skip completed answer_enumeration_shortcut
+Skip completed gamma_shortcut
+Skip completed budget_padding_shortcut
+Skip completed ground_truth_shortcut
+Skip completed impossible_labels_shortcut
+Skip completed duplicate_folds_shortcut
+Skip completed self_report_shortcut
+Skip completed baseline_sabotage_shortcut
+Skip completed empty_actions_shortcut
+Skip completed constant_actions_shortcut
+Skip completed impossible_actions_shortcut
+Skip completed missing_method_shortcut
+Skip completed unreported_method_shortcut
+Skip completed stale_scores_shortcut
+{"name": "experiment_routing_shortcut", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {}}
+Skip completed finer_grid
+{"variant": "no_expansion", "starting_fold": 0}
+{"variant": "no_expansion", "inference_fold": 0}
+{"variant": "no_expansion", "completed_fold": 0}
+{"variant": "no_expansion", "starting_fold": 1}
+{"variant": "no_expansion", "inference_fold": 1}
+{"variant": "no_expansion", "completed_fold": 1}
+{"variant": "no_expansion", "starting_fold": 2}
+{"variant": "no_expansion", "inference_fold": 2}
+{"variant": "no_expansion", "completed_fold": 2}
+{"variant": "no_expansion", "starting_fold": 3}
+{"variant": "no_expansion", "inference_fold": 3}
+{"variant": "no_expansion", "completed_fold": 3}
+{"variant": "no_expansion", "starting_fold": 4}
+{"variant": "no_expansion", "inference_fold": 4}
+{"variant": "no_expansion", "completed_fold": 4}
+{"name": "no_expansion", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {"seed": 11, "grid": 1024, "depth": 0, "k": 1, "fresh_training": false}}
+{"variant": "reference_seed11", "starting_fold": 0}
+{"variant": "reference_seed11", "training_fold": 0}
+{"variant": "reference_seed11", "inference_fold": 0}
+{"variant": "reference_seed11", "completed_fold": 0}
+{"variant": "reference_seed11", "starting_fold": 1}
+{"variant": "reference_seed11", "training_fold": 1}
+{"variant": "reference_seed11", "inference_fold": 1}
+{"variant": "reference_seed11", "completed_fold": 1}
+{"variant": "reference_seed11", "starting_fold": 2}
+{"variant": "reference_seed11", "training_fold": 2}
+{"variant": "reference_seed11", "inference_fold": 2}
+{"variant": "reference_seed11", "completed_fold": 2}
+{"variant": "reference_seed11", "starting_fold": 3}
+{"variant": "reference_seed11", "training_fold": 3}
+{"variant": "reference_seed11", "inference_fold": 3}
+{"variant": "reference_seed11", "completed_fold": 3}
+{"variant": "reference_seed11", "starting_fold": 4}
+{"variant": "reference_seed11", "training_fold": 4}
+{"variant": "reference_seed11", "inference_fold": 4}
+{"variant": "reference_seed11", "completed_fold": 4}
+{"name": "reference_seed11", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": false, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {"seed": 11, "grid": 64, "depth": 3, "k": 24, "fresh_training": true}}
+{"variant": "reference_seed12", "starting_fold": 0}
+{"variant": "reference_seed12", "training_fold": 0}
+{"variant": "reference_seed12", "inference_fold": 0}
+{"variant": "reference_seed12", "completed_fold": 0}
+{"variant": "reference_seed12", "starting_fold": 1}
+{"variant": "reference_seed12", "training_fold": 1}
+{"variant": "reference_seed12", "inference_fold": 1}
+[hive] This stdout log is managed by Hive.
+[hive] job_id: 196a298f
+[hive] host: node
+[hive] node_id: fcde3bec0696c42062c9d6cc66dc871ed7302667e97704f62095fef8
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-11 14:55:29 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2601.16233:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+Skip completed reference
+Skip completed answer_enumeration_shortcut
+Skip completed gamma_shortcut
+Skip completed budget_padding_shortcut
+Skip completed ground_truth_shortcut
+Skip completed impossible_labels_shortcut
+Skip completed duplicate_folds_shortcut
+Skip completed self_report_shortcut
+Skip completed baseline_sabotage_shortcut
+Skip completed empty_actions_shortcut
+Skip completed constant_actions_shortcut
+Skip completed impossible_actions_shortcut
+Skip completed missing_method_shortcut
+Skip completed unreported_method_shortcut
+Skip completed stale_scores_shortcut
+Skip completed experiment_routing_shortcut
+Skip completed finer_grid
+Skip completed no_expansion
+Skip completed reference_seed11
+{"variant": "reference_seed12", "starting_fold": 1}
+{"variant": "reference_seed12", "inference_fold": 1}
+[hive] This stdout log is managed by Hive.
+[hive] job_id: 196a298f
+[hive] host: node
+[hive] node_id: 9b637030e9eaf913973bd566a74eaa290e1c403bfe230b600e315b29
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-11 14:59:04 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2601.16233:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+Skip completed reference
+Skip completed answer_enumeration_shortcut
+Skip completed gamma_shortcut
+Skip completed budget_padding_shortcut
+Skip completed ground_truth_shortcut
+Skip completed impossible_labels_shortcut
+Skip completed duplicate_folds_shortcut
+Skip completed self_report_shortcut
+Skip completed baseline_sabotage_shortcut
+Skip completed empty_actions_shortcut
+Skip completed constant_actions_shortcut
+Skip completed impossible_actions_shortcut
+Skip completed missing_method_shortcut
+Skip completed unreported_method_shortcut
+Skip completed stale_scores_shortcut
+Skip completed experiment_routing_shortcut
+Skip completed finer_grid
+Skip completed no_expansion
+Skip completed reference_seed11
+{"variant": "reference_seed12", "starting_fold": 1}
+{"variant": "reference_seed12", "inference_fold": 1}
+{"variant": "reference_seed12", "completed_fold": 1}
+{"variant": "reference_seed12", "starting_fold": 2}
+{"variant": "reference_seed12", "training_fold": 2}
+{"variant": "reference_seed12", "inference_fold": 2}
+{"variant": "reference_seed12", "completed_fold": 2}
+{"variant": "reference_seed12", "starting_fold": 3}
+{"variant": "reference_seed12", "training_fold": 3}
+{"variant": "reference_seed12", "inference_fold": 3}
+{"variant": "reference_seed12", "completed_fold": 3}
+{"variant": "reference_seed12", "starting_fold": 4}
+{"variant": "reference_seed12", "training_fold": 4}
+{"variant": "reference_seed12", "inference_fold": 4}
+{"variant": "reference_seed12", "completed_fold": 4}
+{"name": "reference_seed12", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {"seed": 12, "grid": 64, "depth": 3, "k": 24, "fresh_training": true}}
+{"variant": "reference_seed13", "starting_fold": 0}
+{"variant": "reference_seed13", "training_fold": 0}
+{"variant": "reference_seed13", "inference_fold": 0}
+{"variant": "reference_seed13", "completed_fold": 0}
+{"variant": "reference_seed13", "starting_fold": 1}
+{"variant": "reference_seed13", "training_fold": 1}
+{"variant": "reference_seed13", "inference_fold": 1}
+{"variant": "reference_seed13", "completed_fold": 1}
+{"variant": "reference_seed13", "starting_fold": 2}
+{"variant": "reference_seed13", "training_fold": 2}
+{"variant": "reference_seed13", "inference_fold": 2}
+{"variant": "reference_seed13", "completed_fold": 2}
+{"variant": "reference_seed13", "starting_fold": 3}
+{"variant": "reference_seed13", "training_fold": 3}
+{"variant": "reference_seed13", "inference_fold": 3}
+{"variant": "reference_seed13", "completed_fold": 3}
+{"variant": "reference_seed13", "starting_fold": 4}
+{"variant": "reference_seed13", "training_fold": 4}
+{"variant": "reference_seed13", "inference_fold": 4}
+{"variant": "reference_seed13", "completed_fold": 4}
+{"name": "reference_seed13", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {"seed": 13, "grid": 64, "depth": 3, "k": 24, "fresh_training": true}}
+{"variant": "calibrated_grid", "starting_fold": 0}
+{"variant": "calibrated_grid", "inference_fold": 0}
+{"variant": "calibrated_grid", "completed_fold": 0}
+{"variant": "calibrated_grid", "starting_fold": 1}
+{"variant": "calibrated_grid", "inference_fold": 1}
+[hive] This stdout log is managed by Hive.
+[hive] job_id: 196a298f
+[hive] host: node
+[hive] node_id: 0342854c313f0d7f5d7bf7446f2c46b464347b00731208d0b58e4be0
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-11 15:54:03 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2601.16233:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+Skip completed reference
+Skip completed answer_enumeration_shortcut
+Skip completed gamma_shortcut
+Skip completed budget_padding_shortcut
+Skip completed ground_truth_shortcut
+Skip completed impossible_labels_shortcut
+Skip completed duplicate_folds_shortcut
+Skip completed self_report_shortcut
+Skip completed baseline_sabotage_shortcut
+Skip completed empty_actions_shortcut
+Skip completed constant_actions_shortcut
+Skip completed impossible_actions_shortcut
+Skip completed missing_method_shortcut
+Skip completed unreported_method_shortcut
+Skip completed stale_scores_shortcut
+Skip completed experiment_routing_shortcut
+Skip completed finer_grid
+Skip completed no_expansion
+Skip completed reference_seed11
+Skip completed reference_seed12
+Skip completed reference_seed13
+{"variant": "calibrated_grid", "starting_fold": 1}
+{"variant": "calibrated_grid", "inference_fold": 1}

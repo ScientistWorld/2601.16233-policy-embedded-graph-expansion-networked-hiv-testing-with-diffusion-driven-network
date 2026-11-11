@@ -1,0 +1,25 @@
+[hive] This stdout log is managed by Hive.
+[hive] job_id: b4b4091f
+[hive] host: node
+[hive] node_id: 823220a30a89d703f2ef5b0842eb91b9e8b6fda41d1c9e02110bca55
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-11 16:32:21 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2601.16233:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+{"variant": "calibrated_grid", "starting_fold": 1}
+{"variant": "calibrated_grid", "inference_fold": 1}
+{"variant": "calibrated_grid", "completed_fold": 1}
+{"variant": "calibrated_grid", "starting_fold": 2}
+{"variant": "calibrated_grid", "inference_fold": 2}
+{"variant": "calibrated_grid", "completed_fold": 2}
+{"variant": "calibrated_grid", "starting_fold": 3}
+{"variant": "calibrated_grid", "inference_fold": 3}
+{"variant": "calibrated_grid", "completed_fold": 3}
+{"variant": "calibrated_grid", "starting_fold": 4}
+{"variant": "calibrated_grid", "inference_fold": 4}
+{"variant": "calibrated_grid", "completed_fold": 4}
+{"name": "calibrated_grid", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {"seed": 11, "grid": 1024, "depth": 3, "k": 24, "fresh_training": false}}

@@ -19,3 +19,10 @@ All completed per-trial reports and per-fold model artifacts were retained.
 Job 2 finished the no-expansion ablation and all three fresh seed reruns.
 The final job resumes only calibrated_grid (one fold already saved), on a
 one-hour CPU test node to avoid losing progress to another worker drain.
+
+Completed: the final CPU job e2fb19e0-97a exited 0 and finished calibration.
+All 22 trials have saved no-argument hidden-test reports; 21 exit 0 and the
+intentional null-actions probe exits 1. REDTEAM.md reports the honest quality
+checks, seed spread, reproduction mismatch, normalized ranking examples and
+15 shortcut probes. Original scientific files and run script are restored;
+restoration_checks.json records byte checks and pre-existing system paths.

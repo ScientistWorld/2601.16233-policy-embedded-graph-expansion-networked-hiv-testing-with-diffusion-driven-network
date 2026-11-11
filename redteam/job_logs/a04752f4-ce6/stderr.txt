@@ -1,0 +1,53 @@
+[hive] This stderr log is managed by Hive.
+[hive] job_id: 196a298f
+[hive] host: node
+[hive] node_id: 7d888975a2d9af5ff288c845bd0547d33548cc2bc6e5a85c832fe664
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-11 14:29:58 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2601.16233:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+[hive] Preempted for SLURM worker drain before walltime
+[hive] This stderr log is managed by Hive.
+[hive] job_id: 196a298f
+[hive] host: node
+[hive] node_id: fcde3bec0696c42062c9d6cc66dc871ed7302667e97704f62095fef8
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-11 14:55:29 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2601.16233:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+[hive] Preempted for SLURM worker drain before walltime
+[hive] This stderr log is managed by Hive.
+[hive] job_id: 196a298f
+[hive] host: node
+[hive] node_id: 9b637030e9eaf913973bd566a74eaa290e1c403bfe230b600e315b29
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-11 14:59:04 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2601.16233:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+[hive] Preempted for SLURM worker drain before walltime
+[hive] This stderr log is managed by Hive.
+[hive] job_id: 196a298f
+[hive] host: node
+[hive] node_id: 0342854c313f0d7f5d7bf7446f2c46b464347b00731208d0b58e4be0
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-11 15:54:03 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2601.16233:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+[hive] Preempted for SLURM worker drain before walltime
+[hive] Job cancelled

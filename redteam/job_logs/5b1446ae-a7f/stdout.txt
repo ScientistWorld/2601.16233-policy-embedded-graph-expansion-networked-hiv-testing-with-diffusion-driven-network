@@ -1,0 +1,60 @@
+[hive] This stdout log is managed by Hive.
+[hive] job_id: 238bcb70
+[hive] host: node
+[hive] node_id: 6d3445135ad278143e2003a21dbe6382012fbe1a691bccdff248eeaa
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-11 13:05:59 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2601.16233:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+{"name": "reference", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": false, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {}}
+{"name": "answer_enumeration_shortcut", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {"enumeration": [{"fold": 0, "positives": 10, "states": 576, "transitions": 2880, "exact_auc": 7.902047874238066}, {"fold": 1, "positives": 7, "states": 80, "transitions": 272, "exact_auc": 5.748930401429639}, {"fold": 2, "positives": 4, "states": 12, "transitions": 24, "exact_auc": 3.638757211792756}, {"fold": 3, "positives": 6, "states": 64, "transitions": 192, "exact_auc": 5.009799907613105}, {"fold": 4, "positives": 12, "states": 1440, "transitions": 8496, "exact_auc": 9.937550568391254}]}}
+{"name": "gamma_shortcut", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {}}
+{"name": "budget_padding_shortcut", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {}}
+{"name": "ground_truth_shortcut", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {}}
+{"name": "impossible_labels_shortcut", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {}}
+{"name": "duplicate_folds_shortcut", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {"duplicated_fold": 1}}
+{"name": "self_report_shortcut", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": false, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {}}
+{"name": "baseline_sabotage_shortcut", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {}}
+{"name": "empty_actions_shortcut", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {}}
+{"name": "constant_actions_shortcut", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {}}
+{"name": "impossible_actions_shortcut", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {}}
+{"name": "missing_method_shortcut", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {"post_train": "remove_required_method"}}
+{"name": "unreported_method_shortcut", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": false, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {}}
+{"name": "stale_scores_shortcut", "train_returncode": 0, "test_returncode": 1, "test_score_file_changed": false, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {"post_train": "null_actions_and_forge_scores"}}
+{"variant": "finer_grid", "completed_fold": 0}
+{"variant": "finer_grid", "completed_fold": 1}
+{"variant": "finer_grid", "completed_fold": 2}
+{"variant": "finer_grid", "completed_fold": 3}
+[hive] This stdout log is managed by Hive.
+[hive] job_id: 238bcb70
+[hive] host: node
+[hive] node_id: f498b1c1ad70c4e3dcc67e3727fb91698db5683e6900b25792f72d9f
+[hive] user: nexus/user (remote)
+[hive] resource: gpu-cpu-test
+[hive] gpus: 0
+[hive] cpus: 1
+[hive] workdir: /home/user
+[hive] timeout_sec: 21600
+[hive] started_at: 2026-11-11 13:28:06 EST
+[hive] command: apptainer exec --containall --cleanenv --env HF_HOME=/home/user/shared/hf_cache --env TRANSFORMERS_CACHE=/home/user/shared/hf_cache --env HF_DATASETS_CACHE=/home/user/shared/hf_cache/datasets --env TORCH_HOME=/home/user/shared/hf_cache/torch --bind /home/user/scratch/AgentWorkspaces/workspaces/2601.16233:/home/user --overlay /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/overlay.img:ro --bind /home/user/scratch/AgentWorkspaces/shared/datasets:/home/user/shared/datasets:ro --bind /home/user/scratch/AgentWorkspaces/shared/models:/home/user/shared/models:ro --bind /home/user/scratch/AgentWorkspaces/shared/hf_cache:/home/user/shared/hf_cache /home/user/scratch/AgentWorkspaces/workspaces/2601.16233/environment/container.sif bash -c 'cd /home/user && bash /home/user/scripts/run.sh'
+Skip completed reference
+Skip completed answer_enumeration_shortcut
+Skip completed gamma_shortcut
+Skip completed budget_padding_shortcut
+Skip completed ground_truth_shortcut
+Skip completed impossible_labels_shortcut
+Skip completed duplicate_folds_shortcut
+Skip completed self_report_shortcut
+Skip completed baseline_sabotage_shortcut
+Skip completed empty_actions_shortcut
+Skip completed constant_actions_shortcut
+Skip completed impossible_actions_shortcut
+Skip completed missing_method_shortcut
+Skip completed unreported_method_shortcut
+Skip completed stale_scores_shortcut
+{"variant": "finer_grid", "completed_fold": 4}
+{"name": "finer_grid", "train_returncode": 0, "test_returncode": 0, "test_score_file_changed": true, "evaluator_unchanged": true, "test_command": ["bash", "scripts/evaluate_test.sh"], "test_arguments": [], "detail": {"seed": 11, "grid": 1024, "depth": 3, "k": 24, "fresh_training": false}}

@@ -1,0 +1,2056 @@
+{
+  "reference": {
+    "auc": 2.516030784458729,
+    "reward_25pct": 1.2036124143294402,
+    "reward_50pct": 2.6818117096538803,
+    "reward_75pct": 3.7397209784816496,
+    "budget_fraction": 1.0
+  },
+  "metrics": [
+    "auc",
+    "reward_25pct",
+    "reward_50pct",
+    "reward_75pct",
+    "budget_fraction"
+  ],
+  "records": {
+    "answer_enumeration_shortcut": {
+      "status": {
+        "name": "answer_enumeration_shortcut",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {
+          "enumeration": [
+            {
+              "fold": 0,
+              "positives": 10,
+              "states": 576,
+              "transitions": 2880,
+              "exact_auc": 7.902047874238066
+            },
+            {
+              "fold": 1,
+              "positives": 7,
+              "states": 80,
+              "transitions": 272,
+              "exact_auc": 5.748930401429639
+            },
+            {
+              "fold": 2,
+              "positives": 4,
+              "states": 12,
+              "transitions": 24,
+              "exact_auc": 3.638757211792756
+            },
+            {
+              "fold": 3,
+              "positives": 6,
+              "states": 64,
+              "transitions": 192,
+              "exact_auc": 5.009799907613105
+            },
+            {
+              "fold": 4,
+              "positives": 12,
+              "states": 1440,
+              "transitions": 8496,
+              "exact_auc": 9.937550568391254
+            }
+          ]
+        }
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 6.898760292477999,
+                "reward_25pct": 7.44845359441738,
+                "reward_50pct": 7.721089240283122,
+                "reward_75pct": 7.721089240283122,
+                "budget_fraction": 1.0
+              },
+              "greedy_classifier": {
+                "auc": 2.6687311783366185,
+                "reward_25pct": 1.225694900230639,
+                "reward_50pct": 2.4656755172649194,
+                "reward_75pct": 3.960985276325346,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 2.7538149137396166,
+                "reward_25pct": 0.6308871193023299,
+                "reward_50pct": 2.935780728629058,
+                "reward_75pct": 4.016367832429864,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 2.5777687003564664,
+                "reward_25pct": 0.9529152709229928,
+                "reward_50pct": 2.2234039443878104,
+                "reward_75pct": 3.889990404678378,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 2.801125142596425,
+                "reward_25pct": 1.2335574222482382,
+                "reward_50pct": 2.734050341245903,
+                "reward_75pct": 4.4247674503142145,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 6.898760292477999,
+        "reward_25pct": 7.44845359441738,
+        "reward_50pct": 7.721089240283122,
+        "reward_75pct": 7.721089240283122,
+        "budget_fraction": 1.0
+      }
+    },
+    "baseline_sabotage_shortcut": {
+      "status": {
+        "name": "baseline_sabotage_shortcut",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {}
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 2.516030784458729,
+                "reward_25pct": 1.2036124143294402,
+                "reward_50pct": 2.6818117096538803,
+                "reward_75pct": 3.7397209784816496,
+                "budget_fraction": 1.0
+              },
+              "greedy_classifier": {
+                "auc": 0.0,
+                "reward_25pct": 0.0,
+                "reward_50pct": 0.0,
+                "reward_75pct": 0.0,
+                "budget_fraction": 0.0
+              },
+              "greedy_neighbor": {
+                "auc": 0.0,
+                "reward_25pct": 0.0,
+                "reward_50pct": 0.0,
+                "reward_75pct": 0.0,
+                "budget_fraction": 0.0
+              },
+              "random": {
+                "auc": 0.0,
+                "reward_25pct": 0.0,
+                "reward_50pct": 0.0,
+                "reward_75pct": 0.0,
+                "budget_fraction": 0.0
+              },
+              "fully_observable_gittins": {
+                "auc": 0.0,
+                "reward_25pct": 0.0,
+                "reward_50pct": 0.0,
+                "reward_75pct": 0.0,
+                "budget_fraction": 0.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 2.516030784458729,
+        "reward_25pct": 1.2036124143294402,
+        "reward_50pct": 2.6818117096538803,
+        "reward_75pct": 3.7397209784816496,
+        "budget_fraction": 1.0
+      }
+    },
+    "budget_padding_shortcut": {
+      "status": {
+        "name": "budget_padding_shortcut",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {}
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 3.9840029746861494,
+                "reward_25pct": 2.6818117096538803,
+                "reward_50pct": 5.451975164913571,
+                "reward_75pct": 5.451975164913571,
+                "budget_fraction": 0.5
+              },
+              "greedy_classifier": {
+                "auc": 4.106148096638402,
+                "reward_25pct": 2.4656755172649194,
+                "reward_50pct": 5.543565014940185,
+                "reward_75pct": 5.543565014940185,
+                "budget_fraction": 0.5
+              },
+              "greedy_neighbor": {
+                "auc": 4.176513144653444,
+                "reward_25pct": 2.935780728629058,
+                "reward_50pct": 5.599211375567271,
+                "reward_75pct": 5.599211375567271,
+                "budget_fraction": 0.5
+              },
+              "random": {
+                "auc": 4.036149319596934,
+                "reward_25pct": 2.2234039443878104,
+                "reward_50pct": 5.4945299388374025,
+                "reward_75pct": 5.4945299388374025,
+                "budget_fraction": 0.5
+              },
+              "fully_observable_gittins": {
+                "auc": 4.2080572659609965,
+                "reward_25pct": 2.734050341245903,
+                "reward_50pct": 5.614989389325569,
+                "reward_75pct": 5.614989389325569,
+                "budget_fraction": 0.5
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 3.9840029746861494,
+        "reward_25pct": 2.6818117096538803,
+        "reward_50pct": 5.451975164913571,
+        "reward_75pct": 5.451975164913571,
+        "budget_fraction": 0.5
+      }
+    },
+    "calibrated_grid": {
+      "status": {
+        "name": "calibrated_grid",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {
+          "seed": 11,
+          "grid": 1024,
+          "depth": 3,
+          "k": 24,
+          "fresh_training": false
+        }
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 2.7317734762806944,
+                "reward_25pct": 1.1803229764765348,
+                "reward_50pct": 3.2379409076370202,
+                "reward_75pct": 3.657244022632792,
+                "budget_fraction": 1.0
+              },
+              "greedy_classifier": {
+                "auc": 2.6687311783366185,
+                "reward_25pct": 1.225694900230639,
+                "reward_50pct": 2.4656755172649194,
+                "reward_75pct": 3.960985276325346,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 2.7538149137396166,
+                "reward_25pct": 0.6308871193023299,
+                "reward_50pct": 2.935780728629058,
+                "reward_75pct": 4.016367832429864,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 2.5777687003564664,
+                "reward_25pct": 0.9529152709229928,
+                "reward_50pct": 2.2234039443878104,
+                "reward_75pct": 3.889990404678378,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 2.801125142596425,
+                "reward_25pct": 1.2335574222482382,
+                "reward_50pct": 2.734050341245903,
+                "reward_75pct": 4.4247674503142145,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 2.7317734762806944,
+        "reward_25pct": 1.1803229764765348,
+        "reward_50pct": 3.2379409076370202,
+        "reward_75pct": 3.657244022632792,
+        "budget_fraction": 1.0
+      }
+    },
+    "constant_actions_shortcut": {
+      "status": {
+        "name": "constant_actions_shortcut",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {}
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 0.0,
+                "reward_25pct": 0.0,
+                "reward_50pct": 0.0,
+                "reward_75pct": 0.0,
+                "budget_fraction": 0.013333333333333334
+              },
+              "greedy_classifier": {
+                "auc": 2.6687311783366185,
+                "reward_25pct": 1.225694900230639,
+                "reward_50pct": 2.4656755172649194,
+                "reward_75pct": 3.960985276325346,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 2.7538149137396166,
+                "reward_25pct": 0.6308871193023299,
+                "reward_50pct": 2.935780728629058,
+                "reward_75pct": 4.016367832429864,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 2.5777687003564664,
+                "reward_25pct": 0.9529152709229928,
+                "reward_50pct": 2.2234039443878104,
+                "reward_75pct": 3.889990404678378,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 2.801125142596425,
+                "reward_25pct": 1.2335574222482382,
+                "reward_50pct": 2.734050341245903,
+                "reward_75pct": 4.4247674503142145,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 0.0,
+        "reward_25pct": 0.0,
+        "reward_50pct": 0.0,
+        "reward_75pct": 0.0,
+        "budget_fraction": 0.013333333333333334
+      }
+    },
+    "duplicate_folds_shortcut": {
+      "status": {
+        "name": "duplicate_folds_shortcut",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {
+          "duplicated_fold": 1
+        }
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 3.8144912497061454,
+                "reward_25pct": 2.6626830489411657,
+                "reward_50pct": 4.926674172681277,
+                "reward_75pct": 4.957487064006357,
+                "budget_fraction": 1.0
+              },
+              "greedy_classifier": {
+                "auc": 2.6687311783366185,
+                "reward_25pct": 1.225694900230639,
+                "reward_50pct": 2.4656755172649194,
+                "reward_75pct": 3.960985276325346,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 2.7538149137396166,
+                "reward_25pct": 0.6308871193023299,
+                "reward_50pct": 2.935780728629058,
+                "reward_75pct": 4.016367832429864,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 2.5777687003564664,
+                "reward_25pct": 0.9529152709229928,
+                "reward_50pct": 2.2234039443878104,
+                "reward_75pct": 3.889990404678378,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 2.801125142596425,
+                "reward_25pct": 1.2335574222482382,
+                "reward_50pct": 2.734050341245903,
+                "reward_75pct": 4.4247674503142145,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 3.8144912497061454,
+        "reward_25pct": 2.6626830489411657,
+        "reward_50pct": 4.926674172681277,
+        "reward_75pct": 4.957487064006357,
+        "budget_fraction": 1.0
+      }
+    },
+    "empty_actions_shortcut": {
+      "status": {
+        "name": "empty_actions_shortcut",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {}
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 0.0,
+                "reward_25pct": 0.0,
+                "reward_50pct": 0.0,
+                "reward_75pct": 0.0,
+                "budget_fraction": 0.0
+              },
+              "greedy_classifier": {
+                "auc": 2.6687311783366185,
+                "reward_25pct": 1.225694900230639,
+                "reward_50pct": 2.4656755172649194,
+                "reward_75pct": 3.960985276325346,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 2.7538149137396166,
+                "reward_25pct": 0.6308871193023299,
+                "reward_50pct": 2.935780728629058,
+                "reward_75pct": 4.016367832429864,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 2.5777687003564664,
+                "reward_25pct": 0.9529152709229928,
+                "reward_50pct": 2.2234039443878104,
+                "reward_75pct": 3.889990404678378,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 2.801125142596425,
+                "reward_25pct": 1.2335574222482382,
+                "reward_50pct": 2.734050341245903,
+                "reward_75pct": 4.4247674503142145,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 0.0,
+        "reward_25pct": 0.0,
+        "reward_50pct": 0.0,
+        "reward_75pct": 0.0,
+        "budget_fraction": 0.0
+      }
+    },
+    "experiment_routing_shortcut": {
+      "status": {
+        "name": "experiment_routing_shortcut",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {}
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "shortcut_unscored": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 0.0,
+                "reward_25pct": 0.0,
+                "reward_50pct": 0.0,
+                "reward_75pct": 0.0,
+                "budget_fraction": 0.0
+              },
+              "greedy_classifier": {
+                "auc": 0.0,
+                "reward_25pct": 0.0,
+                "reward_50pct": 0.0,
+                "reward_75pct": 0.0,
+                "budget_fraction": 0.0
+              },
+              "greedy_neighbor": {
+                "auc": 0.0,
+                "reward_25pct": 0.0,
+                "reward_50pct": 0.0,
+                "reward_75pct": 0.0,
+                "budget_fraction": 0.0
+              },
+              "random": {
+                "auc": 0.0,
+                "reward_25pct": 0.0,
+                "reward_50pct": 0.0,
+                "reward_75pct": 0.0,
+                "budget_fraction": 0.0
+              },
+              "fully_observable_gittins": {
+                "auc": 0.0,
+                "reward_25pct": 0.0,
+                "reward_50pct": 0.0,
+                "reward_75pct": 0.0,
+                "budget_fraction": 0.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": null
+    },
+    "finer_grid": {
+      "status": {
+        "name": "finer_grid",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {
+          "seed": 11,
+          "grid": 1024,
+          "depth": 3,
+          "k": 24,
+          "fresh_training": false
+        }
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 2.5374095433417367,
+                "reward_25pct": 1.2098581968105333,
+                "reward_50pct": 2.6854906816489565,
+                "reward_75pct": 3.7433999504767255,
+                "budget_fraction": 1.0
+              },
+              "greedy_classifier": {
+                "auc": 2.6687311783366185,
+                "reward_25pct": 1.225694900230639,
+                "reward_50pct": 2.4656755172649194,
+                "reward_75pct": 3.960985276325346,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 2.7538149137396166,
+                "reward_25pct": 0.6308871193023299,
+                "reward_50pct": 2.935780728629058,
+                "reward_75pct": 4.016367832429864,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 2.5777687003564664,
+                "reward_25pct": 0.9529152709229928,
+                "reward_50pct": 2.2234039443878104,
+                "reward_75pct": 3.889990404678378,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 2.801125142596425,
+                "reward_25pct": 1.2335574222482382,
+                "reward_50pct": 2.734050341245903,
+                "reward_75pct": 4.4247674503142145,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 2.5374095433417367,
+        "reward_25pct": 1.2098581968105333,
+        "reward_50pct": 2.6854906816489565,
+        "reward_75pct": 3.7433999504767255,
+        "budget_fraction": 1.0
+      }
+    },
+    "gamma_shortcut": {
+      "status": {
+        "name": "gamma_shortcut",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {}
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 20.976683698715124,
+                "reward_25pct": 2.234397690587632,
+                "reward_50pct": 11.130376724901009,
+                "reward_75pct": 27.026303357410313,
+                "budget_fraction": 1.0
+              },
+              "greedy_classifier": {
+                "auc": 22.696282995955414,
+                "reward_25pct": 2.0849068770274286,
+                "reward_50pct": 9.433285918020989,
+                "reward_75pct": 30.615017806640374,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 22.036898188162713,
+                "reward_25pct": 0.8742022242187504,
+                "reward_50pct": 12.025343257266115,
+                "reward_75pct": 26.024262526261396,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 23.65015207440373,
+                "reward_25pct": 1.3433105331464663,
+                "reward_50pct": 7.9375344216168475,
+                "reward_75pct": 34.83489756124088,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 20.96751834526596,
+                "reward_25pct": 1.9511820446159185,
+                "reward_50pct": 10.190824977802153,
+                "reward_75pct": 35.73707027512305,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 20.976683698715124,
+        "reward_25pct": 2.234397690587632,
+        "reward_50pct": 11.130376724901009,
+        "reward_75pct": 27.026303357410313,
+        "budget_fraction": 1.0
+      }
+    },
+    "ground_truth_shortcut": {
+      "status": {
+        "name": "ground_truth_shortcut",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {}
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 29.757827783696253,
+                "reward_25pct": 17.383137616441324,
+                "reward_50pct": 31.744540498961264,
+                "reward_75pct": 43.03987975228405,
+                "budget_fraction": 1.0
+              },
+              "greedy_classifier": {
+                "auc": 29.757827783696253,
+                "reward_25pct": 17.383137616441324,
+                "reward_50pct": 31.744540498961264,
+                "reward_75pct": 43.03987975228405,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 29.757827783696253,
+                "reward_25pct": 17.383137616441324,
+                "reward_50pct": 31.744540498961264,
+                "reward_75pct": 43.03987975228405,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 29.757827783696253,
+                "reward_25pct": 17.383137616441324,
+                "reward_50pct": 31.744540498961264,
+                "reward_75pct": 43.03987975228405,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 29.757827783696253,
+                "reward_25pct": 17.383137616441324,
+                "reward_50pct": 31.744540498961264,
+                "reward_75pct": 43.03987975228405,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 29.757827783696253,
+        "reward_25pct": 17.383137616441324,
+        "reward_50pct": 31.744540498961264,
+        "reward_75pct": 43.03987975228405,
+        "budget_fraction": 1.0
+      }
+    },
+    "impossible_actions_shortcut": {
+      "status": {
+        "name": "impossible_actions_shortcut",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {}
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 0.0,
+                "reward_25pct": 0.0,
+                "reward_50pct": 0.0,
+                "reward_75pct": 0.0,
+                "budget_fraction": 0.0
+              },
+              "greedy_classifier": {
+                "auc": 2.6687311783366185,
+                "reward_25pct": 1.225694900230639,
+                "reward_50pct": 2.4656755172649194,
+                "reward_75pct": 3.960985276325346,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 2.7538149137396166,
+                "reward_25pct": 0.6308871193023299,
+                "reward_50pct": 2.935780728629058,
+                "reward_75pct": 4.016367832429864,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 2.5777687003564664,
+                "reward_25pct": 0.9529152709229928,
+                "reward_50pct": 2.2234039443878104,
+                "reward_75pct": 3.889990404678378,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 2.801125142596425,
+                "reward_25pct": 1.2335574222482382,
+                "reward_50pct": 2.734050341245903,
+                "reward_75pct": 4.4247674503142145,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 0.0,
+        "reward_25pct": 0.0,
+        "reward_50pct": 0.0,
+        "reward_75pct": 0.0,
+        "budget_fraction": 0.0
+      }
+    },
+    "impossible_labels_shortcut": {
+      "status": {
+        "name": "impossible_labels_shortcut",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {}
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 986.6666666666666,
+                "reward_25pct": 1000.0,
+                "reward_50pct": 1000.0,
+                "reward_75pct": 1000.0,
+                "budget_fraction": 0.013333333333333334
+              },
+              "greedy_classifier": {
+                "auc": 29757.827783696266,
+                "reward_25pct": 17383.13761644133,
+                "reward_50pct": 31744.540498961283,
+                "reward_75pct": 43039.879752284076,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 29757.827783696266,
+                "reward_25pct": 17383.13761644133,
+                "reward_50pct": 31744.540498961283,
+                "reward_75pct": 43039.879752284076,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 29757.827783696266,
+                "reward_25pct": 17383.13761644133,
+                "reward_50pct": 31744.540498961283,
+                "reward_75pct": 43039.879752284076,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 29757.827783696266,
+                "reward_25pct": 17383.13761644133,
+                "reward_50pct": 31744.540498961283,
+                "reward_75pct": 43039.879752284076,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 986.6666666666666,
+        "reward_25pct": 1000.0,
+        "reward_50pct": 1000.0,
+        "reward_75pct": 1000.0,
+        "budget_fraction": 0.013333333333333334
+      }
+    },
+    "missing_method_shortcut": {
+      "status": {
+        "name": "missing_method_shortcut",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {
+          "post_train": "remove_required_method"
+        }
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "greedy_classifier": {
+                "auc": 2.6687311783366185,
+                "reward_25pct": 1.225694900230639,
+                "reward_50pct": 2.4656755172649194,
+                "reward_75pct": 3.960985276325346,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 2.7538149137396166,
+                "reward_25pct": 0.6308871193023299,
+                "reward_50pct": 2.935780728629058,
+                "reward_75pct": 4.016367832429864,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 2.5777687003564664,
+                "reward_25pct": 0.9529152709229928,
+                "reward_50pct": 2.2234039443878104,
+                "reward_75pct": 3.889990404678378,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 2.801125142596425,
+                "reward_25pct": 1.2335574222482382,
+                "reward_50pct": 2.734050341245903,
+                "reward_75pct": 4.4247674503142145,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": null
+    },
+    "no_expansion": {
+      "status": {
+        "name": "no_expansion",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {
+          "seed": 11,
+          "grid": 1024,
+          "depth": 0,
+          "k": 1,
+          "fresh_training": false
+        }
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 2.681146822358708,
+                "reward_25pct": 1.2066882299775332,
+                "reward_50pct": 2.965567668772107,
+                "reward_75pct": 3.992697767877648,
+                "budget_fraction": 1.0
+              },
+              "greedy_classifier": {
+                "auc": 2.6687311783366185,
+                "reward_25pct": 1.225694900230639,
+                "reward_50pct": 2.4656755172649194,
+                "reward_75pct": 3.960985276325346,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 2.7538149137396166,
+                "reward_25pct": 0.6308871193023299,
+                "reward_50pct": 2.935780728629058,
+                "reward_75pct": 4.016367832429864,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 2.5777687003564664,
+                "reward_25pct": 0.9529152709229928,
+                "reward_50pct": 2.2234039443878104,
+                "reward_75pct": 3.889990404678378,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 2.801125142596425,
+                "reward_25pct": 1.2335574222482382,
+                "reward_50pct": 2.734050341245903,
+                "reward_75pct": 4.4247674503142145,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 2.681146822358708,
+        "reward_25pct": 1.2066882299775332,
+        "reward_50pct": 2.965567668772107,
+        "reward_75pct": 3.992697767877648,
+        "budget_fraction": 1.0
+      }
+    },
+    "reference": {
+      "status": {
+        "name": "reference",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": false,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {}
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 2.516030784458729,
+                "reward_25pct": 1.2036124143294402,
+                "reward_50pct": 2.6818117096538803,
+                "reward_75pct": 3.7397209784816496,
+                "budget_fraction": 1.0
+              },
+              "greedy_classifier": {
+                "auc": 2.6687311783366185,
+                "reward_25pct": 1.225694900230639,
+                "reward_50pct": 2.4656755172649194,
+                "reward_75pct": 3.960985276325346,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 2.7538149137396166,
+                "reward_25pct": 0.6308871193023299,
+                "reward_50pct": 2.935780728629058,
+                "reward_75pct": 4.016367832429864,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 2.5777687003564664,
+                "reward_25pct": 0.9529152709229928,
+                "reward_50pct": 2.2234039443878104,
+                "reward_75pct": 3.889990404678378,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 2.801125142596425,
+                "reward_25pct": 1.2335574222482382,
+                "reward_50pct": 2.734050341245903,
+                "reward_75pct": 4.4247674503142145,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 2.516030784458729,
+        "reward_25pct": 1.2036124143294402,
+        "reward_50pct": 2.6818117096538803,
+        "reward_75pct": 3.7397209784816496,
+        "budget_fraction": 1.0
+      }
+    },
+    "reference_seed11": {
+      "status": {
+        "name": "reference_seed11",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": false,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {
+          "seed": 11,
+          "grid": 64,
+          "depth": 3,
+          "k": 24,
+          "fresh_training": true
+        }
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 2.516030784458729,
+                "reward_25pct": 1.2036124143294402,
+                "reward_50pct": 2.6818117096538803,
+                "reward_75pct": 3.7397209784816496,
+                "budget_fraction": 1.0
+              },
+              "greedy_classifier": {
+                "auc": 2.6687311783366185,
+                "reward_25pct": 1.225694900230639,
+                "reward_50pct": 2.4656755172649194,
+                "reward_75pct": 3.960985276325346,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 2.7538149137396166,
+                "reward_25pct": 0.6308871193023299,
+                "reward_50pct": 2.935780728629058,
+                "reward_75pct": 4.016367832429864,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 2.5777687003564664,
+                "reward_25pct": 0.9529152709229928,
+                "reward_50pct": 2.2234039443878104,
+                "reward_75pct": 3.889990404678378,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 2.801125142596425,
+                "reward_25pct": 1.2335574222482382,
+                "reward_50pct": 2.734050341245903,
+                "reward_75pct": 4.4247674503142145,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 2.516030784458729,
+        "reward_25pct": 1.2036124143294402,
+        "reward_50pct": 2.6818117096538803,
+        "reward_75pct": 3.7397209784816496,
+        "budget_fraction": 1.0
+      }
+    },
+    "reference_seed12": {
+      "status": {
+        "name": "reference_seed12",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {
+          "seed": 12,
+          "grid": 64,
+          "depth": 3,
+          "k": 24,
+          "fresh_training": true
+        }
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 2.6937838247358012,
+                "reward_25pct": 1.2036736230608374,
+                "reward_50pct": 3.237148173327615,
+                "reward_75pct": 3.4328271006401097,
+                "budget_fraction": 1.0
+              },
+              "greedy_classifier": {
+                "auc": 2.6687311783366185,
+                "reward_25pct": 1.225694900230639,
+                "reward_50pct": 2.4656755172649194,
+                "reward_75pct": 3.960985276325346,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 2.7538149137396166,
+                "reward_25pct": 0.6308871193023299,
+                "reward_50pct": 2.935780728629058,
+                "reward_75pct": 4.016367832429864,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 2.5777687003564664,
+                "reward_25pct": 0.9529152709229928,
+                "reward_50pct": 2.2234039443878104,
+                "reward_75pct": 3.889990404678378,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 2.801125142596425,
+                "reward_25pct": 1.2335574222482382,
+                "reward_50pct": 2.734050341245903,
+                "reward_75pct": 4.4247674503142145,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 2.6937838247358012,
+        "reward_25pct": 1.2036736230608374,
+        "reward_50pct": 3.237148173327615,
+        "reward_75pct": 3.4328271006401097,
+        "budget_fraction": 1.0
+      }
+    },
+    "reference_seed13": {
+      "status": {
+        "name": "reference_seed13",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": true,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {
+          "seed": 13,
+          "grid": 64,
+          "depth": 3,
+          "k": 24,
+          "fresh_training": true
+        }
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 2.8961921206730796,
+                "reward_25pct": 1.829602649691464,
+                "reward_50pct": 3.2982811794789377,
+                "reward_75pct": 3.8974981654978555,
+                "budget_fraction": 1.0
+              },
+              "greedy_classifier": {
+                "auc": 2.6687311783366185,
+                "reward_25pct": 1.225694900230639,
+                "reward_50pct": 2.4656755172649194,
+                "reward_75pct": 3.960985276325346,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 2.7538149137396166,
+                "reward_25pct": 0.6308871193023299,
+                "reward_50pct": 2.935780728629058,
+                "reward_75pct": 4.016367832429864,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 2.5777687003564664,
+                "reward_25pct": 0.9529152709229928,
+                "reward_50pct": 2.2234039443878104,
+                "reward_75pct": 3.889990404678378,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 2.801125142596425,
+                "reward_25pct": 1.2335574222482382,
+                "reward_50pct": 2.734050341245903,
+                "reward_75pct": 4.4247674503142145,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 2.8961921206730796,
+        "reward_25pct": 1.829602649691464,
+        "reward_50pct": 3.2982811794789377,
+        "reward_75pct": 3.8974981654978555,
+        "budget_fraction": 1.0
+      }
+    },
+    "self_report_shortcut": {
+      "status": {
+        "name": "self_report_shortcut",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": false,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {}
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 2.516030784458729,
+                "reward_25pct": 1.2036124143294402,
+                "reward_50pct": 2.6818117096538803,
+                "reward_75pct": 3.7397209784816496,
+                "budget_fraction": 1.0
+              },
+              "greedy_classifier": {
+                "auc": 2.6687311783366185,
+                "reward_25pct": 1.225694900230639,
+                "reward_50pct": 2.4656755172649194,
+                "reward_75pct": 3.960985276325346,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 2.7538149137396166,
+                "reward_25pct": 0.6308871193023299,
+                "reward_50pct": 2.935780728629058,
+                "reward_75pct": 4.016367832429864,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 2.5777687003564664,
+                "reward_25pct": 0.9529152709229928,
+                "reward_50pct": 2.2234039443878104,
+                "reward_75pct": 3.889990404678378,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 2.801125142596425,
+                "reward_25pct": 1.2335574222482382,
+                "reward_50pct": 2.734050341245903,
+                "reward_75pct": 4.4247674503142145,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 2.516030784458729,
+        "reward_25pct": 1.2036124143294402,
+        "reward_50pct": 2.6818117096538803,
+        "reward_75pct": 3.7397209784816496,
+        "budget_fraction": 1.0
+      }
+    },
+    "stale_scores_shortcut": {
+      "status": {
+        "name": "stale_scores_shortcut",
+        "train_returncode": 0,
+        "test_returncode": 1,
+        "test_score_file_changed": false,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {
+          "post_train": "null_actions_and_forge_scores"
+        }
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "train",
+            "split_folds": [
+              0,
+              2
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 1000000.0,
+                "reward_25pct": 1000000.0,
+                "reward_50pct": 1000000.0,
+                "reward_75pct": 1000000.0,
+                "budget_fraction": 1.0
+              },
+              "greedy_classifier": {
+                "auc": 1000000.0,
+                "reward_25pct": 1000000.0,
+                "reward_50pct": 1000000.0,
+                "reward_75pct": 1000000.0,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 1000000.0,
+                "reward_25pct": 1000000.0,
+                "reward_50pct": 1000000.0,
+                "reward_75pct": 1000000.0,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 1000000.0,
+                "reward_25pct": 1000000.0,
+                "reward_50pct": 1000000.0,
+                "reward_75pct": 1000000.0,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 1000000.0,
+                "reward_25pct": 1000000.0,
+                "reward_50pct": 1000000.0,
+                "reward_75pct": 1000000.0,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 1000000.0,
+        "reward_25pct": 1000000.0,
+        "reward_50pct": 1000000.0,
+        "reward_75pct": 1000000.0,
+        "budget_fraction": 1.0
+      }
+    },
+    "unreported_method_shortcut": {
+      "status": {
+        "name": "unreported_method_shortcut",
+        "train_returncode": 0,
+        "test_returncode": 0,
+        "test_score_file_changed": false,
+        "evaluator_unchanged": true,
+        "test_command": [
+          "bash",
+          "scripts/evaluate_test.sh"
+        ],
+        "test_arguments": [],
+        "detail": {}
+      },
+      "report": {
+        "slice": "test",
+        "experiments": {
+          "synthetic_main": {
+            "slice": "test",
+            "split_folds": [
+              1,
+              3,
+              4
+            ],
+            "results": {
+              "pege_ddb": {
+                "auc": 2.516030784458729,
+                "reward_25pct": 1.2036124143294402,
+                "reward_50pct": 2.6818117096538803,
+                "reward_75pct": 3.7397209784816496,
+                "budget_fraction": 1.0
+              },
+              "greedy_classifier": {
+                "auc": 2.6687311783366185,
+                "reward_25pct": 1.225694900230639,
+                "reward_50pct": 2.4656755172649194,
+                "reward_75pct": 3.960985276325346,
+                "budget_fraction": 1.0
+              },
+              "greedy_neighbor": {
+                "auc": 2.7538149137396166,
+                "reward_25pct": 0.6308871193023299,
+                "reward_50pct": 2.935780728629058,
+                "reward_75pct": 4.016367832429864,
+                "budget_fraction": 1.0
+              },
+              "random": {
+                "auc": 2.5777687003564664,
+                "reward_25pct": 0.9529152709229928,
+                "reward_50pct": 2.2234039443878104,
+                "reward_75pct": 3.889990404678378,
+                "budget_fraction": 1.0
+              },
+              "fully_observable_gittins": {
+                "auc": 2.801125142596425,
+                "reward_25pct": 1.2335574222482382,
+                "reward_50pct": 2.734050341245903,
+                "reward_75pct": 4.4247674503142145,
+                "budget_fraction": 1.0
+              }
+            }
+          }
+        }
+      },
+      "metrics": {
+        "auc": 2.516030784458729,
+        "reward_25pct": 1.2036124143294402,
+        "reward_50pct": 2.6818117096538803,
+        "reward_75pct": 3.7397209784816496,
+        "budget_fraction": 1.0
+      }
+    }
+  },
+  "seed_stats": {
+    "auc": {
+      "values": [
+        2.516030784458729,
+        2.6937838247358012,
+        2.8961921206730796
+      ],
+      "min": 2.516030784458729,
+      "max": 2.8961921206730796,
+      "range": 0.3801613362143508,
+      "population_sd": 0.15530897632506488
+    },
+    "reward_25pct": {
+      "values": [
+        1.2036124143294402,
+        1.2036736230608374,
+        1.829602649691464
+      ],
+      "min": 1.2036124143294402,
+      "max": 1.829602649691464,
+      "range": 0.6259902353620237,
+      "population_sd": 0.29508020094240184
+    },
+    "reward_50pct": {
+      "values": [
+        2.6818117096538803,
+        3.237148173327615,
+        3.2982811794789377
+      ],
+      "min": 2.6818117096538803,
+      "max": 3.2982811794789377,
+      "range": 0.6164694698250575,
+      "population_sd": 0.2773226038695997
+    },
+    "reward_75pct": {
+      "values": [
+        3.7397209784816496,
+        3.4328271006401097,
+        3.8974981654978555
+      ],
+      "min": 3.4328271006401097,
+      "max": 3.8974981654978555,
+      "range": 0.4646710648577459,
+      "population_sd": 0.19292966234568965
+    },
+    "budget_fraction": {
+      "values": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": 1.0,
+      "max": 1.0,
+      "range": 0.0,
+      "population_sd": 0.0
+    }
+  },
+  "honest_cohort": {
+    "members": [
+      "reference",
+      "finer_grid",
+      "calibrated_grid",
+      "no_expansion",
+      "reference_seed11",
+      "reference_seed12",
+      "reference_seed13"
+    ],
+    "population_standard_deviations": {
+      "synthetic_main/auc": 0.13021150414366137,
+      "synthetic_main/reward_25pct": 0.22004341822769166,
+      "synthetic_main/reward_50pct": 0.26672582134036965,
+      "synthetic_main/reward_75pct": 0.16466459508063888,
+      "synthetic_main/budget_fraction": 0.0
+    },
+    "rank_improvements": {
+      "reference": 0.0,
+      "finer_grid": 0.199687434831839,
+      "calibrated_grid": 2.4225100403289206,
+      "no_expansion": 2.421871425172656,
+      "reference_seed11": 0.0,
+      "reference_seed12": 1.6591683526594942,
+      "reference_seed13": 6.4434053573419465
+    },
+    "metric_contributions": {
+      "reference": {
+        "synthetic_main/auc": 0.0,
+        "synthetic_main/reward_25pct": 0.0,
+        "synthetic_main/reward_50pct": 0.0,
+        "synthetic_main/reward_75pct": 0.0
+      },
+      "finer_grid": {
+        "synthetic_main/auc": 0.16402068515053358,
+        "synthetic_main/reward_25pct": 0.01984915397246242,
+        "synthetic_main/reward_50pct": 0.006889646087903775,
+        "synthetic_main/reward_75pct": 0.00892794962093923
+      },
+      "calibrated_grid": {
+        "synthetic_main/auc": 1.6552066620193124,
+        "synthetic_main/reward_25pct": -0.07401404696269692,
+        "synthetic_main/reward_50pct": 1.041468474992881,
+        "synthetic_main/reward_75pct": -0.20015104972057624
+      },
+      "no_expansion": {
+        "synthetic_main/auc": 1.2667922312001703,
+        "synthetic_main/reward_25pct": 0.009774970321928736,
+        "synthetic_main/reward_50pct": 0.531392502110564,
+        "synthetic_main/reward_75pct": 0.6139117215399931
+      },
+      "reference_seed11": {
+        "synthetic_main/auc": 0.0,
+        "synthetic_main/reward_25pct": 0.0,
+        "synthetic_main/reward_50pct": 0.0,
+        "synthetic_main/reward_75pct": 0.0
+      },
+      "reference_seed12": {
+        "synthetic_main/auc": 1.3637449963013857,
+        "synthetic_main/reward_25pct": 0.00019452190940667905,
+        "synthetic_main/reward_50pct": 1.0399839138598113,
+        "synthetic_main/reward_75pct": -0.7447550794111094
+      },
+      "reference_seed13": {
+        "synthetic_main/auc": 2.916648397357631,
+        "synthetic_main/reward_25pct": 1.9894027056773527,
+        "synthetic_main/reward_50pct": 1.1544682799370602,
+        "synthetic_main/reward_75pct": 0.38288597436990257
+      }
+    }
+  },
+  "honest_cohort_seed_rank_range": 6.4434053573419465,
+  "all_successful_cohort": {
+    "members": [
+      "answer_enumeration_shortcut",
+      "baseline_sabotage_shortcut",
+      "budget_padding_shortcut",
+      "calibrated_grid",
+      "constant_actions_shortcut",
+      "duplicate_folds_shortcut",
+      "empty_actions_shortcut",
+      "experiment_routing_shortcut",
+      "finer_grid",
+      "gamma_shortcut",
+      "ground_truth_shortcut",
+      "impossible_actions_shortcut",
+      "impossible_labels_shortcut",
+      "missing_method_shortcut",
+      "no_expansion",
+      "reference",
+      "reference_seed11",
+      "reference_seed12",
+      "reference_seed13",
+      "self_report_shortcut",
+      "unreported_method_shortcut"
+    ],
+    "population_standard_deviations": {
+      "synthetic_main/auc": 219.30463136230233,
+      "synthetic_main/reward_25pct": 222.77104412758976,
+      "synthetic_main/reward_50pct": 222.28708958943488,
+      "synthetic_main/reward_75pct": 221.97105489977042,
+      "synthetic_main/budget_fraction": 0.4067733689844865
+    },
+    "rank_improvements": {
+      "answer_enumeration_shortcut": 0.058058972535464326,
+      "baseline_sabotage_shortcut": 0.0,
+      "budget_padding_shortcut": -0.1021610960506865,
+      "calibrated_grid": 0.0020108631986085774,
+      "constant_actions_shortcut": -0.2703149569709438,
+      "duplicate_folds_shortcut": 0.017731733214954422,
+      "empty_actions_shortcut": -0.2735895076214088,
+      "experiment_routing_shortcut": 0,
+      "finer_grid": 0.00013188294621497174,
+      "gamma_shortcut": 0.14823571777073233,
+      "ground_truth_shortcut": 0.3109400590659812,
+      "impossible_actions_shortcut": -0.2735895076214088,
+      "impossible_labels_shortcut": 11.410681128043976,
+      "missing_method_shortcut": 0,
+      "no_expansion": 0.0018548535182794828,
+      "reference": 0.0,
+      "reference_seed11": 0.0,
+      "reference_seed12": 0.0015053241295401559,
+      "reference_seed13": 0.005366096893373044,
+      "self_report_shortcut": 0.0,
+      "unreported_method_shortcut": 0.0
+    },
+    "metric_contributions": {
+      "answer_enumeration_shortcut": {
+        "synthetic_main/auc": 0.01996467995825406,
+        "synthetic_main/reward_25pct": 0.019603164559997003,
+        "synthetic_main/reward_50pct": 0.011323730636801423,
+        "synthetic_main/reward_75pct": 0.007167397380411845,
+        "synthetic_main/budget_fraction": 0.0
+      },
+      "baseline_sabotage_shortcut": {
+        "synthetic_main/auc": 0.0,
+        "synthetic_main/reward_25pct": 0.0,
+        "synthetic_main/reward_50pct": 0.0,
+        "synthetic_main/reward_75pct": 0.0,
+        "synthetic_main/budget_fraction": 0.0
+      },
+      "budget_padding_shortcut": {
+        "synthetic_main/auc": 0.006687064513537127,
+        "synthetic_main/reward_25pct": 0.004640211528695521,
+        "synthetic_main/reward_50pct": 0.006224817862602406,
+        "synthetic_main/reward_75pct": 0.003082459436916896,
+        "synthetic_main/budget_fraction": -0.12279564939243845
+      },
+      "calibrated_grid": {
+        "synthetic_main/auc": 0.0009827742706175785,
+        "synthetic_main/reward_25pct": -7.310781324528389e-05,
+        "synthetic_main/reward_50pct": 0.0012496746208052445,
+        "synthetic_main/reward_75pct": -0.00014847787956896174,
+        "synthetic_main/budget_fraction": 0.0
+      },
+      "constant_actions_shortcut": {
+        "synthetic_main/auc": -0.011461293535209553,
+        "synthetic_main/reward_25pct": -0.0037782565711660023,
+        "synthetic_main/reward_50pct": -0.006026283179316868,
+        "synthetic_main/reward_75pct": -0.006732375550839502,
+        "synthetic_main/budget_fraction": -0.24231674813441187
+      },
+      "duplicate_folds_shortcut": {
+        "synthetic_main/auc": 0.005914886506154956,
+        "synthetic_main/reward_25pct": 0.00458016480005183,
+        "synthetic_main/reward_50pct": 0.005044417120010191,
+        "synthetic_main/reward_75pct": 0.0021922647887374453,
+        "synthetic_main/budget_fraction": 0.0
+      },
+      "empty_actions_shortcut": {
+        "synthetic_main/auc": -0.011461293535209553,
+        "synthetic_main/reward_25pct": -0.0037782565711660023,
+        "synthetic_main/reward_50pct": -0.006026283179316868,
+        "synthetic_main/reward_75pct": -0.006732375550839502,
+        "synthetic_main/budget_fraction": -0.2455912987848769
+      },
+      "experiment_routing_shortcut": {},
+      "finer_grid": {
+        "synthetic_main/auc": 9.738681755809073e-05,
+        "synthetic_main/reward_25pct": 1.9606119395511993e-05,
+        "synthetic_main/reward_50pct": 8.266996139698167e-06,
+        "synthetic_main/reward_75pct": 6.623013121670857e-06,
+        "synthetic_main/budget_fraction": 0.0
+      },
+      "gamma_shortcut": {
+        "synthetic_main/auc": 0.08409394797903154,
+        "synthetic_main/reward_25pct": 0.0032357353555990277,
+        "synthetic_main/reward_50pct": 0.018984720313313764,
+        "synthetic_main/reward_75pct": 0.04192131412278799,
+        "synthetic_main/budget_fraction": 0.0
+      },
+      "ground_truth_shortcut": {
+        "synthetic_main/auc": 0.12409475820544102,
+        "synthetic_main/reward_25pct": 0.05078910510181327,
+        "synthetic_main/reward_50pct": 0.06530668540881833,
+        "synthetic_main/reward_75pct": 0.07074951034990862,
+        "synthetic_main/budget_fraction": 0.0
+      },
+      "impossible_actions_shortcut": {
+        "synthetic_main/auc": -0.011461293535209553,
+        "synthetic_main/reward_25pct": -0.0037782565711660023,
+        "synthetic_main/reward_50pct": -0.006026283179316868,
+        "synthetic_main/reward_75pct": -0.006732375550839502,
+        "synthetic_main/budget_fraction": -0.2455912987848769
+      },
+      "impossible_labels_shortcut": {
+        "synthetic_main/auc": 4.483108629028837,
+        "synthetic_main/reward_25pct": 3.135319119115969,
+        "synthetic_main/reward_50pct": 2.241067782978904,
+        "synthetic_main/reward_75pct": 1.7935023450546772,
+        "synthetic_main/budget_fraction": -0.24231674813441187
+      },
+      "missing_method_shortcut": {},
+      "no_expansion": {
+        "synthetic_main/auc": 0.0007521543017008689,
+        "synthetic_main/reward_25pct": 9.655284829026179e-06,
+        "synthetic_main/reward_50pct": 0.0006376263319716022,
+        "synthetic_main/reward_75pct": 0.0004554175997779855,
+        "synthetic_main/budget_fraction": 0.0
+      },
+      "reference": {
+        "synthetic_main/auc": 0.0,
+        "synthetic_main/reward_25pct": 0.0,
+        "synthetic_main/reward_50pct": 0.0,
+        "synthetic_main/reward_75pct": 0.0,
+        "synthetic_main/budget_fraction": 0.0
+      },
+      "reference_seed11": {
+        "synthetic_main/auc": 0.0,
+        "synthetic_main/reward_25pct": 0.0,
+        "synthetic_main/reward_50pct": 0.0,
+        "synthetic_main/reward_75pct": 0.0,
+        "synthetic_main/budget_fraction": 0.0
+      },
+      "reference_seed12": {
+        "synthetic_main/auc": 0.0008097197315611269,
+        "synthetic_main/reward_25pct": 1.9214016809791452e-07,
+        "synthetic_main/reward_50pct": 0.0012478932722425394,
+        "synthetic_main/reward_75pct": -0.0005524810144316083,
+        "synthetic_main/budget_fraction": 0.0
+      },
+      "reference_seed13": {
+        "synthetic_main/auc": 0.0017317517305447086,
+        "synthetic_main/reward_25pct": 0.0019650443050307003,
+        "synthetic_main/reward_50pct": 0.001385264887611591,
+        "synthetic_main/reward_75pct": 0.0002840359701860438,
+        "synthetic_main/budget_fraction": 0.0
+      },
+      "self_report_shortcut": {
+        "synthetic_main/auc": 0.0,
+        "synthetic_main/reward_25pct": 0.0,
+        "synthetic_main/reward_50pct": 0.0,
+        "synthetic_main/reward_75pct": 0.0,
+        "synthetic_main/budget_fraction": 0.0
+      },
+      "unreported_method_shortcut": {
+        "synthetic_main/auc": 0.0,
+        "synthetic_main/reward_25pct": 0.0,
+        "synthetic_main/reward_50pct": 0.0,
+        "synthetic_main/reward_75pct": 0.0,
+        "synthetic_main/budget_fraction": 0.0
+      }
+    }
+  },
+  "budget_padding_pair_cohort": {
+    "members": [
+      "reference",
+      "budget_padding_shortcut"
+    ],
+    "population_standard_deviations": {
+      "synthetic_main/auc": 0.7339860951137103,
+      "synthetic_main/reward_25pct": 0.73909964766222,
+      "synthetic_main/reward_50pct": 1.3850817276298453,
+      "synthetic_main/reward_75pct": 0.8561270932159606,
+      "synthetic_main/budget_fraction": 0.25
+    },
+    "rank_improvements": {
+      "reference": 0.0,
+      "budget_padding_shortcut": 4.995
+    },
+    "metric_contributions": {
+      "reference": {
+        "synthetic_main/auc": 0.0,
+        "synthetic_main/reward_25pct": 0.0,
+        "synthetic_main/reward_50pct": 0.0,
+        "synthetic_main/reward_75pct": 0.0,
+        "synthetic_main/budget_fraction": 0.0
+      },
+      "budget_padding_shortcut": {
+        "synthetic_main/auc": 1.9980000000000002,
+        "synthetic_main/reward_25pct": 1.3985999999999998,
+        "synthetic_main/reward_50pct": 0.9990000000000001,
+        "synthetic_main/reward_75pct": 0.7992,
+        "synthetic_main/budget_fraction": -0.1998
+      }
+    }
+  },
+  "impossible_labels_pair_cohort": {
+    "members": [
+      "reference",
+      "impossible_labels_shortcut"
+    ],
+    "population_standard_deviations": {
+      "synthetic_main/auc": 492.07531794110395,
+      "synthetic_main/reward_25pct": 499.3981937928353,
+      "synthetic_main/reward_50pct": 498.65909414517307,
+      "synthetic_main/reward_75pct": 498.1301395107592,
+      "synthetic_main/budget_fraction": 0.49333333333333335
+    },
+    "rank_improvements": {
+      "reference": 0.0,
+      "impossible_labels_shortcut": 4.995
+    },
+    "metric_contributions": {
+      "reference": {
+        "synthetic_main/auc": 0.0,
+        "synthetic_main/reward_25pct": 0.0,
+        "synthetic_main/reward_50pct": 0.0,
+        "synthetic_main/reward_75pct": 0.0,
+        "synthetic_main/budget_fraction": 0.0
+      },
+      "impossible_labels_shortcut": {
+        "synthetic_main/auc": 1.998,
+        "synthetic_main/reward_25pct": 1.3985999999999998,
+        "synthetic_main/reward_50pct": 0.999,
+        "synthetic_main/reward_75pct": 0.7992,
+        "synthetic_main/budget_fraction": -0.1998
+      }
+    }
+  },
+  "notes": [
+    "Population standard deviations; a sample-SD convention rescales a fixed complete cohort without changing its ordering.",
+    "Metrics absent from results are skipped, as specified in the audit task.",
+    "An absent method may be rejected by an external eligibility check; that check is not supplied here.",
+    "The failed stale-scores run is excluded from every successful-run cohort.",
+    "Equal zero-variance metrics contribute zero; all honest variants have budget_fraction=1."
+  ]
+}
