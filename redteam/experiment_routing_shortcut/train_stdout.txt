@@ -1,0 +1,13 @@
+{
+  "wrote": "scoring/scores_train.json",
+  "slice": "train",
+  "methods": {
+    "shortcut_unscored": [
+      "fully_observable_gittins",
+      "greedy_classifier",
+      "greedy_neighbor",
+      "pege_ddb",
+      "random"
+    ]
+  }
+}

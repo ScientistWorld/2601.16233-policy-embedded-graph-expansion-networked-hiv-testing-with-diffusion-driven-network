@@ -1,0 +1,122 @@
+{
+  "experiment": "shortcut_unscored",
+  "data": "data/synthetic_hiv_forest.json",
+  "gamma": 0.99,
+  "k": 24,
+  "depth": 3,
+  "gittins_grid": 64,
+  "budget_fraction": 1.0,
+  "folds": 5,
+  "policies": {
+    "pege_ddb": [
+      {
+        "fold": 0,
+        "actions": []
+      },
+      {
+        "fold": 1,
+        "actions": []
+      },
+      {
+        "fold": 2,
+        "actions": []
+      },
+      {
+        "fold": 3,
+        "actions": []
+      },
+      {
+        "fold": 4,
+        "actions": []
+      }
+    ],
+    "greedy_classifier": [
+      {
+        "fold": 0,
+        "actions": []
+      },
+      {
+        "fold": 1,
+        "actions": []
+      },
+      {
+        "fold": 2,
+        "actions": []
+      },
+      {
+        "fold": 3,
+        "actions": []
+      },
+      {
+        "fold": 4,
+        "actions": []
+      }
+    ],
+    "greedy_neighbor": [
+      {
+        "fold": 0,
+        "actions": []
+      },
+      {
+        "fold": 1,
+        "actions": []
+      },
+      {
+        "fold": 2,
+        "actions": []
+      },
+      {
+        "fold": 3,
+        "actions": []
+      },
+      {
+        "fold": 4,
+        "actions": []
+      }
+    ],
+    "random": [
+      {
+        "fold": 0,
+        "actions": []
+      },
+      {
+        "fold": 1,
+        "actions": []
+      },
+      {
+        "fold": 2,
+        "actions": []
+      },
+      {
+        "fold": 3,
+        "actions": []
+      },
+      {
+        "fold": 4,
+        "actions": []
+      }
+    ],
+    "fog": [
+      {
+        "fold": 0,
+        "actions": []
+      },
+      {
+        "fold": 1,
+        "actions": []
+      },
+      {
+        "fold": 2,
+        "actions": []
+      },
+      {
+        "fold": 3,
+        "actions": []
+      },
+      {
+        "fold": 4,
+        "actions": []
+      }
+    ]
+  }
+}

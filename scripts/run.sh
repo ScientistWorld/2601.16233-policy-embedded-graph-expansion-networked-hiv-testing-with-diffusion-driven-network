@@ -1,4 +1,4 @@
 #!/bin/bash
 set -eu
 cd /home/user
-bash redteam/run_suite.sh
+bash redteam/calibrated_grid/run.sh
