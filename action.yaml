@@ -1,4 +1,4 @@
 action: submit
 gpus: 0
-test: false
-notes: "Resume audit after worker preemption: preserve 15 completed trials, run unscored-experiment omission check, no-expansion ablation, three fresh full five-fold reference seeds, then calibrated probabilities."
+test: true
+notes: "Finish the interrupted honest calibration variant on a one-hour CPU node; reuse its completed fold and all already-saved audit results."
