@@ -1,0 +1,13 @@
+{
+  "wrote": "scoring/scores_test.json",
+  "slice": "test",
+  "methods": {
+    "synthetic_main": [
+      "fully_observable_gittins",
+      "greedy_classifier",
+      "greedy_neighbor",
+      "pege_ddb",
+      "random"
+    ]
+  }
+}
