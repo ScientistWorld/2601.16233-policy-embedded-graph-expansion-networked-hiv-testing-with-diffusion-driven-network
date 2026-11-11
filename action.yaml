@@ -1,4 +1,2 @@
-action: submit
-gpus: 0
-test: true
-notes: "Finish the interrupted honest calibration variant on a one-hour CPU node; reuse its completed fold and all already-saved audit results."
+action: done
+notes: "Audit complete: 22 trials, three reference seeds, reproduction mismatch and major normalized-score shortcuts documented in REDTEAM.md; original gym files restored."
