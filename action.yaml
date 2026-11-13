@@ -5,4 +5,4 @@ action: submit
 gpus: 1
 test: false
 milestone: core_claim
-notes: "Hardening round 2 (resumable): retrain fixed PEGE+DDB (proper diffusion schedule/sampler + one-hot decoding, GPR on |N(v)|, theta with referrer covariates) and baselines; train/test scores on 120 hidden episodes with eval/test locked during policy runs; hand-written lookahead-rule probes; shortcut/tamper probes; better/weaker variants and seeds."
+notes: "Resume hardening audit (worker died): theta_generated better variant, remaining weaker variants/seeds/k48/aggregations on 120 hidden episodes, final determinism rerun of the official hidden test."
