@@ -21,6 +21,7 @@ heval() {  # hidden evaluator; restore eval/test permissions around it
   return $rc
 }
 log "cpus available: $(python -c 'import os; print(len(os.sched_getaffinity(0)))')"
+chmod u+rwx eval/test 2>/dev/null  # a worker that died mid-evaluation leaves it locked
 
 # ---- 1. reference method + baselines from the final code
 if [ ! -f tmp/hv2/reference_trained ]; then
@@ -126,6 +127,7 @@ run_variant() {  # name, then 'variant' or 'train', then method args
   python scripts/hardening/summarize.py > $OUT/summary.txt 2>&1
 }
 python scripts/hardening/summarize.py > $OUT/summary.txt 2>&1
+run_variant theta_generated variant --theta-generated
 run_variant depth5 variant --depth 5
 run_variant theta_parent_label variant --theta parent_label
 run_variant no_expansion variant --depth 0
@@ -136,6 +138,20 @@ run_variant k48 variant --k 48
 run_variant mean_plus_var variant --aggregate mean_plus_var
 run_variant mode variant --aggregate mode
 run_variant mean_minus_var variant --aggregate mean_minus_var
+
+# ---- 9. official hidden test once more from the final code (determinism check)
+if [ ! -f $OUT/details/test_reference_final.json ]; then
+  log "final evaluate_test"
+  bash scripts/evaluate_test.sh --details $OUT/details/test_reference_final.json || exit 1
+  python - <<'PY'
+import json
+a = json.load(open("notes/hardening/details/test_reference.json"))["per_episode"]
+b = json.load(open("notes/hardening/details/test_reference_final.json"))["per_episode"]
+same = {k: a[k] == b.get(k) for k in a}
+print("final rerun identical per episode:", same)
+json.dump(same, open("notes/hardening/scores/determinism.json", "w"))
+PY
+fi
 
 python scripts/hardening/summarize.py > $OUT/summary.txt 2>&1
 cat $OUT/summary.txt

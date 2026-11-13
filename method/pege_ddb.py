@@ -72,6 +72,7 @@ DEFAULT_CONFIG = {
     "aggregate": "mean",
     "seed": 11,
     "theta": "parent_features",
+    "theta_generated": False,  # variant: separate theta fitted on DDB-generated children
 }
 
 
@@ -104,6 +105,9 @@ class DDB:
         self._d_b = [b.astype(np.float64) for b in mlp.intercepts_]
         self._t_w = self.theta_model.coef_.ravel().astype(np.float64)
         self._t_b = float(self.theta_model.intercept_[0])
+        gen = getattr(self, "theta_gen_model", None)
+        self._g_w = gen.coef_.ravel().astype(np.float64) if gen is not None else self._t_w
+        self._g_b = float(gen.intercept_[0]) if gen is not None else self._t_b
         rng = np.random.default_rng(0)
         probe = np.hstack([rng.integers(0, 2, (4, 2 * self.feature_dim)).astype(float), rng.random((4, 1))])
         probe[:, self.feature_dim : 2 * self.feature_dim] = rng.normal(size=(4, self.feature_dim))
@@ -162,10 +166,15 @@ class DDB:
             start += size
         return out
 
-    def theta(self, X: np.ndarray, parent_X: np.ndarray, is_root: np.ndarray, parent_pos: np.ndarray) -> np.ndarray:
-        """P(HIV+ | own covariates, referrer state) for a batch."""
+    def theta(self, X: np.ndarray, parent_X: np.ndarray, is_root: np.ndarray, parent_pos: np.ndarray,
+              generated: bool = False) -> np.ndarray:
+        """P(HIV+ | own covariates, referrer state) for a batch.
+
+        ``generated=True`` is used for DDB-generated people; it differs from the
+        observed-person mapping only when a ``theta_generated`` variant fitted a
+        separate mapping on generated children."""
         feats = theta_features(self.theta_kind, X, parent_X, is_root, parent_pos)
-        z = feats @ self._t_w + self._t_b
+        z = feats @ (self._g_w if generated else self._t_w) + (self._g_b if generated else self._t_b)
         return 1.0 / (1.0 + np.exp(-z))
 
 
@@ -196,6 +205,26 @@ def fit_theta(forest: Forest, kind: str, seed: int):
     # Calibrated (unweighted) logistic model: the Gittins index needs probabilities.
     model = LogisticRegression(C=1.0, max_iter=5000, random_state=seed)
     model.fit(feats, y)
+    return model
+
+
+def fit_theta_generated(ddb: "DDB", forest: Forest, seed: int, reps: int = 10):
+    """Variant (not the paper's): theta for generated people, fitted on DDB
+    samples of real children (x_child ~ DDB(x_parent)) with the real child's
+    label and the real referrer's label, so the oracle's P(+) for generated
+    children is calibrated to what DDB actually generates."""
+    from sklearn.linear_model import LogisticRegression
+
+    ddb.prepare()
+    rng = np.random.default_rng(seed + 1000)
+    X, y, parents = _forest_arrays(forest)
+    child = np.flatnonzero(parents >= 0)
+    px = np.repeat(X[parents[child]], reps, axis=0)
+    gx = ddb.sample_child_features(px, rng)
+    ppos = np.repeat(y[parents[child]], reps)
+    feats = theta_features(ddb.theta_kind, gx, px, np.zeros(len(gx), dtype=bool), ppos)
+    model = LogisticRegression(C=1.0, max_iter=5000, random_state=seed)
+    model.fit(feats, np.repeat(y[child], reps))
     return model
 
 
@@ -385,7 +414,7 @@ class PEGEPolicy:
             n = len(X)
             p = np.empty((n, 2))
             for lab in (0, 1):
-                p[:, lab] = ddb.theta(X, parent_X, np.zeros(n, dtype=bool), np.full(n, lab))
+                p[:, lab] = ddb.theta(X, parent_X, np.zeros(n, dtype=bool), np.full(n, lab), generated=True)
             levels.append({"X": X, "p": p, "parent_counts": counts})
         return levels
 
@@ -431,6 +460,9 @@ def cmd_train(args: argparse.Namespace) -> None:
     forest = load_train_forest(args.data)
     cat_sizes = json.loads(Path(args.data).read_text())["categorical_sizes"]
     ddb = train_ddb(forest, cat_sizes, seed=int(config["seed"]), theta_kind=config["theta"])
+    if config.get("theta_generated"):
+        ddb.theta_gen_model = fit_theta_generated(ddb, forest, int(config["seed"]))
+        ddb._prepared = False
     out.mkdir(parents=True, exist_ok=True)
     with (out / "ddb.pkl").open("wb") as f:
         pickle.dump(ddb, f)
@@ -454,6 +486,9 @@ def cmd_variant(args: argparse.Namespace) -> None:
     if config["theta"] != ddb.theta_kind:
         ddb.theta_model = fit_theta(load_train_forest(args.data), config["theta"], int(config["seed"]))
         ddb.theta_kind = config["theta"]
+        ddb._prepared = False
+    if config.get("theta_generated"):
+        ddb.theta_gen_model = fit_theta_generated(ddb, load_train_forest(args.data), int(config["seed"]))
         ddb._prepared = False
     with (out / "ddb.pkl").open("wb") as f:
         pickle.dump(ddb, f)
@@ -483,6 +518,7 @@ def main() -> None:
         p.add_argument("--aggregate", choices=["mean", "mode", "mean_plus_var", "mean_minus_var"])
         p.add_argument("--seed", type=int)
         p.add_argument("--theta", choices=["parent_label", "parent_features"])
+        p.add_argument("--theta-generated", dest="theta_generated", action="store_const", const=True)
         if name == "variant":
             p.add_argument("--base", required=True)
     s = sub.add_parser("serve")

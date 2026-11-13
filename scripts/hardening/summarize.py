@@ -35,7 +35,7 @@ def load_details(folder: Path):
     for path in sorted(folder.glob("*.json")):
         stem = path.stem
         tag = stem[: -len("_test")] if stem.endswith("_test") else stem
-        if tag.startswith("train"):
+        if tag.startswith("train") or tag == "test_reference_final":
             continue
         raw = json.loads(path.read_text())
         for name, eps in raw["per_episode"].items():
