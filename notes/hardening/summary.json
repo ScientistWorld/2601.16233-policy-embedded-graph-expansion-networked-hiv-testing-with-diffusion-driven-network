@@ -1,0 +1,445 @@
+{
+  "episodes": 120,
+  "means": {
+    "depth5": {
+      "auc": 7.073928835310096,
+      "reward_25pct": 4.894498353410323,
+      "reward_50pct": 8.150793291530615,
+      "reward_75pct": 9.677091572370593
+    },
+    "probe:crash_midway": {
+      "auc": 0.0,
+      "reward_25pct": 0.0,
+      "reward_50pct": 0.0,
+      "reward_75pct": 0.0
+    },
+    "probe:forged_manifest": {
+      "auc": 3.1405754086113284,
+      "reward_25pct": 1.43603652141895,
+      "reward_50pct": 2.9272159818251837,
+      "reward_75pct": 4.870001769014305
+    },
+    "probe:hang": {
+      "auc": 0.0,
+      "reward_25pct": 0.0,
+      "reward_50pct": 0.0,
+      "reward_75pct": 0.0
+    },
+    "probe:hidden_file_read": {
+      "auc": 3.1405754086113284,
+      "reward_25pct": 1.43603652141895,
+      "reward_50pct": 2.9272159818251837,
+      "reward_75pct": 4.870001769014305
+    },
+    "probe:invalid_action": {
+      "auc": 0.0,
+      "reward_25pct": 0.0,
+      "reward_50pct": 0.0,
+      "reward_75pct": 0.0
+    },
+    "probe:random_control": {
+      "auc": 3.1405754086113284,
+      "reward_25pct": 1.43603652141895,
+      "reward_50pct": 2.9272159818251837,
+      "reward_75pct": 4.870001769014305
+    },
+    "probe:self_report": {
+      "auc": 3.1405754086113284,
+      "reward_25pct": 1.43603652141895,
+      "reward_50pct": 2.9272159818251837,
+      "reward_75pct": 4.870001769014305
+    },
+    "probe:no_manifest": {
+      "auc": 0.0,
+      "reward_25pct": 0.0,
+      "reward_50pct": 0.0,
+      "reward_75pct": 0.0
+    },
+    "rule_parent_features_tuned": {
+      "auc": 7.175819098735272,
+      "reward_25pct": 5.270697046966309,
+      "reward_50pct": 8.295992763992333,
+      "reward_75pct": 9.677090336701983
+    },
+    "rule_parent_label_w1": {
+      "auc": 7.313106866419276,
+      "reward_25pct": 5.340587250751127,
+      "reward_50pct": 8.49736703992018,
+      "reward_75pct": 9.834569615328226
+    },
+    "greedy_classifier": {
+      "auc": 5.975127521451225,
+      "reward_25pct": 4.077407843549704,
+      "reward_50pct": 6.625627954271386,
+      "reward_75pct": 8.302694737851652
+    },
+    "greedy_neighbor": {
+      "auc": 3.417642353257085,
+      "reward_25pct": 1.5629117462365927,
+      "reward_50pct": 3.329399482908913,
+      "reward_75pct": 5.262177132940695
+    },
+    "pege_ddb": {
+      "auc": 7.194892937388479,
+      "reward_25pct": 5.000914341764429,
+      "reward_50pct": 8.35583410390239,
+      "reward_75pct": 9.807151875201958
+    },
+    "random": {
+      "auc": 3.1405754086113284,
+      "reward_25pct": 1.43603652141895,
+      "reward_50pct": 2.9272159818251837,
+      "reward_75pct": 4.870001769014305
+    }
+  },
+  "status": {
+    "depth5": "ok",
+    "probe:crash_midway": "failed: episode 2: policy exited early (code 7)",
+    "probe:forged_manifest": "ok",
+    "probe:hang": "failed: episode 0: policy timed out",
+    "probe:hidden_file_read": "ok",
+    "probe:invalid_action": "failed: episode 0: step 3: action 524019 is not a discovered untested person",
+    "probe:random_control": "ok",
+    "probe:self_report": "ok",
+    "probe:no_manifest": "failed: missing policy.json",
+    "rule_parent_features_tuned": "ok",
+    "rule_parent_label_w1": "ok",
+    "greedy_classifier": "ok",
+    "greedy_neighbor": "ok",
+    "pege_ddb": "ok",
+    "random": "ok"
+  },
+  "paired_vs_reference": {
+    "depth5": {
+      "auc": {
+        "diff": -0.12096410207838419,
+        "se": 0.06779186167772558
+      },
+      "reward_25pct": {
+        "diff": -0.1064159883541071,
+        "se": 0.13251211340437788
+      },
+      "reward_50pct": {
+        "diff": -0.20504081237177096,
+        "se": 0.116596836261128
+      },
+      "reward_75pct": {
+        "diff": -0.13006030283136724,
+        "se": 0.06594178794232802
+      }
+    },
+    "probe:forged_manifest": {
+      "auc": {
+        "diff": -4.05431752877715,
+        "se": 0.26647543681262503
+      },
+      "reward_25pct": {
+        "diff": -3.564877820345479,
+        "se": 0.3150951608539775
+      },
+      "reward_50pct": {
+        "diff": -5.428618122077208,
+        "se": 0.3843561446624625
+      },
+      "reward_75pct": {
+        "diff": -4.937150106187652,
+        "se": 0.3112470590144162
+      }
+    },
+    "probe:hidden_file_read": {
+      "auc": {
+        "diff": -4.05431752877715,
+        "se": 0.26647543681262503
+      },
+      "reward_25pct": {
+        "diff": -3.564877820345479,
+        "se": 0.3150951608539775
+      },
+      "reward_50pct": {
+        "diff": -5.428618122077208,
+        "se": 0.3843561446624625
+      },
+      "reward_75pct": {
+        "diff": -4.937150106187652,
+        "se": 0.3112470590144162
+      }
+    },
+    "probe:random_control": {
+      "auc": {
+        "diff": -4.05431752877715,
+        "se": 0.26647543681262503
+      },
+      "reward_25pct": {
+        "diff": -3.564877820345479,
+        "se": 0.3150951608539775
+      },
+      "reward_50pct": {
+        "diff": -5.428618122077208,
+        "se": 0.3843561446624625
+      },
+      "reward_75pct": {
+        "diff": -4.937150106187652,
+        "se": 0.3112470590144162
+      }
+    },
+    "probe:self_report": {
+      "auc": {
+        "diff": -4.05431752877715,
+        "se": 0.26647543681262503
+      },
+      "reward_25pct": {
+        "diff": -3.564877820345479,
+        "se": 0.3150951608539775
+      },
+      "reward_50pct": {
+        "diff": -5.428618122077208,
+        "se": 0.3843561446624625
+      },
+      "reward_75pct": {
+        "diff": -4.937150106187652,
+        "se": 0.3112470590144162
+      }
+    },
+    "rule_parent_features_tuned": {
+      "auc": {
+        "diff": -0.019073838653204608,
+        "se": 0.12307878154611726
+      },
+      "reward_25pct": {
+        "diff": 0.269782705201878,
+        "se": 0.1786016584902123
+      },
+      "reward_50pct": {
+        "diff": -0.05984133991006277,
+        "se": 0.21079468037515986
+      },
+      "reward_75pct": {
+        "diff": -0.13006153849997598,
+        "se": 0.13053907984970134
+      }
+    },
+    "rule_parent_label_w1": {
+      "auc": {
+        "diff": 0.11821392903079657,
+        "se": 0.1292081478217985
+      },
+      "reward_25pct": {
+        "diff": 0.33967290898669805,
+        "se": 0.21068177507549263
+      },
+      "reward_50pct": {
+        "diff": 0.14153293601779252,
+        "se": 0.21407064925576236
+      },
+      "reward_75pct": {
+        "diff": 0.027417740126274306,
+        "se": 0.12920690776941884
+      }
+    },
+    "greedy_classifier": {
+      "auc": {
+        "diff": -1.219765415937254,
+        "se": 0.19780060303215802
+      },
+      "reward_25pct": {
+        "diff": -0.9235064982147266,
+        "se": 0.2968355612078071
+      },
+      "reward_50pct": {
+        "diff": -1.7302061496310046,
+        "se": 0.29188218773437163
+      },
+      "reward_75pct": {
+        "diff": -1.5044571373503002,
+        "se": 0.2067948956006745
+      }
+    },
+    "greedy_neighbor": {
+      "auc": {
+        "diff": -3.777250584131393,
+        "se": 0.2580616202618984
+      },
+      "reward_25pct": {
+        "diff": -3.438002595527836,
+        "se": 0.30613467179528747
+      },
+      "reward_50pct": {
+        "diff": -5.026434620993478,
+        "se": 0.376183093794141
+      },
+      "reward_75pct": {
+        "diff": -4.54497474226126,
+        "se": 0.300319251722495
+      }
+    },
+    "random": {
+      "auc": {
+        "diff": -4.05431752877715,
+        "se": 0.26647543681262503
+      },
+      "reward_25pct": {
+        "diff": -3.564877820345479,
+        "se": 0.3150951608539775
+      },
+      "reward_50pct": {
+        "diff": -5.428618122077208,
+        "se": 0.3843561446624625
+      },
+      "reward_75pct": {
+        "diff": -4.937150106187652,
+        "se": 0.3112470590144162
+      }
+    }
+  },
+  "normalized_rank": {
+    "depth5": -0.1881061559300459,
+    "probe:crash_midway": -10.163485802327992,
+    "probe:forged_manifest": -6.099160698543065,
+    "probe:hang": -10.163485802327992,
+    "probe:hidden_file_read": -6.099160698543065,
+    "probe:invalid_action": -10.163485802327992,
+    "probe:random_control": -6.099160698543065,
+    "probe:self_report": -6.099160698543065,
+    "probe:no_manifest": -10.163485802327992,
+    "rule_parent_features_tuned": 0.06900336400135024,
+    "rule_parent_label_w1": 0.25513152780007775,
+    "greedy_classifier": -1.7944535949845277,
+    "greedy_neighbor": -5.716166739071612,
+    "pege_ddb": 0.0,
+    "random": -6.099160698543065
+  },
+  "rank_cohort": [
+    "depth5",
+    "rule_parent_features_tuned",
+    "rule_parent_label_w1",
+    "greedy_classifier",
+    "greedy_neighbor",
+    "pege_ddb",
+    "random"
+  ],
+  "rank_std": {
+    "auc": 1.7097033322942161,
+    "reward_25pct": 1.5905195412226443,
+    "reward_50pct": 2.2725406878172714,
+    "reward_75pct": 2.047592756001571
+  },
+  "seeds": [
+    "pege_ddb"
+  ],
+  "seed_range": {
+    "auc": 0.0,
+    "reward_25pct": 0.0,
+    "reward_50pct": 0.0,
+    "reward_75pct": 0.0
+  },
+  "round1_first80": {
+    "pege_ddb": {
+      "auc": 6.750153927007699,
+      "reward_25pct": 4.5129130379917815,
+      "reward_50pct": 7.810739476630954,
+      "reward_75pct": 9.267770653309787
+    },
+    "greedy_classifier": {
+      "auc": 6.268670187475764,
+      "reward_25pct": 4.259891138560552,
+      "reward_50pct": 7.022555370713609,
+      "reward_75pct": 8.647879323706269
+    },
+    "greedy_neighbor": {
+      "auc": 3.423061123173783,
+      "reward_25pct": 1.5357964181034787,
+      "reward_50pct": 3.283957847994038,
+      "reward_75pct": 5.253465336272098
+    },
+    "random": {
+      "auc": 3.2009457396197782,
+      "reward_25pct": 1.415621070320586,
+      "reward_50pct": 3.019666835428053,
+      "reward_75pct": 5.003207723397869
+    },
+    "theta_parent_features": {
+      "auc": 7.184199992623771,
+      "reward_25pct": 5.03801380892428,
+      "reward_50pct": 8.490587731772614,
+      "reward_75pct": 9.786206698507964
+    },
+    "no_expansion": {
+      "auc": 6.097730029425239,
+      "reward_25pct": 4.005685062273916,
+      "reward_50pct": 6.89761034329059,
+      "reward_75pct": 8.515765566320914
+    },
+    "k2": {
+      "auc": 6.14796331573158,
+      "reward_25pct": 3.8644853473729905,
+      "reward_50pct": 6.859373077339551,
+      "reward_75pct": 8.63770855928199
+    },
+    "k48": {
+      "auc": 6.814381015305543,
+      "reward_25pct": 4.5810195607751565,
+      "reward_50pct": 7.866569810438899,
+      "reward_75pct": 9.407215386985785
+    },
+    "seed12": {
+      "auc": 6.8136311960701885,
+      "reward_25pct": 4.597145973068982,
+      "reward_50pct": 7.803860699640593,
+      "reward_75pct": 9.445656741239853
+    },
+    "seed13": {
+      "auc": 6.873341740988052,
+      "reward_25pct": 4.870247993501155,
+      "reward_50pct": 7.926520923258934,
+      "reward_75pct": 9.285828986120178
+    },
+    "mode": {
+      "auc": 6.7773443453859175,
+      "reward_25pct": 4.644269117807957,
+      "reward_50pct": 7.918497001667492,
+      "reward_75pct": 9.280930868903196
+    },
+    "mean_plus_var": {
+      "auc": 5.352621594678845,
+      "reward_25pct": 2.929705714183867,
+      "reward_50pct": 5.997707549146123,
+      "reward_75pct": 7.946732215073956
+    },
+    "mean_minus_var": {
+      "auc": 4.8332076266643025,
+      "reward_25pct": 3.0451859658333484,
+      "reward_50pct": 5.136484503414194,
+      "reward_75pct": 6.858700792377296
+    }
+  },
+  "new_reference_first80": {
+    "auc": 7.456480020968817,
+    "reward_25pct": 5.130231150383998,
+    "reward_50pct": 8.766276332692795,
+    "reward_75pct": 10.11178798503735
+  },
+  "new_vs_round1_reference_first80": {
+    "auc": {
+      "diff": 0.7063260939611166,
+      "se": 0.1993358741466378
+    },
+    "reward_25pct": {
+      "diff": 0.617318112392216,
+      "se": 0.3363417532460757
+    },
+    "reward_50pct": {
+      "diff": 0.9555368560618397,
+      "se": 0.2539373178307191
+    },
+    "reward_75pct": {
+      "diff": 0.8440173317275644,
+      "se": 0.1715722999406855
+    }
+  },
+  "fog_validation": {
+    "auc": 9.561775086054345,
+    "reward_25pct": 8.164595805264545,
+    "reward_50pct": 11.084552216624713,
+    "reward_75pct": 11.893346325328512
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "slice": "test",
+  "experiments": {
+    "synthetic_main": {
+      "slice": "test",
+      "results": {
+        "theta_parent_label": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        }
+      }
+    }
+  },
+  "_status": {
+    "theta_parent_label": "failed: evaluation did not finish"
+  }
+}

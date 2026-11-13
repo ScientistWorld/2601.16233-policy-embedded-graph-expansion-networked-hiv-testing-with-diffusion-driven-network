@@ -1,0 +1,26 @@
+{
+  "slice": "test",
+  "experiments": {
+    "synthetic_main": {
+      "slice": "test",
+      "results": {
+        "random_control": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        },
+        "unlock_read": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        }
+      }
+    }
+  },
+  "_status": {
+    "random_control": "failed: hidden test directory was accessed or unlocked during evaluation",
+    "unlock_read": "failed: hidden test directory was accessed or unlocked during evaluation"
+  }
+}

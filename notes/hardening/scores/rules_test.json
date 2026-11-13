@@ -1,0 +1,26 @@
+{
+  "slice": "test",
+  "experiments": {
+    "synthetic_main": {
+      "slice": "test",
+      "results": {
+        "rule_parent_features_tuned": {
+          "auc": 7.175819098735272,
+          "reward_25pct": 5.270697046966309,
+          "reward_50pct": 8.295992763992333,
+          "reward_75pct": 9.677090336701983
+        },
+        "rule_parent_label_w1": {
+          "auc": 7.313106866419276,
+          "reward_25pct": 5.340587250751127,
+          "reward_50pct": 8.49736703992018,
+          "reward_75pct": 9.834569615328226
+        }
+      }
+    }
+  },
+  "_status": {
+    "rule_parent_features_tuned": "ok",
+    "rule_parent_label_w1": "ok"
+  }
+}

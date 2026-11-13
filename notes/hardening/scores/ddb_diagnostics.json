@@ -1,0 +1,30 @@
+{
+  "previous_ddb": {
+    "generated_valid_onehot_frac": 0.0,
+    "generated_mean_ones": 23.350536746490505,
+    "real_mean_ones": 17.0,
+    "bit_marginal_mean_abs_gap": 0.11089893568217267,
+    "theta_mean_generated_parent0": 0.0452505739051595,
+    "theta_mean_real_parent0": 0.08354305612808247,
+    "theta_mean_generated_parent1": 0.19724297278941055,
+    "theta_mean_real_parent1": 0.5366890545960574,
+    "count_target": "children",
+    "count_corr_validation": 0.2677667557555649,
+    "count_mean_pred": 0.7756796409617864,
+    "count_mean_true": 0.7812903225806451
+  },
+  "fixed_ddb": {
+    "generated_valid_onehot_frac": 1.0,
+    "generated_mean_ones": 17.0,
+    "real_mean_ones": 17.0,
+    "bit_marginal_mean_abs_gap": 0.03350077988806313,
+    "theta_mean_generated_parent0": 0.059067839867707236,
+    "theta_mean_real_parent0": 0.0740320635997965,
+    "theta_mean_generated_parent1": 0.31422336562431985,
+    "theta_mean_real_parent1": 0.4955688626148006,
+    "count_target": "degree",
+    "count_corr_validation": 0.3317530659046165,
+    "count_mean_pred": 1.5705379867849214,
+    "count_mean_true": 1.5625806451612902
+  }
+}

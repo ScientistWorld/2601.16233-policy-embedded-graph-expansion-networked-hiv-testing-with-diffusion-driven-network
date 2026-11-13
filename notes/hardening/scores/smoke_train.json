@@ -1,0 +1,19 @@
+{
+  "slice": "train",
+  "experiments": {
+    "synthetic_main": {
+      "slice": "train",
+      "results": {
+        "pege_smoke": {
+          "auc": 6.443257948719406,
+          "reward_25pct": 4.606065647784486,
+          "reward_50pct": 7.460791183546443,
+          "reward_75pct": 8.712415731006075
+        }
+      }
+    }
+  },
+  "_status": {
+    "pege_smoke": "ok"
+  }
+}

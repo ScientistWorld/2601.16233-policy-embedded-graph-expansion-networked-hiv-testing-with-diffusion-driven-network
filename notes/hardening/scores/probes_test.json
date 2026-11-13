@@ -1,0 +1,68 @@
+{
+  "slice": "test",
+  "experiments": {
+    "synthetic_main": {
+      "slice": "test",
+      "results": {
+        "crash_midway": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        },
+        "forged_manifest": {
+          "auc": 3.1405754086113284,
+          "reward_25pct": 1.43603652141895,
+          "reward_50pct": 2.9272159818251837,
+          "reward_75pct": 4.870001769014305
+        },
+        "hang": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        },
+        "hidden_file_read": {
+          "auc": 3.1405754086113284,
+          "reward_25pct": 1.43603652141895,
+          "reward_50pct": 2.9272159818251837,
+          "reward_75pct": 4.870001769014305
+        },
+        "invalid_action": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        },
+        "no_manifest": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        },
+        "random_control": {
+          "auc": 3.1405754086113284,
+          "reward_25pct": 1.43603652141895,
+          "reward_50pct": 2.9272159818251837,
+          "reward_75pct": 4.870001769014305
+        },
+        "self_report": {
+          "auc": 3.1405754086113284,
+          "reward_25pct": 1.43603652141895,
+          "reward_50pct": 2.9272159818251837,
+          "reward_75pct": 4.870001769014305
+        }
+      }
+    }
+  },
+  "_status": {
+    "crash_midway": "failed: episode 2: policy exited early (code 7)",
+    "forged_manifest": "ok",
+    "hang": "failed: episode 0: policy timed out",
+    "hidden_file_read": "ok",
+    "invalid_action": "failed: episode 0: step 3: action 524019 is not a discovered untested person",
+    "no_manifest": "failed: missing policy.json",
+    "random_control": "ok",
+    "self_report": "ok"
+  }
+}
