@@ -1,0 +1,68 @@
+{
+  "slice": "test",
+  "experiments": {
+    "synthetic_main": {
+      "slice": "test",
+      "results": {
+        "crash_midway": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        },
+        "forged_manifest": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        },
+        "hang": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        },
+        "hidden_file_read": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        },
+        "invalid_action": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        },
+        "no_manifest": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        },
+        "random_control": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        },
+        "self_report": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        }
+      }
+    }
+  },
+  "_status": {
+    "crash_midway": "failed: evaluation did not finish",
+    "forged_manifest": "failed: evaluation did not finish",
+    "hang": "failed: evaluation did not finish",
+    "hidden_file_read": "failed: evaluation did not finish",
+    "invalid_action": "failed: evaluation did not finish",
+    "no_manifest": "failed: evaluation did not finish",
+    "random_control": "failed: evaluation did not finish",
+    "self_report": "failed: evaluation did not finish"
+  }
+}

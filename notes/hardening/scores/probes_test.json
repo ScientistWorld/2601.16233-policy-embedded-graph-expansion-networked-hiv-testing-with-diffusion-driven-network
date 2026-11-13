@@ -1,0 +1,68 @@
+{
+  "slice": "test",
+  "experiments": {
+    "synthetic_main": {
+      "slice": "test",
+      "results": {
+        "crash_midway": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        },
+        "forged_manifest": {
+          "auc": 3.2009457396197782,
+          "reward_25pct": 1.415621070320586,
+          "reward_50pct": 3.019666835428053,
+          "reward_75pct": 5.003207723397869
+        },
+        "hang": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        },
+        "hidden_file_read": {
+          "auc": 13.204244330494488,
+          "reward_25pct": 13.83156492051998,
+          "reward_50pct": 14.827003847206553,
+          "reward_75pct": 14.827003847206553
+        },
+        "invalid_action": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        },
+        "no_manifest": {
+          "auc": 0.0,
+          "reward_25pct": 0.0,
+          "reward_50pct": 0.0,
+          "reward_75pct": 0.0
+        },
+        "random_control": {
+          "auc": 3.2009457396197782,
+          "reward_25pct": 1.415621070320586,
+          "reward_50pct": 3.019666835428053,
+          "reward_75pct": 5.003207723397869
+        },
+        "self_report": {
+          "auc": 3.2009457396197782,
+          "reward_25pct": 1.415621070320586,
+          "reward_50pct": 3.019666835428053,
+          "reward_75pct": 5.003207723397869
+        }
+      }
+    }
+  },
+  "_status": {
+    "crash_midway": "failed: episode 0: policy exited early (code 7)",
+    "forged_manifest": "ok",
+    "hang": "failed: episode 0: policy timed out",
+    "hidden_file_read": "ok",
+    "invalid_action": "failed: episode 0: step 3: action 524019 is not a discovered untested person",
+    "no_manifest": "failed: missing policy.json",
+    "random_control": "ok",
+    "self_report": "ok"
+  }
+}

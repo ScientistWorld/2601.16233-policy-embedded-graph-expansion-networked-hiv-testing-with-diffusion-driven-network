@@ -3,47 +3,38 @@
   "experiments": {
     "synthetic_main": {
       "slice": "train",
-      "split_folds": [
-        0,
-        2
-      ],
       "results": {
-        "pege_ddb": {
-          "auc": 3.192059474794552,
-          "reward_25pct": 2.725230531347307,
-          "reward_50pct": 3.1341840001459222,
-          "reward_75pct": 4.099774131138937,
-          "budget_fraction": 1.0
-        },
         "greedy_classifier": {
-          "auc": 2.654528805319891,
-          "reward_25pct": 2.2086257204292368,
-          "reward_50pct": 2.582211767595035,
-          "reward_75pct": 3.832514441344507,
-          "budget_fraction": 1.0
+          "auc": 6.152658946840465,
+          "reward_25pct": 4.0049086726255805,
+          "reward_50pct": 6.818761797354897,
+          "reward_75pct": 8.717456376730482
         },
         "greedy_neighbor": {
-          "auc": 2.7116616748589175,
-          "reward_25pct": 1.3535840186064236,
-          "reward_50pct": 2.958202623718438,
-          "reward_75pct": 3.611242618669231,
-          "budget_fraction": 1.0
+          "auc": 4.067039010986697,
+          "reward_25pct": 1.7507602479495648,
+          "reward_50pct": 4.168366769563605,
+          "reward_75pct": 6.017985458986957
+        },
+        "pege_ddb": {
+          "auc": 6.474660866853075,
+          "reward_25pct": 4.790715285023433,
+          "reward_50pct": 7.19592291985405,
+          "reward_75pct": 8.775190133969005
         },
         "random": {
-          "auc": 2.6431388253460675,
-          "reward_25pct": 1.3079012353208055,
-          "reward_50pct": 3.1674213279290058,
-          "reward_75pct": 4.38215659073474,
-          "budget_fraction": 1.0
-        },
-        "fully_observable_gittins": {
-          "auc": 2.2668587422975457,
-          "reward_25pct": 0.9422410375044021,
-          "reward_50pct": 2.078208301174594,
-          "reward_75pct": 3.0433132041845066,
-          "budget_fraction": 1.0
+          "auc": 3.5394068441985866,
+          "reward_25pct": 1.7229692939812917,
+          "reward_50pct": 3.5029775173091133,
+          "reward_75pct": 5.3016282757450774
         }
       }
     }
+  },
+  "_status": {
+    "greedy_classifier": "ok",
+    "greedy_neighbor": "ok",
+    "pege_ddb": "ok",
+    "random": "ok"
   }
 }

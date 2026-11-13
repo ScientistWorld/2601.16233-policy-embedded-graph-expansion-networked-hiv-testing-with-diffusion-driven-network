@@ -1,0 +1,19 @@
+{
+  "slice": "test",
+  "experiments": {
+    "synthetic_main": {
+      "slice": "test",
+      "results": {
+        "mode": {
+          "auc": 6.7773443453859175,
+          "reward_25pct": 4.644269117807957,
+          "reward_50pct": 7.918497001667492,
+          "reward_75pct": 9.280930868903196
+        }
+      }
+    }
+  },
+  "_status": {
+    "mode": "ok"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "slice": "test",
+  "experiments": {
+    "synthetic_main": {
+      "slice": "test",
+      "results": {
+        "mean_plus_var": {
+          "auc": 5.352621594678845,
+          "reward_25pct": 2.929705714183867,
+          "reward_50pct": 5.997707549146123,
+          "reward_75pct": 7.946732215073956
+        }
+      }
+    }
+  },
+  "_status": {
+    "mean_plus_var": "ok"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "slice": "test",
+  "experiments": {
+    "synthetic_main": {
+      "slice": "test",
+      "results": {
+        "k48": {
+          "auc": 6.814381015305543,
+          "reward_25pct": 4.5810195607751565,
+          "reward_50pct": 7.866569810438899,
+          "reward_75pct": 9.407215386985785
+        }
+      }
+    }
+  },
+  "_status": {
+    "k48": "ok"
+  }
+}

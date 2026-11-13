@@ -1,8 +1,8 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends.
-action: pending
-gpus: 0
+action: submit
+gpus: 1
 test: false
 milestone: core_claim
-notes: ""
+notes: "Hardening audit (CPU-bound; GPU requested only for more CPU cores): train PEGE+DDB + baselines from final code, smoke test, official train/test scores, shortcut probes, FOG diagnostic, honest variants and seed spread on the hidden test. Resumable."
