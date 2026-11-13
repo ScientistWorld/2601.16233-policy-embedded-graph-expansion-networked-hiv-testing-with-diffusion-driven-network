@@ -2,20 +2,20 @@
 
 ## Data
 
-Use the provided `data/synthetic_hiv_forest.json` generator and five component-level folds. Do not add external labeled HIV network data, and do not split connected components across train and test. The original ICPSR dataset requires a user agreement, so this gym's fixed substitute is the comparable benchmark surface.
+Learn only from `data/train_forest.json` (the public training forest; its five component-level folds are there for internal validation). Tune on the visible validation episodes in `data/validation_episodes.json` if you like. Do not add external labelled HIV network data. The held-out episodes come from the same distribution but are generated inside the hidden evaluator. Do not try to recover them: no reading or unlocking `eval/test/`, and no inspecting the evaluator process.
 
 ## Budget
 
-Use the same full-population testing budget and `gamma = 0.99` when reporting `synthetic_main`. Reducing the tested population fraction can improve apparent early precision but changes the task.
+Every person in an episode is tested (`T = |V|`) and `gamma = 0.99`. Both are fixed by the evaluator, and anything a method writes about them is ignored.
 
 ## Information
 
-Policies may only act on discovered frontier nodes and information revealed by previous tests. They must not inspect labels of untested nodes or hidden future graph topology, except for the explicit fully observable upper-bound baseline.
+At each step a policy may use only the roots, the people revealed by its own earlier tests (their covariates and referrer), and the labels of the people it tested in **this** episode. Each evaluation episode is an independent instance. Do not persist revealed labels or other episode information (files, caches, background processes) from one evaluation episode to another. Learning happens from the training data before evaluation, not from the held-out episodes.
 
 ## Compliance Checklist
 
-- [ ] Uses the provided generated forest data and component-level folds
-- [ ] Does not train on held-out fold labels
-- [ ] Uses `gamma = 0.99` and the same budget definition
-- [ ] Selects only currently discovered frontier nodes during evaluation
-- [ ] Does not use hidden future graph topology for non-upper-bound methods
+- [ ] Models trained only on `data/train_forest.json` (optionally tuned on the visible validation episodes)
+- [ ] The policy acts only on discovered, untested people and finishes every episode
+- [ ] No use of undiscovered people, unrevealed labels or the hidden evaluator's files or memory
+- [ ] No state carried between evaluation episodes
+- [ ] Same budget (`T = |V|`) and `gamma = 0.99` as the evaluator

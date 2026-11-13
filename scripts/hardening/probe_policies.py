@@ -11,7 +11,9 @@ Each mode is a policy speaking the evaluator protocol directly:
   hang             stops answering (exercises the per-step timeout)
   hidden_file_read reads the hidden evaluator at test time, regenerates the
                    held-out episodes and plays with full knowledge of labels
-                   and topology (the residual leak a grader must catch)
+                   and topology; falls back to random play if it cannot
+  unlock_read      like hidden_file_read, but first chmods eval/test back to
+                   readable (and re-locks it afterwards)
 """
 
 from __future__ import annotations
@@ -52,8 +54,8 @@ def main() -> None:
             rng = random.Random(msg["policy_seed"])
             frontier = [n["id"] for n in msg["new_nodes"]]
             tested, t = [], 0
-            if mode == "hidden_file_read":
-                oracle = HiddenOracle({n["id"] for n in msg["new_nodes"]})
+            if mode in ("hidden_file_read", "unlock_read"):
+                oracle = HiddenOracle({n["id"] for n in msg["new_nodes"]}, unlock=(mode == "unlock_read"))
         else:
             tested.append(msg["tested"])
             if msg["tested"] in frontier:
@@ -67,7 +69,7 @@ def main() -> None:
         if mode == "invalid_action" and t >= 3:
             reply(tested[0])
             continue
-        if mode == "hidden_file_read" and oracle is not None and oracle.ok:
+        if oracle is not None and oracle.ok:
             reply(oracle.choose(frontier))
             continue
         reply(rng.choice(frontier))
@@ -76,13 +78,24 @@ def main() -> None:
 class HiddenOracle:
     """Locate this episode inside the hidden evaluator and act on its answers."""
 
-    def __init__(self, root_ids: set) -> None:
+    def __init__(self, root_ids: set, unlock: bool = False) -> None:
         self.ok = False
-        path = ROOT / "eval" / "test" / "evaluate.py"
-        spec = importlib.util.spec_from_file_location("hidden_eval_probe", path)
-        mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
-        for ep in mod.load_episodes():
+        hidden = ROOT / "eval" / "test"
+        try:
+            if unlock:
+                os.chmod(hidden, 0o700)
+            sys.path.insert(0, str(hidden))
+            spec = importlib.util.spec_from_file_location("hidden_eval_probe", hidden / "evaluate.py")
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            episodes = mod.load_episodes()
+        except Exception as exc:  # locked: play randomly instead
+            print(f"hidden evaluator unreadable: {exc!r}", file=sys.stderr)
+            return
+        finally:
+            if unlock:
+                os.chmod(hidden, 0)
+        for ep in episodes:
             ids = {ep["ids"][r] for r in ep["roots"]}
             if ids == root_ids:
                 self.ep = ep

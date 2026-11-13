@@ -4,15 +4,20 @@ Paper: "Policy-Embedded Graph Expansion: Networked HIV Testing with
 Diffusion-Driven Network Samples" (Algorithm 1 and Section 5).
 
 * DDB is trained only on parent->child dynamics of the training forest:
-  a Gaussian Process regressor gives a Gaussian over the number of referrals
-  of a person given their covariates, and a conditional denoising diffusion
-  model (epsilon-prediction MLP) samples a child's covariates given the
-  parent's covariates.  Recursive sampling from each frontier person up to
-  depth ``d`` produces forest-preserving graph expansions.
+  a Gaussian Process regressor gives a Gaussian over a person's number of
+  neighbours |N(v)| given their covariates (Section 5; a non-root's successors
+  are |N(v)| - 1 because one neighbour is its referrer), and a conditional
+  denoising diffusion model (epsilon-prediction MLP, cosine noise schedule,
+  ancestral sampling) samples a child's covariates given the parent's
+  covariates; each sample is decoded to one valid answer per categorical
+  question.  Recursive sampling from each frontier person up to depth ``d``
+  produces forest-preserving graph expansions.
 * The decision oracle is the Gittins index policy for forests (Choo et al.
   2025): retirement-value recursion with Whittle's product formula for the
   children of a node, conditioning each child on its parent's label.  Its
-  feature mapping theta gives P(HIV+ | covariates, referrer's state).
+  feature mapping theta gives P(HIV+ | own covariates, referrer's covariates,
+  referrer's label) -- Choo et al.'s pairwise potentials use the covariates of
+  both endpoints of an edge.
 * PEGE samples ``k`` expansions at every step, evaluates every frontier
   person with the oracle on each sample, averages (mean aggregation) and
   tests the argmax.
@@ -44,8 +49,20 @@ if str(ROOT) not in sys.path:
 from data.sapog_data import Forest, load_train_forest  # noqa: E402
 from data.sapog_protocol import EpisodeState, serve  # noqa: E402
 
-DIFF_STEPS = 12
-BETAS = np.linspace(0.0008, 0.08, DIFF_STEPS)
+DIFF_STEPS = 40
+DIFF_REPS = 20  # noisy training examples per parent->child edge
+
+
+def _cosine_schedule(steps: int, s: float = 0.008) -> np.ndarray:
+    """Nichol & Dhariwal cosine schedule; alpha_bar of the last step is ~0, so
+    sampling can start from N(0, I) exactly as the forward process ends."""
+    f = lambda t: math.cos((t / steps + s) / (1.0 + s) * math.pi / 2.0) ** 2  # noqa: E731
+    ab = np.array([f(t + 1) / f(0) for t in range(steps)])
+    prev = np.concatenate([[1.0], ab[:-1]])
+    return np.clip(1.0 - ab / prev, 1e-5, 0.999)
+
+
+BETAS = _cosine_schedule(DIFF_STEPS)
 ALPHA_BAR = np.cumprod(1.0 - BETAS)
 
 DEFAULT_CONFIG = {
@@ -54,7 +71,7 @@ DEFAULT_CONFIG = {
     "grid": 256,
     "aggregate": "mean",
     "seed": 11,
-    "theta": "parent_label",
+    "theta": "parent_features",
 }
 
 
@@ -64,13 +81,16 @@ DEFAULT_CONFIG = {
 class DDB:
     """Hybrid GP-count / diffusion-covariate expansion model plus theta."""
 
-    def __init__(self, count_model, diffusion_model, theta_model, feature_dim: int, max_children: int, theta_kind: str):
-        self.count_model = count_model
+    def __init__(self, count_model, diffusion_model, theta_model, feature_dim: int, max_children: int, theta_kind: str,
+                 cat_sizes: Sequence[int]):
+        self.count_model = count_model  # GPR over |N(v)| (number of neighbours)
         self.diffusion_model = diffusion_model
         self.theta_model = theta_model
         self.feature_dim = feature_dim
         self.max_children = max_children
         self.theta_kind = theta_kind
+        self.cat_sizes = [int(c) for c in cat_sizes]
+        assert sum(self.cat_sizes) == feature_dim
         self._prepared = False
 
     # -- fast inference paths (numerically identical to sklearn's predict) --
@@ -105,11 +125,14 @@ class DDB:
         mean, std = self.count_model.predict(X, return_std=True)
         return np.asarray(mean, dtype=float), np.asarray(std, dtype=float)
 
-    def sample_counts(self, mean: np.ndarray, std: np.ndarray, rng: np.random.Generator) -> np.ndarray:
-        draw = rng.normal(mean, std)
-        return np.clip(np.rint(draw), 0, self.max_children).astype(np.int64)
+    def sample_successors(self, mean: np.ndarray, std: np.ndarray, has_referrer: np.ndarray,
+                          rng: np.random.Generator) -> np.ndarray:
+        """Sample |N(v)| from the GPR Gaussian; successors exclude the referrer."""
+        draw = np.rint(rng.normal(mean, std)) - has_referrer.astype(float)
+        return np.clip(draw, 0, self.max_children).astype(np.int64)
 
     def sample_child_features(self, parent_X: np.ndarray, rng: np.random.Generator) -> np.ndarray:
+        """Ancestral DDPM sampling of child covariates given parent covariates."""
         R, D = parent_X.shape[0], self.feature_dim
         if R == 0:
             return np.zeros((0, D))
@@ -118,14 +141,26 @@ class DDB:
             inp = np.hstack([parent_X, z, np.full((R, 1), t / (DIFF_STEPS - 1))])
             eps = self._mlp(inp)
             ab = ALPHA_BAR[t]
-            x0 = (z - math.sqrt(max(1e-6, 1.0 - ab)) * eps) / math.sqrt(max(1e-6, ab))
+            x0 = np.clip((z - math.sqrt(1.0 - ab) * eps) / math.sqrt(ab), -1.0, 1.0)
             if t > 0:
-                abp = ALPHA_BAR[t - 1]
-                z = math.sqrt(abp) * x0 + math.sqrt(max(1e-6, 1.0 - abp)) * rng.standard_normal((R, D))
+                abp, beta = ALPHA_BAR[t - 1], BETAS[t]
+                mean = (math.sqrt(abp) * beta / (1.0 - ab)) * x0 + (math.sqrt(1.0 - beta) * (1.0 - abp) / (1.0 - ab)) * z
+                var = beta * (1.0 - abp) / (1.0 - ab)
+                z = mean + math.sqrt(var) * rng.standard_normal((R, D))
             else:
                 z = x0
-        probs = np.clip((z + 1.0) * 0.5, 0.0, 1.0)
-        return (rng.random((R, D)) < probs).astype(np.float64)
+        # Decode to a valid person: one answer per categorical question.
+        weight = np.clip((z + 1.0) * 0.5, 1e-4, None)
+        out = np.zeros((R, D))
+        u = rng.random((R, len(self.cat_sizes)))
+        start = 0
+        for j, size in enumerate(self.cat_sizes):
+            block = weight[:, start : start + size]
+            cdf = np.cumsum(block, axis=1)
+            pick = (cdf < (u[:, j] * cdf[:, -1])[:, None]).sum(axis=1)
+            out[np.arange(R), start + np.minimum(pick, size - 1)] = 1.0
+            start += size
+        return out
 
     def theta(self, X: np.ndarray, parent_X: np.ndarray, is_root: np.ndarray, parent_pos: np.ndarray) -> np.ndarray:
         """P(HIV+ | own covariates, referrer state) for a batch."""
@@ -164,7 +199,7 @@ def fit_theta(forest: Forest, kind: str, seed: int):
     return model
 
 
-def train_ddb(forest: Forest, seed: int = 11, theta_kind: str = "parent_label") -> DDB:
+def train_ddb(forest: Forest, cat_sizes: Sequence[int], seed: int = 11, theta_kind: str = "parent_features") -> DDB:
     from sklearn.gaussian_process import GaussianProcessRegressor
     from sklearn.gaussian_process.kernels import RBF, WhiteKernel
     from sklearn.neural_network import MLPRegressor
@@ -179,19 +214,20 @@ def train_ddb(forest: Forest, seed: int = 11, theta_kind: str = "parent_label") 
         if p >= 0:
             counts[p] += 1
 
-    # (1) GPR over the number of referrals given the referrer's covariates.
+    # (1) GPR over |N(v)| (neighbours = successors + referrer) given covariates.
+    degree = counts + (parents >= 0)
     kernel = 1.0 * RBF(length_scale=6.0) + WhiteKernel(noise_level=0.4)
     count_model = make_pipeline(
         StandardScaler(),
         GaussianProcessRegressor(kernel=kernel, alpha=0.05, normalize_y=True, random_state=seed),
     )
-    count_model.fit(X, counts)
+    count_model.fit(X, degree)
 
     # (2) Conditional denoising diffusion over child covariates given parent covariates.
     child_idx = np.flatnonzero(parents >= 0)
     parent_x = X[parents[child_idx]]
     child_x = X[child_idx] * 2.0 - 1.0
-    reps = 5
+    reps = DIFF_REPS
     t = rng.integers(0, DIFF_STEPS, size=(len(child_idx), reps))
     eps = rng.standard_normal((len(child_idx), reps, D))
     ab = ALPHA_BAR[t][..., None]
@@ -208,7 +244,7 @@ def train_ddb(forest: Forest, seed: int = 11, theta_kind: str = "parent_label") 
 
     # (3) Oracle feature mapping theta.
     theta_model = fit_theta(forest, theta_kind, seed)
-    return DDB(count_model, diffusion_model, theta_model, D, int(counts.max()), theta_kind)
+    return DDB(count_model, diffusion_model, theta_model, D, int(counts.max()), theta_kind, cat_sizes)
 
 
 # --------------------------------------------------------------------------- oracle
@@ -328,20 +364,21 @@ class PEGEPolicy:
                 parent_pos[i] = int(state.labels.get(par, 0))
         return X, parent_X, is_root, parent_pos
 
-    def expand(self, X0: np.ndarray, p0: np.ndarray) -> List[dict]:
+    def expand(self, X0: np.ndarray, is_root: np.ndarray) -> List[dict]:
         """k independent DDB expansions of depth d from every frontier person."""
-        F = len(X0)
         ddb, rng, k = self.ddb, self.rng, self.k
         levels: List[dict] = [{"X": np.repeat(X0, k, axis=0)}]
         if self.depth <= 0:
             return levels
         mean0, std0 = ddb.count_mean_std(X0)
         mean, std = np.repeat(mean0, k), np.repeat(std0, k)
+        has_ref = np.repeat(~is_root, k)
         for L in range(1, self.depth + 1):
             prev = levels[L - 1]["X"]
             if L > 1:
                 mean, std = ddb.count_mean_std(prev)
-            counts = ddb.sample_counts(mean, std, rng) if len(prev) else np.zeros(0, dtype=np.int64)
+                has_ref = np.ones(len(prev), dtype=bool)
+            counts = ddb.sample_successors(mean, std, has_ref, rng) if len(prev) else np.zeros(0, dtype=np.int64)
             parent_rows = np.repeat(np.arange(len(prev)), counts)
             parent_X = prev[parent_rows]
             X = ddb.sample_child_features(parent_X, rng)
@@ -359,7 +396,7 @@ class PEGEPolicy:
         X0, pX0, is_root, ppos = self.frontier_inputs(state, frontier)
         p0 = self.ddb.theta(X0, pX0, is_root, ppos)
         F, k = len(frontier), self.k
-        levels = self.expand(X0, p0)
+        levels = self.expand(X0, is_root)
         idx = gittins_indices(levels, np.repeat(p0, k), self.grid).reshape(F, k)
         if self.aggregate == "mean":
             score = idx.mean(axis=1)
@@ -392,7 +429,8 @@ def cmd_train(args: argparse.Namespace) -> None:
     out = Path(args.out)
     config = {**DEFAULT_CONFIG, **{k: v for k, v in vars(args).items() if k in DEFAULT_CONFIG and v is not None}}
     forest = load_train_forest(args.data)
-    ddb = train_ddb(forest, seed=int(config["seed"]), theta_kind=config["theta"])
+    cat_sizes = json.loads(Path(args.data).read_text())["categorical_sizes"]
+    ddb = train_ddb(forest, cat_sizes, seed=int(config["seed"]), theta_kind=config["theta"])
     out.mkdir(parents=True, exist_ok=True)
     with (out / "ddb.pkl").open("wb") as f:
         pickle.dump(ddb, f)

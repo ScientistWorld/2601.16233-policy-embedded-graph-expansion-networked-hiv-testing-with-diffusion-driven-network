@@ -9,7 +9,12 @@ people, the people revealed by its own tests, and the labels of the people it
 tested.
 
 Held-out episodes are generated here, in memory, from hidden seeds by
-``world.py`` in this directory; they never touch disk.  Gamma, the budget
+``world.py`` in this directory; they never touch disk.  While submitted
+policies run, this directory is made unreadable (mode 0) and the scorer is
+made non-dumpable, so a policy cannot re-derive the episodes from the hidden
+seeds or read them from the scorer's memory; if the directory's permissions
+are changed during the run (its ctime moves), every method is scored as
+failed.  Gamma, the budget
 (test every discovered person, ``T = |V|``), the episodes, the metrics and the
 aggregation are all fixed by this file -- nothing a method writes is trusted.
 Any failure (missing/invalid ``policy.json``, crash, timeout, an action that
@@ -22,6 +27,7 @@ interrupted run never leaves stale scores behind.
 from __future__ import annotations
 
 import argparse
+import ctypes
 import hashlib
 import json
 import math
@@ -43,6 +49,8 @@ ROOT = HERE.parent.parent
 sys.path.insert(0, str(HERE))
 import world  # noqa: E402  (hidden generator, same directory)
 
+sys.path[:] = [p for p in sys.path if Path(p or ".").resolve() != HERE]
+
 SLICE = "test"
 EXPERIMENT = "synthetic_main"
 GAMMA = 0.99
@@ -51,11 +59,44 @@ CHECKPOINTS = (0.25, 0.50, 0.75)
 WORST = {m: 0.0 for m in METRICS}  # rewards are non-negative, so 0 is the floor
 
 _HIDDEN_BASE = 7_340_117
-N_TEST_EPISODES = 80
+N_TEST_EPISODES = 120
 TEST_SEEDS = [_HIDDEN_BASE + 104_729 * i for i in range(N_TEST_EPISODES)]
 
 STEP_TIMEOUT_S = float(os.environ.get("SAPOG_STEP_TIMEOUT", "900"))
 MAX_IGNORED_LINES = 10_000
+
+
+# ---------------------------------------------------------------- hidden-dir lock
+
+
+class HiddenLock:
+    """Keep eval/test unreadable while policies run; detect tampering."""
+
+    def __init__(self) -> None:
+        self.mode: Optional[int] = None
+        self.ctime: Optional[int] = None
+
+    def lock(self) -> None:
+        try:  # PR_SET_DUMPABLE=0: same-user processes cannot read our memory
+            ctypes.CDLL(None, use_errno=True).prctl(4, 0, 0, 0, 0)
+        except Exception:
+            pass
+        self.mode = os.stat(HERE).st_mode & 0o7777
+        os.chmod(HERE, 0)
+        self.ctime = os.stat(HERE).st_ctime_ns
+
+    def tampered(self) -> bool:
+        if self.ctime is None:
+            return False
+        st = os.stat(HERE)
+        return (st.st_mode & 0o7777) != 0 or st.st_ctime_ns != self.ctime
+
+    def unlock(self) -> None:
+        if self.mode is not None:
+            try:
+                os.chmod(HERE, self.mode | 0o700)
+            except Exception:
+                pass
 
 
 # ---------------------------------------------------------------- episodes
@@ -341,6 +382,22 @@ def main() -> int:
         return 1
 
     episodes = load_episodes()
+    hidden = HiddenLock()
+
+    def _on_signal(signum, _frame):
+        hidden.unlock()
+        raise SystemExit(128 + signum)
+
+    for sig in (signal.SIGTERM, signal.SIGHUP, signal.SIGINT):
+        signal.signal(sig, _on_signal)
+    try:
+        hidden.lock()
+        return _evaluate(args, output, methods, results, status, episodes, hidden)
+    finally:
+        hidden.unlock()
+
+
+def _evaluate(args, output, methods, results, status, episodes, hidden) -> int:
     log_root = ROOT / "logs" / "eval_test"
     commands: Dict[str, List[str]] = {}
     for method in methods:
@@ -377,6 +434,9 @@ def main() -> int:
         for f in futures:
             f.result()
 
+    if hidden.tampered():
+        for name in commands:
+            failures.setdefault(name, "hidden test directory was accessed or unlocked during evaluation")
     for name in commands:
         if name in failures:
             status[name] = f"failed: {failures[name]}"
