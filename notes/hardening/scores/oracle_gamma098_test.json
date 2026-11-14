@@ -1,0 +1,19 @@
+{
+  "slice": "test",
+  "experiments": {
+    "synthetic_main": {
+      "slice": "test",
+      "results": {
+        "oracle_gamma098": {
+          "auc": 7.154506785339419,
+          "reward_25pct": 4.9361883398730555,
+          "reward_50pct": 8.298489278293388,
+          "reward_75pct": 9.788938947217925
+        }
+      }
+    }
+  },
+  "_status": {
+    "oracle_gamma098": "ok"
+  }
+}

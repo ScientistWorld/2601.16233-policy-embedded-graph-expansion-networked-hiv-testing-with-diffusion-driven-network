@@ -49,7 +49,7 @@
   },
   "experiments": {
     "synthetic_main": {
-      "description": "Sequential HIV testing on incrementally revealed referral forests (synthetic substitute for the gated ICPSR network, at the paper's per-fold scale: ~155 people per test graph, ~11% HIV prevalence, gamma=0.99, budget T=|V|). Each method is played interactively on held-out episodes generated inside eval/test/; it sees only roots, the people its tests reveal and the labels of people it tested. Any invalid action, crash or timeout fails the run (worst value in every metric).",
+      "description": "Sequential HIV testing on incrementally revealed referral forests (synthetic substitute for the gated ICPSR network, at the paper's per-fold scale: ~155 people per test graph, ~11% HIV prevalence, gamma=0.99, budget T=|V|). Each method is played interactively on 120 held-out episodes generated inside eval/test/ (unreadable while policies run); it sees only roots, the people its tests reveal and the labels of people it tested. Any invalid action, crash or timeout fails the run (worst value in every metric).",
       "weight": 1.0,
       "primary_metric": "auc",
       "metrics": {
@@ -77,34 +77,34 @@
       "results": {
         "pege_ddb": {
           "type": "proposed",
-          "auc": 0.0,
-          "reward_25pct": 0.0,
-          "reward_50pct": 0.0,
-          "reward_75pct": 0.0
+          "auc": 7.194892937388479,
+          "reward_25pct": 5.000914341764429,
+          "reward_50pct": 8.35583410390239,
+          "reward_75pct": 9.807151875201958
         },
         "greedy_classifier": {
           "type": "baseline",
-          "auc": 0.0,
-          "reward_25pct": 0.0,
-          "reward_50pct": 0.0,
-          "reward_75pct": 0.0
+          "auc": 5.975127521451225,
+          "reward_25pct": 4.077407843549704,
+          "reward_50pct": 6.625627954271386,
+          "reward_75pct": 8.302694737851652
         },
         "greedy_neighbor": {
           "type": "baseline",
-          "auc": 0.0,
-          "reward_25pct": 0.0,
-          "reward_50pct": 0.0,
-          "reward_75pct": 0.0
+          "auc": 3.417642353257085,
+          "reward_25pct": 1.5629117462365927,
+          "reward_50pct": 3.329399482908913,
+          "reward_75pct": 5.262177132940695
         },
         "random": {
           "type": "baseline",
-          "auc": 0.0,
-          "reward_25pct": 0.0,
-          "reward_50pct": 0.0,
-          "reward_75pct": 0.0
+          "auc": 3.1405754086113284,
+          "reward_25pct": 1.43603652141895,
+          "reward_50pct": 2.9272159818251837,
+          "reward_75pct": 4.870001769014305
         }
       },
-      "notes": "PLACEHOLDER: results are filled from the hardening job's hidden-test run of the final reference code."
+      "notes": "Results are the hidden-test scores of the final reference code (PEGE+DDB, k=24, d=3, mean aggregation, seed 11) and the paper's simple baselines, identical to scoring/scores_test.json. Scaled setup: synthetic data instead of ICPSR, so these values are not on the paper's scale; the paper's Table 1 is kept under _paper_icpsr_main. Coefficients follow the paper's emphasis on total AUC and the 25% budget (its headline '9% more detections with 25% tested')."
     }
   }
 }

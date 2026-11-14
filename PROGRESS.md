@@ -68,3 +68,14 @@ PEGE + DDB beats the practical partial-observation baselines on the primary AUC 
 - **Dataset**: The paper uses ICPSR 22140 with 778 nodes, 188 connected components, and 72 binary covariates. This reproduction uses a procedural synthetic HIV-like forest with the same partial-observability protocol because ICPSR access requires a user agreement.
 - **Oracle details**: The paper uses the Gittins index policy from Choo et al. 2025. This implementation uses the cited binary branching-bandit retirement-value recursion on a discretized grid, with learned DDB conditionals substituting for unavailable ICPSR transition estimates.
 - **Scale for first corrected job**: The completed smoke job used 3 folds and `k = 8`. The final core-claim run used 5 folds and `k = 24` on the synthetic substitute.
+
+## Iteration 11 (hardening)
+
+- The test is now interactive on 120 held-out episodes, generated inside `eval/test/` and unreadable while policies run. Evaluator constants are fixed, and any failure scores worst values.
+- Reproduction fidelity fixes:
+  - The diffusion noise schedule now reaches pure noise, sampling is ancestral, and samples decode to valid one-hot people.
+  - The GPR models |N(v)| as the paper states.
+  - θ includes the referrer's covariates, as in Choo et al.'s pairwise potentials.
+- Final hidden-test AUC: PEGE+DDB 7.195, greedy classifier 5.975, greedy neighbour 3.418, random 3.141. The seed range is 0.067.
+- Paper secondary trends reproduced: k = 2 < k = 24 ≈ k = 48, and mean aggregation beats mean + variance.
+- Open issue: a calibrated one-step-lookahead rule ties the reference (+0.12 ± 0.13), so headroom from honest variants is small (k = 48: +0.10 ± 0.06). Details are in `HARDENING.md`.

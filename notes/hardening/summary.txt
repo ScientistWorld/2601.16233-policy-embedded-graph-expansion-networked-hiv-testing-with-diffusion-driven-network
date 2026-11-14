@@ -1,25 +1,30 @@
 episodes=120
 method                                    auc reward_25pct reward_50pct reward_75pct     dAUC     se     rank
-rule_parent_label_w1                   7.3131       5.3406       8.4974       9.8346    0.118  0.129    0.223  
+rule_parent_label_w1                   7.3131       5.3406       8.4974       9.8346    0.118  0.129    0.355  
+k48                                    7.2910       5.0401       8.6036       9.8815    0.096  0.061    0.195  
 pege_ddb                               7.1949       5.0009       8.3558       9.8072    0.000  0.000    0.000  
-rule_parent_features_tuned             7.1758       5.2707       8.2960       9.6771   -0.019  0.123    0.072  
-seed12                                 7.1275       4.8696       8.3921       9.7407   -0.067  0.064   -0.087  
-depth5                                 7.0739       4.8945       8.1508       9.6771   -0.121  0.068   -0.155  
-theta_generated                        6.9835       4.9494       7.9817       9.4701   -0.211  0.088   -0.234  
-k2                                     6.7688       4.5504       7.8008       9.2722   -0.426  0.107   -0.555  
-greedy_classifier                      5.9751       4.0774       6.6256       8.3027   -1.220  0.198   -1.463  
-no_expansion                           5.8051       3.7989       6.5052       8.2010   -1.390  0.202   -1.691  
-greedy_neighbor                        3.4176       1.5629       3.3294       5.2622   -3.777  0.258   -4.689  
-probe:forged_manifest                  3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -4.996  
-probe:hidden_file_read                 3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -4.996  
-probe:random_control                   3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -4.996  
-probe:self_report                      3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -4.996  
-random                                 3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -4.996  
-probe:crash_midway                     0.0000       0.0000       0.0000       0.0000    0.000  0.000   -8.232  failed: episode 2: policy exited early (code 7)
-probe:hang                             0.0000       0.0000       0.0000       0.0000    0.000  0.000   -8.232  failed: episode 0: policy timed out
-probe:invalid_action                   0.0000       0.0000       0.0000       0.0000    0.000  0.000   -8.232  failed: episode 0: step 3: action 524019 is not a discovered untested person
-probe:no_manifest                      0.0000       0.0000       0.0000       0.0000    0.000  0.000   -8.232  failed: missing policy.json
-theta_parent_label                     0.0000       0.0000       0.0000       0.0000    0.000  0.000   -8.232  failed: hidden test directory was accessed or unlocked during evaluation
-seed range: {"auc": 0.06741819616134936, "reward_25pct": 0.13128270127510966, "reward_50pct": 0.03626309558483243, "reward_75pct": 0.06642837684280423}
+seed13                                 7.1814       5.0326       8.4421       9.8030   -0.013  0.064    0.033  
+rule_parent_features_tuned             7.1758       5.2707       8.2960       9.6771   -0.019  0.123    0.099  
+oracle_gamma097                        7.1564       4.8890       8.3222       9.7811   -0.039  0.037   -0.117  
+oracle_gamma098                        7.1545       4.9362       8.2985       9.7889   -0.040  0.031   -0.094  
+seed12                                 7.1275       4.8696       8.3921       9.7407   -0.067  0.064   -0.142  
+depth5                                 7.0739       4.8945       8.1508       9.6771   -0.121  0.068   -0.259  
+theta_parent_label                     7.0643       4.8598       8.2263       9.6462   -0.131  0.130   -0.274  
+theta_generated                        6.9835       4.9494       7.9817       9.4701   -0.211  0.088   -0.403  
+k2                                     6.7688       4.5504       7.8008       9.2722   -0.426  0.107   -0.929  
+mean_plus_var                          6.3686       4.1719       7.3100       8.9996   -0.826  0.166   -1.703  
+greedy_classifier                      5.9751       4.0774       6.6256       8.3027   -1.220  0.198   -2.467  
+no_expansion                           5.8051       3.7989       6.5052       8.2010   -1.390  0.202   -2.839  
+greedy_neighbor                        3.4176       1.5629       3.3294       5.2622   -3.777  0.258   -7.868  
+probe:forged_manifest                  3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -8.394  
+probe:hidden_file_read                 3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -8.394  
+probe:random_control                   3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -8.394  
+probe:self_report                      3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -8.394  
+random                                 3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -8.394  
+probe:crash_midway                     0.0000       0.0000       0.0000       0.0000    0.000  0.000  -13.972  failed: episode 2: policy exited early (code 7)
+probe:hang                             0.0000       0.0000       0.0000       0.0000    0.000  0.000  -13.972  failed: episode 0: policy timed out
+probe:invalid_action                   0.0000       0.0000       0.0000       0.0000    0.000  0.000  -13.972  failed: episode 0: step 3: action 524019 is not a discovered untested person
+probe:no_manifest                      0.0000       0.0000       0.0000       0.0000    0.000  0.000  -13.972  failed: missing policy.json
+seed range: {"auc": 0.06741819616134759, "reward_25pct": 0.1629616906648783, "reward_50pct": 0.08626535896307352, "reward_75pct": 0.06642837684280067}
 new reference vs round-1 reference on the shared 80 episodes: {"diff": 0.7063260939611166, "se": 0.1993358741466378}
 FOG (validation, privileged): {"auc": 9.561775086054345, "reward_25pct": 8.164595805264545, "reward_50pct": 11.084552216624713, "reward_75pct": 11.893346325328512}

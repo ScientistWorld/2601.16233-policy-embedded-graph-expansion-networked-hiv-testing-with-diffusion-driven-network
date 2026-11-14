@@ -1,0 +1,40 @@
+{
+  "slice": "test",
+  "experiments": {
+    "synthetic_main": {
+      "slice": "test",
+      "results": {
+        "greedy_classifier": {
+          "auc": 5.975127521451225,
+          "reward_25pct": 4.077407843549704,
+          "reward_50pct": 6.625627954271386,
+          "reward_75pct": 8.302694737851652
+        },
+        "greedy_neighbor": {
+          "auc": 3.417642353257085,
+          "reward_25pct": 1.5629117462365927,
+          "reward_50pct": 3.329399482908913,
+          "reward_75pct": 5.262177132940695
+        },
+        "pege_ddb": {
+          "auc": 7.194892937388479,
+          "reward_25pct": 5.000914341764429,
+          "reward_50pct": 8.35583410390239,
+          "reward_75pct": 9.807151875201958
+        },
+        "random": {
+          "auc": 3.1405754086113284,
+          "reward_25pct": 1.43603652141895,
+          "reward_50pct": 2.9272159818251837,
+          "reward_75pct": 4.870001769014305
+        }
+      }
+    }
+  },
+  "_status": {
+    "greedy_classifier": "ok",
+    "greedy_neighbor": "ok",
+    "pege_ddb": "ok",
+    "random": "ok"
+  }
+}

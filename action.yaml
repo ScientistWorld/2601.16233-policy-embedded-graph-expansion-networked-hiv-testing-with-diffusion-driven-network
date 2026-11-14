@@ -5,4 +5,4 @@ action: submit
 gpus: 1
 test: false
 milestone: core_claim
-notes: "Resume hardening audit (worker died twice): oracle planning-discount variants (0.98/0.97) as better candidates, theta_parent_label rerun, seed13, k48, mean_plus_var, final determinism rerun of official hidden test."
+notes: "Final check: scripts/run.sh reproduces the reference end to end (train PEGE+DDB seed 11 + baselines, score train and 120-episode hidden test), compares with the recorded reference scores, runs validate.py."

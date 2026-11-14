@@ -1,0 +1,19 @@
+{
+  "slice": "test",
+  "experiments": {
+    "synthetic_main": {
+      "slice": "test",
+      "results": {
+        "theta_parent_label": {
+          "auc": 7.0643172723427865,
+          "reward_25pct": 4.859759125707194,
+          "reward_50pct": 8.226305951606248,
+          "reward_75pct": 9.646242227693547
+        }
+      }
+    }
+  },
+  "_status": {
+    "theta_parent_label": "ok"
+  }
+}

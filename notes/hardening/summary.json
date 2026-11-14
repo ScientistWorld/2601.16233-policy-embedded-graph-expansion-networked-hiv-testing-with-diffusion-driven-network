@@ -13,11 +13,35 @@
       "reward_50pct": 7.800779455744843,
       "reward_75pct": 9.272214542311204
     },
+    "k48": {
+      "auc": 7.290959545502335,
+      "reward_25pct": 5.0401270988231195,
+      "reward_50pct": 8.603622431914689,
+      "reward_75pct": 9.881479539775793
+    },
+    "mean_plus_var": {
+      "auc": 6.368561529658552,
+      "reward_25pct": 4.171902620541157,
+      "reward_50pct": 7.309985100420618,
+      "reward_75pct": 8.99955935375732
+    },
     "no_expansion": {
       "auc": 5.805064654400862,
       "reward_25pct": 3.7989254111256865,
       "reward_50pct": 6.505199568564012,
       "reward_75pct": 8.201021248977929
+    },
+    "oracle_gamma097": {
+      "auc": 7.156355213474089,
+      "reward_25pct": 4.888968435235558,
+      "reward_50pct": 8.322212580361684,
+      "reward_75pct": 9.781056999120247
+    },
+    "oracle_gamma098": {
+      "auc": 7.154506785339421,
+      "reward_25pct": 4.9361883398730555,
+      "reward_50pct": 8.298489278293392,
+      "reward_75pct": 9.788938947217922
     },
     "probe:crash_midway": {
       "auc": 0.0,
@@ -85,6 +109,12 @@
       "reward_50pct": 8.39209719948722,
       "reward_75pct": 9.740723498359156
     },
+    "seed13": {
+      "auc": 7.181436962076107,
+      "reward_25pct": 5.032593331154198,
+      "reward_50pct": 8.442099462865464,
+      "reward_75pct": 9.803027898447219
+    },
     "greedy_classifier": {
       "auc": 5.975127521451226,
       "reward_25pct": 4.077407843549702,
@@ -116,16 +146,20 @@
       "reward_75pct": 9.47007300978204
     },
     "theta_parent_label": {
-      "auc": 0.0,
-      "reward_25pct": 0.0,
-      "reward_50pct": 0.0,
-      "reward_75pct": 0.0
+      "auc": 7.0643172723427865,
+      "reward_25pct": 4.859759125707195,
+      "reward_50pct": 8.226305951606246,
+      "reward_75pct": 9.646242227693545
     }
   },
   "status": {
     "depth5": "ok",
     "k2": "ok",
+    "k48": "ok",
+    "mean_plus_var": "ok",
     "no_expansion": "ok",
+    "oracle_gamma097": "ok",
+    "oracle_gamma098": "ok",
     "probe:crash_midway": "failed: episode 2: policy exited early (code 7)",
     "probe:forged_manifest": "ok",
     "probe:hang": "failed: episode 0: policy timed out",
@@ -137,12 +171,13 @@
     "rule_parent_features_tuned": "ok",
     "rule_parent_label_w1": "ok",
     "seed12": "ok",
+    "seed13": "ok",
     "greedy_classifier": "ok",
     "greedy_neighbor": "ok",
     "pege_ddb": "ok",
     "random": "ok",
     "theta_generated": "ok",
-    "theta_parent_label": "failed: hidden test directory was accessed or unlocked during evaluation"
+    "theta_parent_label": "ok"
   },
   "paired_vs_reference": {
     "depth5": {
@@ -181,6 +216,42 @@
         "se": 0.10711902732188767
       }
     },
+    "k48": {
+      "auc": {
+        "diff": 0.09606660811385527,
+        "se": 0.060706469723101335
+      },
+      "reward_25pct": {
+        "diff": 0.039212757058690616,
+        "se": 0.13213983530786547
+      },
+      "reward_50pct": {
+        "diff": 0.24778832801229786,
+        "se": 0.1092768416991871
+      },
+      "reward_75pct": {
+        "diff": 0.07432766457383706,
+        "se": 0.06159949862310527
+      }
+    },
+    "mean_plus_var": {
+      "auc": {
+        "diff": -0.8263314077299274,
+        "se": 0.16564939034948137
+      },
+      "reward_25pct": {
+        "diff": -0.8290117212232722,
+        "se": 0.22091554678639186
+      },
+      "reward_50pct": {
+        "diff": -1.0458490034817727,
+        "se": 0.2766886409745458
+      },
+      "reward_75pct": {
+        "diff": -0.8075925214446372,
+        "se": 0.16509014355761797
+      }
+    },
     "no_expansion": {
       "auc": {
         "diff": -1.3898282829876174,
@@ -197,6 +268,42 @@
       "reward_75pct": {
         "diff": -1.6061306262240271,
         "se": 0.2150259313351787
+      }
+    },
+    "oracle_gamma097": {
+      "auc": {
+        "diff": -0.038537723914390774,
+        "se": 0.03727900070951351
+      },
+      "reward_25pct": {
+        "diff": -0.1119459065288706,
+        "se": 0.08024230757496953
+      },
+      "reward_50pct": {
+        "diff": -0.0336215235407061,
+        "se": 0.06957195469696685
+      },
+      "reward_75pct": {
+        "diff": -0.026094876081707654,
+        "se": 0.048583861638233417
+      }
+    },
+    "oracle_gamma098": {
+      "auc": {
+        "diff": -0.040386152049059376,
+        "se": 0.03124561996225407
+      },
+      "reward_25pct": {
+        "diff": -0.06472600189137312,
+        "se": 0.07714805692539674
+      },
+      "reward_50pct": {
+        "diff": -0.05734482560899836,
+        "se": 0.048246917830834006
+      },
+      "reward_75pct": {
+        "diff": -0.01821292798403387,
+        "se": 0.04074156162544626
       }
     },
     "probe:forged_manifest": {
@@ -325,6 +432,24 @@
         "se": 0.072324640868852
       }
     },
+    "seed13": {
+      "auc": {
+        "diff": -0.013455975312372,
+        "se": 0.0642855878309037
+      },
+      "reward_25pct": {
+        "diff": 0.03167898938976844,
+        "se": 0.1107983872221643
+      },
+      "reward_50pct": {
+        "diff": 0.08626535896307301,
+        "se": 0.14879503148055795
+      },
+      "reward_75pct": {
+        "diff": -0.004123976754737278,
+        "se": 0.07393894454089149
+      }
+    },
     "greedy_classifier": {
       "auc": {
         "diff": -1.219765415937254,
@@ -396,37 +521,65 @@
         "diff": -0.337078865419916,
         "se": 0.0892354245944642
       }
+    },
+    "theta_parent_label": {
+      "auc": {
+        "diff": -0.13057566504569287,
+        "se": 0.1304060257535631
+      },
+      "reward_25pct": {
+        "diff": -0.141155216057234,
+        "se": 0.23481421337940858
+      },
+      "reward_50pct": {
+        "diff": -0.12952815229614378,
+        "se": 0.18419277824755742
+      },
+      "reward_75pct": {
+        "diff": -0.16090964750840991,
+        "se": 0.12282261272455502
+      }
     }
   },
   "normalized_rank": {
-    "depth5": -0.15475973607451224,
-    "k2": -0.5553813293074237,
-    "no_expansion": -1.6907074312503547,
-    "probe:crash_midway": -8.231678339964635,
-    "probe:forged_manifest": -4.996384135413056,
-    "probe:hang": -8.231678339964635,
-    "probe:hidden_file_read": -4.996384135413056,
-    "probe:invalid_action": -8.231678339964635,
-    "probe:random_control": -4.996384135413056,
-    "probe:self_report": -4.996384135413056,
-    "probe:no_manifest": -8.231678339964635,
-    "rule_parent_features_tuned": 0.07222309132764092,
-    "rule_parent_label_w1": 0.22260988956870023,
-    "seed12": -0.0866391600551523,
-    "greedy_classifier": -1.4631599727042355,
-    "greedy_neighbor": -4.689160464452438,
+    "depth5": -0.25870921913905653,
+    "k2": -0.9288073322393573,
+    "k48": 0.19499214195032014,
+    "mean_plus_var": -1.7032058444970617,
+    "no_expansion": -2.838838605182239,
+    "oracle_gamma097": -0.11724375922659863,
+    "oracle_gamma098": -0.09443499685402965,
+    "probe:crash_midway": -13.97197623570054,
+    "probe:forged_manifest": -8.39363670785574,
+    "probe:hang": -13.97197623570054,
+    "probe:hidden_file_read": -8.39363670785574,
+    "probe:invalid_action": -13.97197623570054,
+    "probe:random_control": -8.39363670785574,
+    "probe:self_report": -8.39363670785574,
+    "probe:no_manifest": -13.97197623570054,
+    "rule_parent_features_tuned": 0.09938015708008567,
+    "rule_parent_label_w1": 0.35475659555485034,
+    "seed12": -0.14229662628930423,
+    "seed13": 0.03346158044747817,
+    "greedy_classifier": -2.466933875471114,
+    "greedy_neighbor": -7.868468198770612,
     "pege_ddb": 0.0,
-    "random": -4.996384135413056,
-    "theta_generated": -0.23374828672482725,
-    "theta_parent_label": -8.231678339964635
+    "random": -8.39363670785574,
+    "theta_generated": -0.40277956513969726,
+    "theta_parent_label": -0.2736541484361391
   },
   "rank_cohort": [
     "depth5",
     "k2",
+    "k48",
+    "mean_plus_var",
     "no_expansion",
+    "oracle_gamma097",
+    "oracle_gamma098",
     "rule_parent_features_tuned",
     "rule_parent_label_w1",
     "seed12",
+    "seed13",
     "greedy_classifier",
     "greedy_neighbor",
     "pege_ddb",
@@ -435,19 +588,20 @@
     "theta_parent_label"
   ],
   "rank_std": {
-    "auc": 2.1994622368213044,
-    "reward_25pct": 1.7154362419110494,
-    "reward_50pct": 2.674370160913713,
-    "reward_75pct": 2.889563247636381
+    "auc": 1.2474522698314732,
+    "reward_25pct": 1.1296022683074998,
+    "reward_50pct": 1.677228930429951,
+    "reward_75pct": 1.5005167253814646
   },
   "seeds": [
     "pege_ddb",
-    "seed12"
+    "seed12",
+    "seed13"
   ],
   "seed_range": {
     "auc": 0.06741819616134759,
-    "reward_25pct": 0.13128270127510966,
-    "reward_50pct": 0.036263095584828875,
+    "reward_25pct": 0.1629616906648783,
+    "reward_50pct": 0.08626535896307352,
     "reward_75pct": 0.06642837684280067
   },
   "round1_first80": {

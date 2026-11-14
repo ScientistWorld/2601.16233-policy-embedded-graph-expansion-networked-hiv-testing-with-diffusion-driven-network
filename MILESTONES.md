@@ -34,3 +34,7 @@
 - Final verification kept the milestone at `core_claim`.
 - Removed the pending ablation submission from the scored gym surface because no completed ablation artifacts were present.
 - Confirmed the completed five-fold `synthetic_main` result remains the validated benchmark.
+
+### [2026-11-14] - core_claim
+- Hardening iteration. The reference was restored to the paper's DDB/oracle specification after a diffusion-schedule bug was found. The interactive hidden test was enlarged to 120 episodes and locked while policies run.
+- PEGE+DDB beats every practical baseline on the hidden test (AUC 7.195 vs 5.975 for the greedy classifier; 18× the seed range). The paper's k and aggregation trends are reproduced.
