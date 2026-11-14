@@ -67,6 +67,11 @@ def paired(a, b, m):
 
 
 def episode_sizes(n):
+    cache = OUT / "episode_sizes.json"  # written once; avoids touching eval/test while it is locked
+    if cache.exists():
+        sizes = json.loads(cache.read_text())
+        if len(sizes) >= n:
+            return sizes[:n]
     import sys
 
     sys.path.insert(0, str(ROOT / "eval" / "test"))

@@ -1,20 +1,25 @@
 episodes=120
 method                                    auc reward_25pct reward_50pct reward_75pct     dAUC     se     rank
-rule_parent_label_w1                   7.3131       5.3406       8.4974       9.8346    0.118  0.129    0.255  
+rule_parent_label_w1                   7.3131       5.3406       8.4974       9.8346    0.118  0.129    0.223  
 pege_ddb                               7.1949       5.0009       8.3558       9.8072    0.000  0.000    0.000  
-rule_parent_features_tuned             7.1758       5.2707       8.2960       9.6771   -0.019  0.123    0.069  
-depth5                                 7.0739       4.8945       8.1508       9.6771   -0.121  0.068   -0.188  
-greedy_classifier                      5.9751       4.0774       6.6256       8.3027   -1.220  0.198   -1.794  
-greedy_neighbor                        3.4176       1.5629       3.3294       5.2622   -3.777  0.258   -5.716  
-probe:forged_manifest                  3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -6.099  
-probe:hidden_file_read                 3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -6.099  
-probe:random_control                   3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -6.099  
-probe:self_report                      3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -6.099  
-random                                 3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -6.099  
-probe:crash_midway                     0.0000       0.0000       0.0000       0.0000    0.000  0.000  -10.163  failed: episode 2: policy exited early (code 7)
-probe:hang                             0.0000       0.0000       0.0000       0.0000    0.000  0.000  -10.163  failed: episode 0: policy timed out
-probe:invalid_action                   0.0000       0.0000       0.0000       0.0000    0.000  0.000  -10.163  failed: episode 0: step 3: action 524019 is not a discovered untested person
-probe:no_manifest                      0.0000       0.0000       0.0000       0.0000    0.000  0.000  -10.163  failed: missing policy.json
-seed range: {"auc": 0.0, "reward_25pct": 0.0, "reward_50pct": 0.0, "reward_75pct": 0.0}
+rule_parent_features_tuned             7.1758       5.2707       8.2960       9.6771   -0.019  0.123    0.072  
+seed12                                 7.1275       4.8696       8.3921       9.7407   -0.067  0.064   -0.087  
+depth5                                 7.0739       4.8945       8.1508       9.6771   -0.121  0.068   -0.155  
+theta_generated                        6.9835       4.9494       7.9817       9.4701   -0.211  0.088   -0.234  
+k2                                     6.7688       4.5504       7.8008       9.2722   -0.426  0.107   -0.555  
+greedy_classifier                      5.9751       4.0774       6.6256       8.3027   -1.220  0.198   -1.463  
+no_expansion                           5.8051       3.7989       6.5052       8.2010   -1.390  0.202   -1.691  
+greedy_neighbor                        3.4176       1.5629       3.3294       5.2622   -3.777  0.258   -4.689  
+probe:forged_manifest                  3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -4.996  
+probe:hidden_file_read                 3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -4.996  
+probe:random_control                   3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -4.996  
+probe:self_report                      3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -4.996  
+random                                 3.1406       1.4360       2.9272       4.8700   -4.054  0.266   -4.996  
+probe:crash_midway                     0.0000       0.0000       0.0000       0.0000    0.000  0.000   -8.232  failed: episode 2: policy exited early (code 7)
+probe:hang                             0.0000       0.0000       0.0000       0.0000    0.000  0.000   -8.232  failed: episode 0: policy timed out
+probe:invalid_action                   0.0000       0.0000       0.0000       0.0000    0.000  0.000   -8.232  failed: episode 0: step 3: action 524019 is not a discovered untested person
+probe:no_manifest                      0.0000       0.0000       0.0000       0.0000    0.000  0.000   -8.232  failed: missing policy.json
+theta_parent_label                     0.0000       0.0000       0.0000       0.0000    0.000  0.000   -8.232  failed: hidden test directory was accessed or unlocked during evaluation
+seed range: {"auc": 0.06741819616134936, "reward_25pct": 0.13128270127510966, "reward_50pct": 0.03626309558483243, "reward_75pct": 0.06642837684280423}
 new reference vs round-1 reference on the shared 80 episodes: {"diff": 0.7063260939611166, "se": 0.1993358741466378}
 FOG (validation, privileged): {"auc": 9.561775086054345, "reward_25pct": 8.164595805264545, "reward_50pct": 11.084552216624713, "reward_75pct": 11.893346325328512}

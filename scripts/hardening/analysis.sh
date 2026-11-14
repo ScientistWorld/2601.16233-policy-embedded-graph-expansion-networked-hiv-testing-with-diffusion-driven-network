@@ -129,6 +129,8 @@ run_variant() {  # name, then 'variant' or 'train', then method args
 python scripts/hardening/summarize.py > $OUT/summary.txt 2>&1
 run_variant theta_generated variant --theta-generated
 run_variant depth5 variant --depth 5
+run_variant oracle_gamma098 variant --oracle-gamma 0.98
+run_variant oracle_gamma097 variant --oracle-gamma 0.97
 run_variant theta_parent_label variant --theta parent_label
 run_variant no_expansion variant --depth 0
 run_variant k2 variant --k 2
@@ -136,8 +138,6 @@ run_variant seed12 train --seed 12
 run_variant seed13 train --seed 13
 run_variant k48 variant --k 48
 run_variant mean_plus_var variant --aggregate mean_plus_var
-run_variant mode variant --aggregate mode
-run_variant mean_minus_var variant --aggregate mean_minus_var
 
 # ---- 9. official hidden test once more from the final code (determinism check)
 if [ ! -f $OUT/details/test_reference_final.json ]; then

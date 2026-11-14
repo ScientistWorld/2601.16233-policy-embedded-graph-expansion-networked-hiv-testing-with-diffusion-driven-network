@@ -73,6 +73,7 @@ DEFAULT_CONFIG = {
     "seed": 11,
     "theta": "parent_features",
     "theta_generated": False,  # variant: separate theta fitted on DDB-generated children
+    "oracle_gamma": None,  # variant: planning discount of the oracle (None = the episode's gamma, 0.99)
 }
 
 
@@ -371,12 +372,14 @@ class PEGEPolicy:
         self.grid_size = int(config["grid"])
         self.aggregate = config["aggregate"]
         self.seed = int(config["seed"])
+        self.oracle_gamma = config.get("oracle_gamma")
         self.rng = np.random.default_rng(self.seed)
         self.grid: Optional[Grid] = None
 
     def reset(self, state: EpisodeState) -> None:
         self.rng = np.random.default_rng([self.seed, int(state.policy_seed)])
-        self.grid = Grid(state.gamma, self.grid_size)
+        gamma = float(self.oracle_gamma) if self.oracle_gamma else state.gamma
+        self.grid = Grid(gamma, self.grid_size)
 
     def frontier_inputs(self, state: EpisodeState, frontier: Sequence[int]):
         D = self.ddb.feature_dim
@@ -519,6 +522,7 @@ def main() -> None:
         p.add_argument("--seed", type=int)
         p.add_argument("--theta", choices=["parent_label", "parent_features"])
         p.add_argument("--theta-generated", dest="theta_generated", action="store_const", const=True)
+        p.add_argument("--oracle-gamma", dest="oracle_gamma", type=float)
         if name == "variant":
             p.add_argument("--base", required=True)
     s = sub.add_parser("serve")
