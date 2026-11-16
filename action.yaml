@@ -1,8 +1,6 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends.
-action: submit
-gpus: 1
-test: false
+action: done
 milestone: core_claim
-notes: "Final check: scripts/run.sh reproduces the reference end to end (train PEGE+DDB seed 11 + baselines, score train and 120-episode hidden test), compares with the recorded reference scores, runs validate.py."
+notes: "Hardened: hidden interactive test locked during policy runs (120 episodes), reproduction restored to paper's DDB/oracle spec (PEGE+DDB 7.195 vs classifier 5.975 AUC, seed range 0.067), shortcuts closed; open: one-step lookahead rule ties the reference, honest headroom small (k48 +0.10). See HARDENING.md."

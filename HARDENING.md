@@ -100,4 +100,4 @@ PEGE settings stay at the paper's k = 24, d = 3, mean aggregation and γ = 0.99.
 - θ is a directed logistic approximation of Choo et al.'s pairwise MRF, which they fit by pseudo-likelihood; the MRF itself is not implemented.
 - The DQN baseline is absent.
 - The paper's mode and mean − variance aggregations were rerun only in session 1, with the previous DDB: mode +0.027 ± 0.122, mean − variance −1.917 ± 0.331.
-- The final job reproduces the reference end to end (`scripts/run.sh`) and checks it against the recorded scores (`scripts/hardening/compare_reference.py`). Its outcome is recorded below.
+- **Reproduction check (done).** Job `b0cbcbfa-77d` ran `scripts/run.sh` from scratch: it retrained PEGE+DDB (seed 11) and the baselines and rescored both slices. `scoring/scores_train.json` and `scoring/scores_test.json` came out identical to the recorded reference (max difference 0 for every method and metric), and `python validate.py` passed.
